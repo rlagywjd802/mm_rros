@@ -105,7 +105,7 @@ roslaunch mm_navigation mm_keyboard_navigation.launch camera:=kinect1 map_file:=
 ## robot
 roslaunch openni_launch openni.launch camera:=kinect1 depth_registration:=true
 roslaunch mm_bringup mm_mobile_bringup.launch
-roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true rgbd:=true rviz:=false
+roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true rviz:=false rgbd:=true
 
 ## pc
 rviz -d mm_move_base.rviz
