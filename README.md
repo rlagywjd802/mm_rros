@@ -108,7 +108,7 @@ roslaunch mm_bringup mm_mobile_bringup.launch
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true rgbd:=true rviz:=false
 
 ## pc
-roslaunch mm_slam mm_rtabmap_remote_viz.launch
+rviz -d mm_move_base.rviz
 
 ########################################################
 # optimize openni processing for rtabmap
