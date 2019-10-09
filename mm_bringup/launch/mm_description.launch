@@ -1,0 +1,14 @@
+<launch>
+	<include file="$(find mm_description)/launch/description.launch"/>
+	
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+		<!-- <param name="use_gui" value="false"/>	 -->
+		<param name="rate" value="100"/>
+	</node>
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+		<param name="publish_frequency" type="double" value="100"/>
+		<param name="tf_prefix" value=""/>
+	</node>
+	
+</launch>

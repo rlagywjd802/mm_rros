@@ -1,0 +1,33 @@
+<launch>
+	<arg name="mobile_device" 	default="/dev/ttyUSB0"/>
+	<arg name="gripper_device" 	default="/dev/ttyUSB1"/>
+
+	<!-- mobile -->
+	<node name="mm_odom_publisher" pkg="mm_bringup" type="base_odom_publisher.py" output="screen" args="$(arg mobile_device)" respawn="true">
+  	<param name="initial_x" 	type="double" value="0.0"/>
+  	<param name="initial_y" 	type="double" value="0.0"/>
+  	<param name="initial_th" 	type="double" value="0.0"/>
+  </node>
+	
+	<!-- manipulator -->
+	<include file="$(find ur_modern_driver)/launch/mm_bringup.launch">
+		<arg name="robot_ip" value="192.168.1.9"/>
+	</include>
+
+	<!-- gripper -->
+	<node name="robotiq_2f_gripper_connect" pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py" args="$(arg gripper_device)"/>
+	<node name="robotiq_2f_gripper_control" pkg="robotiq_2f_gripper_control" type="robotiq_2f_gripper_ctrl_gui.py" output="screen"/>
+
+	<!-- kinect -->
+	<include file="$(find openni_launch)/launch/openni.launch">
+		<arg name="device_id" 					value="#1"/>
+		<arg name="camera" 							value="kinect1"/>
+		<arg name="depth_registration" 	value="true"/>
+	</include>
+	<include file="$(find openni_launch)/launch/openni.launch">
+		<arg name="device_id" 					value="#2"/>
+		<arg name="camera" 							value="kinect2"/>
+		<arg name="depth_registration" 	value="true"/>
+	</include>
+
+</launch>

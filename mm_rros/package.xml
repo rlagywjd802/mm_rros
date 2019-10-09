@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mm_rros</name>
+  <version>0.0.0</version>
+  <description>The mm_rros package</description>
+  <maintainer email="rlagywjd802@gmail.com">hyojeong</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  	<architecture_independent/>
+    <metapackage/>
+  </export>
+
+
+</package>

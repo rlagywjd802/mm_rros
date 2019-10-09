@@ -1,0 +1,23 @@
+<launch>
+
+	<!-- Arguments -->
+	<arg name="camera" 		default="camera"/>
+  <arg name="rviz" 			default="false"/>
+  <arg name="max_depth" default="0.0"/>
+
+  <!-- Construct and voxelize the point cloud (for fast visualization in rviz) -->
+  <group ns="$(arg camera)">
+	  <node pkg="nodelet" type="nodelet" name="points_xyzrgb" args="standalone rtabmap_ros/point_cloud_xyzrgb">
+	    <remap from="rgbd_image"	to="rgbd_image/compressed"/>
+	    <remap from="cloud"				to="voxel_cloud" />
+
+	    <param name="queue_size" type="int" value="10"/>
+	    <param name="voxel_size" type="double" value="0.01"/>
+
+	    <param name="max_depth" type="double" value="$(arg max_depth)"/>
+	  </node>
+	</group>
+
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find mm_slam)/rviz/mm_rgbd_remote.rviz"/>
+
+</launch>

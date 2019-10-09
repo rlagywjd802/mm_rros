@@ -1,0 +1,95 @@
+<launch>
+
+	<!-- Arguments -->
+  <arg name="database_path"   default="rtabmap.db"/>
+
+  <!-- if rgbd is false, depth is true vice versa -->
+  <arg name="rgbd"            default="false"/>
+  <arg name="rviz"            default="false"/>
+  <arg name="camera"          default="camera"/>  
+  <arg name="localization"    default="false"/>
+  <arg name="mm_description"  default="true"/>
+
+  <!-- robot description -->
+  <include if="$(arg mm_description)" file="$(find mm_bringup)/launch/mm_description.launch"/>
+
+  <arg     if="$(arg localization)" name="args" default=""/>
+  <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
+
+  <!-- Navigation -->
+  <include if="$(arg localization)" file="$(find mm_navigation)/launch/mm_move_base.launch"/>
+  
+  <!-- rtabmap -->
+  <group ns="rtabmap">
+
+    <!-- Use RGBD synchronization -->
+    <node     if="$(arg rgbd)" pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+      <remap from="rgb/image"       to="/$(arg camera)/rgb/image_rect_color"/>
+      <remap from="depth/image"     to="/$(arg camera)/depth_registered/image_raw"/>
+      <remap from="rgb/camera_info" to="/$(arg camera)/rgb/camera_info"/>
+      <remap from="rgbd_image"      to="/rgbd_image"/>
+      
+      <param name="queue_size"        value="30"/>
+      <param name="approx_sync"       value="true"/> 
+      <param name="compressed_rate"   value="5.0"/>
+    </node> 
+
+    <!-- Kinect cloud to laser scan -->
+    <node unless="$(arg rgbd)" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+      <remap from="image" to="/$(arg camera)/depth_registered/image_raw"/>
+      <remap from="camera_info" to="/$(arg camera)/depth_registered/camera_info"/>
+      <remap from="scan" to="/kinect_scan"/>
+
+      <param name="scan_height" type="double" value="100"/>
+      <param name="range_max" type="int" value="4"/>
+      <param name="output_frame_id" type="string" value="$(arg camera)_depth_frame"/>
+    </node>
+
+    <!-- slam -->
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg args)">
+        <param name="database_path" type="string" value="$(arg database_path)"/>
+
+        <param name="frame_id" type="string" value="/base_footprint"/>
+
+        <param     if="$(arg rgbd)" name="subscribe_depth" type="bool" value="false"/>
+        <param     if="$(arg rgbd)" name="subscribe_rgbd" type="bool" value="true"/>
+
+        <param unless="$(arg rgbd)" name="subscribe_depth" type="bool" value="true"/>
+        <param unless="$(arg rgbd)" name="subscribe_scan" type="bool" value="true"/>        
+
+        <remap from="odom" to="/odom"/>
+        
+        <remap     if="$(arg rgbd)" from="rgbd_image" to="/rgbd_image"/>
+        <remap unless="$(arg rgbd)" from="scan" to="/kinect_scan"/>
+
+        <!-- input -->
+        <remap from="rgb/image" to="/$(arg camera)/rgb/image_rect_color"/>
+        <remap from="depth/image" to="/$(arg camera)/depth_registered/image_raw"/>
+        <remap from="rgb/camera_info" to="/$(arg camera)/rgb/camera_info"/>
+
+        <!-- output -->
+        <remap from="grid_map" to="/map"/>
+        <param name="queue_size" type="int" value="10"/>
+
+        <!-- localization mode -->
+        <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
+        <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
+        <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
+
+        <!-- RTAB-Map's parameters -->
+        <param name="RGBD/ProximityBySpace" type="string" value="false"/>
+        <param name="RGBD/AngularUpdate" type="string" value="0.01"/>
+        <param name="RGBD/LinearUpdate" type="string" value="0.01"/>
+        <param name="RGBD/OptimizerFromGraphEnd" type="string" value="false"/>
+
+        <param name="Reg/Force3DoF" type="string" value="true"/>
+        <param name="Vis/MinInliers" type="string" value="12"/>
+    </node>
+  </group>
+
+	<!-- rviz -->
+  <group if="$(arg rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find mm_slam)/rviz/mm_rtabmap.rviz"/>
+  </group>
+
+</launch>

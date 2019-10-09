@@ -1,0 +1,24 @@
+DWAPlannerROS:
+  max_vel_x: 0.2
+  min_vel_x: 0.0
+  max_vel_y: 0.0
+  min_vel_y: 0.0
+  max_trans_vel: 0.2
+  max_rot_vel: 0.4
+  min_rot_vel: 0.04
+
+  acc_lim_theta: 1.0
+  acc_lim_x: 0.5
+  acc_lim_y: 0.0
+
+  holonomic_robot: false
+  meter_scoring: false
+
+  yaw_goal_tolerance: 0.05
+  xy_goal_tolerance: 0.15 # 0.5
+  latch_xy_goal_tolerance: false
+
+  sim_time: 1.0
+  vx_samples: 5
+  vy_sanokes: 1
+  vth_samples: 20

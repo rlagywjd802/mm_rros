@@ -1,0 +1,9 @@
+<launch>
+	<!-- manipulator -->
+	<include file="$(find ur_modern_driver)/launch/mm_ur5_bringup.launch">
+		<arg name="robot_ip" value="192.168.1.9"/>
+	</include>
+
+	<include file="$(find mm_moveit_config)/launch/mm_moveit_planning_execution.launch"/>
+	
+</launch>

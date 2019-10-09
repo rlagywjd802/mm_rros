@@ -1,0 +1,19 @@
+<launch>
+
+  <arg name="robot_namespace" default="/"/>
+  <arg name="kinect1_enabled" default="$(optenv MM_KINECT1_ENABLED true)"/>
+  <arg name="kinect2_enabled" default="$(optenv MM_KINECT2_ENABLED true)"/>
+  <arg name="ur_enabled" default="$(optenv MM_UR_ENABLED true)"/>
+  <arg name="gripper_enabled" default="$(optenv MM_UR_GRIPPER_ENABLED true)"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find mm_description)/urdf/mm.urdf.xacro'    
+  	--inorder 
+    robot_namespace:=$(arg robot_namespace)
+    kinect1_enabled:=$(arg kinect1_enabled)
+    kinect2_enabled:=$(arg kinect2_enabled)
+    ur_enabled:=$(arg ur_enabled)
+    gripper_enabled:=$(arg gripper_enabled)
+    " />
+
+</launch>
+

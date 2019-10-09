@@ -1,0 +1,26 @@
+<launch>
+	<arg name="rgbd" default="true"/>
+	
+	<include file="$(find openni_launch)/launch/openni.launch">
+		<arg name="device_id" 					value="#2"/>
+		<arg name="camera" 							value="kinect1"/>
+		<arg name="depth_registration" 	value="true"/>
+	</include>
+
+	<include file="$(find openni_launch)/launch/openni.launch">
+		<arg name="device_id" 					value="#1"/>
+		<arg name="camera" 							value="kinect2"/>
+		<arg name="depth_registration" 	value="true"/>
+	</include>
+
+	<include if="$(arg rgbd)" file="$(find mm_slam)/launch/mm_combine_rgbd.launch">
+		<arg name="camera" value="kinect1"/>
+		<arg name="rviz" value="false"/>
+	</include>
+
+	<include if="$(arg rgbd)" file="$(find mm_slam)/launch/mm_combine_rgbd.launch">
+		<arg name="camera" value="kinect2"/>
+		<arg name="rviz" value="false"/>
+	</include>
+
+</launch>

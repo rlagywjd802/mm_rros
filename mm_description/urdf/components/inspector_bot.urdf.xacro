@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<robot name="inspector_bot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Base Size -->
+  <xacro:property name="base_x_size" value="0.76" />
+  <xacro:property name="base_y_size" value="0.46" />
+  <xacro:property name="base_z_size" value="0.55" />
+
+  <!-- Profile Size -->
+  <xacro:property name="profile_size" value="0.04" />
+
+  <!-- Origin -->
+  <xacro:property name="origin_x" value="0.025" />
+  <xacro:property name="origin_y" value="0.025" />
+  
+  <!-- Wheel Mounting Positions -->
+  <xacro:property name="wheelbase" value="0.44" />
+  <xacro:property name="track" value="0.71" />
+  <xacro:property name="wheel_vertical_offset" value="0.2" />
+
+  <!-- Wheel Properties -->
+  <xacro:property name="wheel_length" value="0.15" />
+  <xacro:property name="wheel_radius" value="0.2" />
+  <xacro:property name="base_center_height" value="${wheel_vertical_offset + wheel_radius}" />
+
+  <xacro:property name="M_PI" value="3.14159"/>
+
+  <!-- Inspector_bot wheel macro -->
+  <xacro:macro name="inspector_bot_wheel" params="wheel_prefix *joint_pose">
+
+    <link name="${wheel_prefix}_wheel_link">
+      <inertial>
+        <mass value="2.637" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="0.02467" ixy="0" ixz="0" iyy="0.04411" iyz="0" izz="0.02467" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+          <geometry>
+            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+          </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+          <geometry>
+            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+          </geometry>
+      </collision>
+    </link>
+
+    <!-- <joint name="${wheel_prefix}_wheel" type="fixed"> -->
+    <joint name="${wheel_prefix}_wheel" type="continuous">
+      <xacro:insert_block name="joint_pose"/>
+      <parent link="bare_base_link"/>
+      <child link="${wheel_prefix}_wheel_link"/>
+      <axis xyz="0 1 0" rpy="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <!-- inspector_bot base -->
+  <link name="base_footprint"/>
+
+  <joint name="base_joint" type="fixed">
+    <origin xyz="-${base_x_size/2 + origin_x} ${base_y_size/2 - origin_y} 0" rpy="0 0 0" />
+    <parent link="base_footprint" />
+    <child link="bare_base_link" />
+  </joint>
+
+  <link name="bare_base_link">
+    <visual>
+      <origin xyz="0 0 ${base_center_height}" rpy="0 0 0" />
+      <geometry>
+        <box size = "${base_x_size}  ${base_y_size}  ${base_z_size}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${base_center_height}" rpy="0 0 0" />
+      <geometry>
+        <box size = "${base_x_size}  ${base_y_size}  ${base_z_size}"/>
+      </geometry>      
+    </collision>     
+  </link>
+
+  <!-- interial link stores the robot's inertial information -->
+  <link name="inertial_link">
+    <inertial>
+      <mass value="50"/>
+      <origin xyz="0 0 ${base_center_height}"/>
+      <inertia ixx="2.14" ixy="0.0" ixz="0.0" iyy="3.67" iyz="0.0" izz="3.29"/>
+    </inertial>
+  </link>
+
+  <joint name="inertial_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="bare_base_link" />
+    <child link="inertial_link" />
+  </joint>
+ 
+  <!-- interial link stores the robot's inertial information -->
+  <link name="base_imu_link"/>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="bare_base_link" />
+    <child link="base_imu_link" />
+  </joint>
+
+  <!-- inspector_bot wheels -->
+  <xacro:inspector_bot_wheel wheel_prefix="front_left">
+    <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:inspector_bot_wheel>
+  <xacro:inspector_bot_wheel wheel_prefix="front_right">
+    <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:inspector_bot_wheel>
+  <xacro:inspector_bot_wheel wheel_prefix="rear_left">
+    <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:inspector_bot_wheel>
+  <xacro:inspector_bot_wheel wheel_prefix="rear_right">
+    <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:inspector_bot_wheel>
+
+
+</robot>
