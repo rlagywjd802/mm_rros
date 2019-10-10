@@ -3,9 +3,11 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Map1
+        - /Local Map1
       Splitter Ratio: 0.498677254
-    Tree Height: 395
+    Tree Height: 800
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -38,7 +40,7 @@ Visualization Manager:
       Value: true
     - Acceleration_Scaling_Factor: 1
       Class: moveit_rviz_plugin/MotionPlanning
-      Enabled: true
+      Enabled: false
       Move Group Namespace: ""
       MoveIt_Allow_Approximate_IK: false
       MoveIt_Allow_External_Program: false
@@ -273,7 +275,7 @@ Visualization Manager:
         Goal State Color: 250; 128; 0
         Interactive Marker Size: 0
         Joint Violation Color: 255; 0; 255
-        Planning Group: ""
+        Planning Group: manipulator
         Query Goal State: true
         Query Start State: false
         Show Workspace: false
@@ -481,7 +483,7 @@ Visualization Manager:
         Robot Alpha: 1
         Show Robot Collision: false
         Show Robot Visual: true
-      Value: true
+      Value: false
       Velocity_Scaling_Factor: 1
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -525,7 +527,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -542,7 +544,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/Image
       Enabled: true
       Image Topic: /kinect2/rgb/image_rect_color
@@ -580,7 +582,7 @@ Visualization Manager:
       Cloud min depth (m): 0
       Cloud voxel size (m): 0.00999999978
       Color: 255; 255; 255
-      Color Transformer: ""
+      Color Transformer: RGB8
       Download graph: false
       Download map: false
       Enabled: true
@@ -594,11 +596,11 @@ Visualization Manager:
       Name: MapCloud
       Node filtering angle (degrees): 30
       Node filtering radius (m): 0
-      Position Transformer: ""
+      Position Transformer: XYZ
       Size (Pixels): 3
-      Size (m): 0.00999999978
+      Size (m): 0.0199999996
       Style: Flat Squares
-      Topic: ""
+      Topic: /rtabmap/mapData
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -653,7 +655,7 @@ Visualization Manager:
           Topic: /move_base_simple/goal
           Unreliable: false
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Global Map
     - Class: rviz/Group
       Displays:
@@ -734,6 +736,154 @@ Visualization Manager:
       Topic: ""
       Unreliable: false
       Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        bare_base_link:
+          Value: false
+        base:
+          Value: false
+        base_footprint:
+          Value: true
+        base_imu_link:
+          Value: false
+        base_link:
+          Value: false
+        ee_link:
+          Value: false
+        forearm_link:
+          Value: false
+        inertial_link:
+          Value: false
+        kinect1_base_link:
+          Value: false
+        kinect1_depth_frame:
+          Value: false
+        kinect1_depth_optical_frame:
+          Value: false
+        kinect1_frame_optical:
+          Value: false
+        kinect1_head_link:
+          Value: false
+        kinect1_link:
+          Value: false
+        kinect1_neck_link:
+          Value: false
+        kinect1_rgb_frame:
+          Value: false
+        kinect1_rgb_optical_frame:
+          Value: false
+        kinect2_base_link:
+          Value: false
+        kinect2_depth_frame:
+          Value: false
+        kinect2_depth_optical_frame:
+          Value: false
+        kinect2_frame_optical:
+          Value: false
+        kinect2_head_link:
+          Value: false
+        kinect2_link:
+          Value: false
+        kinect2_neck_link:
+          Value: false
+        kinect2_rgb_frame:
+          Value: false
+        kinect2_rgb_optical_frame:
+          Value: false
+        left_inner_finger:
+          Value: false
+        left_inner_finger_pad:
+          Value: false
+        left_outer_finger:
+          Value: false
+        left_outer_knuckle:
+          Value: false
+        map:
+          Value: false
+        odom:
+          Value: false
+        right_inner_finger:
+          Value: false
+        right_inner_finger_pad:
+          Value: false
+        right_outer_finger:
+          Value: false
+        right_outer_knuckle:
+          Value: false
+        robotiq_arg2f_base_link:
+          Value: false
+        shoulder_link:
+          Value: false
+        tool0:
+          Value: false
+        tool0_controller:
+          Value: false
+        upper_arm_link:
+          Value: false
+        wrist_1_link:
+          Value: false
+        wrist_2_link:
+          Value: false
+        wrist_3_link:
+          Value: false
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        map:
+          odom:
+            base_footprint:
+              bare_base_link:
+                base_imu_link:
+                  {}
+                base_link:
+                  base:
+                    tool0_controller:
+                      {}
+                  shoulder_link:
+                    upper_arm_link:
+                      forearm_link:
+                        wrist_1_link:
+                          wrist_2_link:
+                            wrist_3_link:
+                              ee_link:
+                                {}
+                              tool0:
+                                robotiq_arg2f_base_link:
+                                  {}
+                inertial_link:
+                  {}
+                kinect1_base_link:
+                  kinect1_neck_link:
+                    kinect1_head_link:
+                      kinect1_link:
+                        kinect1_depth_frame:
+                          kinect1_depth_optical_frame:
+                            {}
+                        kinect1_frame_optical:
+                          {}
+                        kinect1_rgb_frame:
+                          kinect1_rgb_optical_frame:
+                            {}
+                kinect2_base_link:
+                  kinect2_neck_link:
+                    kinect2_head_link:
+                      kinect2_link:
+                        kinect2_depth_frame:
+                          kinect2_depth_optical_frame:
+                            {}
+                        kinect2_frame_optical:
+                          {}
+                        kinect2_rgb_frame:
+                          kinect2_rgb_optical_frame:
+                            {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -747,13 +897,13 @@ Visualization Manager:
     - Class: rviz/MoveCamera
     - Class: rviz/Select
     - Class: rviz/SetGoal
-      Topic: goal
+      Topic: /move_base_simple/goal
     - Class: rviz/Measure
   Value: true
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 8.64049721
+      Distance: 6.48229885
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -768,10 +918,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.480203867
+      Pitch: 1.26479602
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 3.25680041
+      Yaw: 3.43679118
     Saved: ~
 Window Geometry:
   Displays:
@@ -787,7 +937,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc0200000009fb000000100044006900730070006c0061007900730100000028000001cc000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000002020000004a0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000001fa000001c50000018300fffffffb0000000a0049006d00610067006501000003c50000003d0000001600fffffffb0000000a0049006d00610067006501000003d80000002a00000000000000000000048c000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc0200000009fb000000100044006900730070006c006100790073010000002800000361000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000002020000004a0000001600000016fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001fa000001c50000018300fffffffb0000000a0049006d006100670065010000038f000000730000001600fffffffb0000000a0049006d00610067006501000003d80000002a00000000000000000000048c000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1855
