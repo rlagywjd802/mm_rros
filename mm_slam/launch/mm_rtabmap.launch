@@ -57,7 +57,7 @@
         <param unless="$(arg rgbd)" name="subscribe_depth" type="bool" value="true"/>
         <param unless="$(arg rgbd)" name="subscribe_scan" type="bool" value="true"/>        
 
-        <remap from="odom" to="/odom"/>
+        <remap from="odom" to="/odom_combined"/>
         
         <remap     if="$(arg rgbd)" from="rgbd_image" to="/rgbd_image"/>
         <remap unless="$(arg rgbd)" from="scan" to="/kinect_scan"/>

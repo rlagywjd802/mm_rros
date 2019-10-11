@@ -1,0 +1,6 @@
+<launch>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+		<arg name="use_gui" value="true"/>
+		<rosparam command="load" file="$(find mm_description)/config/gripper_joints.map"/>
+	</node>
+</launch>
