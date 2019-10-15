@@ -4,16 +4,22 @@
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-<!--   <arg name="config" default="false" />
-  <arg unless="$(arg config)" name="command_args" value="" />
-  <arg     if="$(arg config)" name="command_args" value="-d $(find mm_moveit_config)/launch/moveit.rviz" />
- -->
-  <arg name="slam" default="false"/>
-  <arg     if="$(arg slam)" name="command_args" value="-d $(find mm_moveit_config)/launch/slam_moveit.rviz"/>
-  <arg unless="$(arg slam)" name="command_args" value="-d $(find mm_moveit_config)/launch/moveit.rviz" />  
+  <arg name="rgbd" default="false"/>
+  <include if="$(arg rgbd)" file="$(find mm_slam)/launch/mm_combine_rgbd.launch">
+    <arg name="camera"    value="kinect1"/>
+  </include>
+  <include if="$(arg rgbd)" file="$(find mm_slam)/launch/mm_combine_rgbd.launch">
+    <arg name="camera"    value="kinect2"/>
+    <arg name="max_depth" value="2.0"/>
+  </include>
   
+
+  <arg name="mm" default="false" />
+  <arg     if="$(arg mm)" name="command_args" value="-d $(find ur5_moveit_config)/rviz/mm_moveit.rviz" />
+  <arg unless="$(arg mm)" name="command_args" value="-d $(find ur5_moveit_config)/rviz/moveit.rviz" />
+
   <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
-	args="$(arg command_args)" output="screen">
+  args="$(arg command_args)" output="screen">
     <rosparam command="load" file="$(find mm_moveit_config)/config/kinematics.yaml"/>
   </node>
 

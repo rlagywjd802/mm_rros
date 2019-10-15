@@ -548,6 +548,10 @@ Visualization Manager:
           Value: false
         kinect2_base_link:
           Value: false
+        kinect2_depth_frame:
+          Value: true
+        kinect2_depth_optical_frame:
+          Value: true
         kinect2_frame_optical:
           Value: false
         kinect2_head_link:
@@ -556,6 +560,10 @@ Visualization Manager:
           Value: false
         kinect2_neck_link:
           Value: false
+        kinect2_rgb_frame:
+          Value: true
+        kinect2_rgb_optical_frame:
+          Value: true
         left_inner_finger:
           Value: false
         left_inner_finger_pad:
@@ -659,8 +667,14 @@ Visualization Manager:
                   kinect2_neck_link:
                     kinect2_head_link:
                       kinect2_link:
+                        kinect2_depth_frame:
+                          kinect2_depth_optical_frame:
+                            {}
                         kinect2_frame_optical:
                           {}
+                        kinect2_rgb_frame:
+                          kinect2_rgb_optical_frame:
+                            {}
                 rear_left_wheel_link:
                   {}
                 rear_right_wheel_link:
@@ -700,10 +714,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.759796619
+      Pitch: 0.429796517
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 3.65180993
+      Yaw: 3.68680596
     Saved: ~
 Window Geometry:
   Displays:
