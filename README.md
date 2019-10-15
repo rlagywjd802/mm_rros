@@ -68,8 +68,7 @@ roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB1
 ## base - slam record - keyboard
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB0
-roslaunch mm_bringup mm_kinect_bringup.launch camera1:=kinect1 rgbd1:=true
-roslaunch openni_launch openni.launch device_id:=#1 camera:=kinect1 depth_registration:=true
+roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1
 
 ### remote pc
@@ -87,7 +86,7 @@ rosrun map_server map_saver map:=/rtabmap/proj_map
 ## base - localization - move_base
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB0
-roslaunch mm_bringup mm_kinect_bringup.launch camera1:=kinect1 rgbd1:=true
+roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
 roslaunch openni_launch openni.launch device_id:=#1 camera:=kinect1 depth_registration:=true
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true
 
@@ -97,7 +96,7 @@ roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true
 ## base + arm + gripper - localization - move_base
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB0
-roslaunch mm_bringup mm_kinect_bringup.launch camera1:=kinect1 camera2:=kinect2 rgbd1:=true rgbd2:=true
+roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true camera2:=true rgbd1:=true rgbd2:=true
 roslaunch mm_bringup mm_ur5_bringup.launch
 roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB1
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true
