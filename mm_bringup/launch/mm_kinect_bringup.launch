@@ -12,7 +12,7 @@
 		<arg name="depth_registration" 	value="true"/>
 	</include>
 
-	<include unless="(arg camera2)" file="$(find openni_launch)/launch/openni.launch">
+	<include unless="$(arg camera2)" file="$(find openni_launch)/launch/openni.launch">
 		<arg unless="$(arg switched)" 	name="device_id"	value="#2"/>
 		<arg     if="$(arg switched)" 	name="device_id"	value="#1"/>
 		<arg name="camera" 				value="kinect2"/>
