@@ -4,15 +4,16 @@
   <arg name="database_path"   default="rtabmap.db"/>
 
   <!-- if rgbd is false, depth is true vice versa -->
-  <arg name="rgbd"            default="false"/>
+  <arg name="rgbd"            default="true"/>
   <arg name="rviz"            default="false"/>
   <arg name="camera"          default="camera"/>  
   <arg name="localization"    default="false"/>
-  <arg name="mm_description"  default="true"/>
+  <arg name="mm"              default="true"/>
 
   <!-- robot description -->
-  <include if="$(arg mm_description)" file="$(find mm_bringup)/launch/mm_description.launch"/>
+  <include unless="$(arg mm)" file="$(find mm_bringup)/launch/mm_description.launch"/>
 
+  <!-- Localization mode -->
   <arg     if="$(arg localization)" name="args" default=""/>
   <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
 

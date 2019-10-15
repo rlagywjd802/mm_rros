@@ -39,7 +39,6 @@
 
       <xacro:robotiq_arg2f_85 prefix=""/>
     </xacro:if>
-  
   </xacro:if>
 
   <!-- kinect -->  
