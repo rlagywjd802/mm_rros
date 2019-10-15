@@ -5,14 +5,14 @@
 	<arg name="rgbd1" 		default="false"/>
 	<arg name="rgbd2" 		default="false"/>
 
-	<include unless="$(arg camera1)" file="$(find openni_launch)/launch/openni.launch">
+	<include if="$(arg camera1)" file="$(find openni_launch)/launch/openni.launch">
 		<arg unless="$(arg switched)" 	name="device_id"	value="#1"/>
 		<arg     if="$(arg switched)" 	name="device_id"	value="#2"/>
 		<arg name="camera" 				value="kinect1"/>
 		<arg name="depth_registration" 	value="true"/>
 	</include>
 
-	<include unless="$(arg camera2)" file="$(find openni_launch)/launch/openni.launch">
+	<include if="$(arg camera2)" file="$(find openni_launch)/launch/openni.launch">
 		<arg unless="$(arg switched)" 	name="device_id"	value="#2"/>
 		<arg     if="$(arg switched)" 	name="device_id"	value="#1"/>
 		<arg name="camera" 				value="kinect2"/>
