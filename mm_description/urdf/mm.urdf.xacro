@@ -4,42 +4,14 @@
 
   <!-- argument -->
   <xacro:arg name="robot_namespace" default="/"/>
-  <xacro:arg name="kinect1_enabled" default="true"/>
-  <xacro:arg name="kinect2_enabled" default="true"/>
-  <xacro:arg name="ur_enabled" default="true"/>
-  <xacro:arg name="gripper_enabled" default="true"/>
+  <xacro:arg name="kinect1_enabled" default="false"/>
+  <xacro:arg name="kinect2_enabled" default="false"/>
+  <xacro:arg name="ur_enabled" default="false"/>
+  <xacro:arg name="gripper_enabled" default="false"/>
 
   <!-- inspector_bot -->
   <xacro:include filename="$(find mm_description)/urdf/components/inspector_bot.urdf.xacro" />  
   <xacro:include filename="$(find mm_description)/urdf/accessories/kinect_tilted_camera.urdf.xacro"/>
-  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
-  <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" />
-
-  <!-- ur5 robot -->
-  <xacro:if value="$(arg ur_enabled)">    
-    <xacro:property name="ur5_z_location" value="${base_center_height + base_z_size/2}" />
-    <xacro:property name="ur5_x_location" value="0.175" />
-    
-    <joint name="ur_fixed_joint" type="fixed">
-      <parent link="bare_base_link" />
-      <child link="base_link" />
-      <origin xyz="${ur5_x_location} 0.0 ${ur5_z_location}" rpy="0.0 0.0 -${M_PI/2}" />
-    </joint>
-
-    <xacro:ur5_robot prefix="" joint_limited="false"/>
-
-    <!-- gripper -->
-    <xacro:if value="$(arg gripper_enabled)">  
-      
-      <joint name="ur_gripper_fixed_joint" type="fixed">
-        <parent link="tool0"/>
-        <child link="robotiq_arg2f_base_link"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </joint>
-
-      <xacro:robotiq_arg2f_85 prefix=""/>
-    </xacro:if>
-  </xacro:if>
 
   <!-- kinect -->  
   <xacro:if value="$(arg kinect1_enabled)">
