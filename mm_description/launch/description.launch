@@ -1,8 +1,8 @@
 <launch>
 
   <arg name="robot_namespace" default="/"/>
-  <arg name="kinect1_enabled" default="$(optenv MM_KINECT1_ENABLED true)"/>
-  <arg name="kinect2_enabled" default="$(optenv MM_KINECT2_ENABLED true)"/>
+  <arg name="kinect1_enabled" default="$(optenv MM_KINECT1_ENABLED false)"/>
+  <arg name="kinect2_enabled" default="$(optenv MM_KINECT2_ENABLED false)"/>
   <arg name="ur_enabled" default="$(optenv MM_UR_ENABLED false)"/>
   <arg name="gripper_enabled" default="$(optenv MM_UR_GRIPPER_ENABLED false)"/>
 

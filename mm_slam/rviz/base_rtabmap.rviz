@@ -4,8 +4,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /RobotState1
-        - /Pose1
         - /TF1/Frames1
       Splitter Ratio: 0.498677254
     Tree Height: 921
@@ -40,7 +38,7 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Attached Body Color: 150; 50; 150
-      Class: moveit_rviz_plugin/RobotState
+      Class: rviz/RobotModel
       Collision Enabled: false
       Enabled: true
       Links:
@@ -54,10 +52,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         base_footprint:
           Alpha: 1
           Show Axes: false
@@ -66,21 +60,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ee_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        forearm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         front_left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -137,31 +116,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        left_inner_finger:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_inner_finger_pad:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_inner_knuckle:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_outer_finger:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_outer_knuckle:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -172,71 +126,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        right_inner_finger:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_inner_finger_pad:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_inner_knuckle:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_outer_finger:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_outer_knuckle:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robotiq_arg2f_base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        shoulder_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        tool0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        upper_arm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wrist_1_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wrist_2_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wrist_3_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-      Name: RobotState
-      Robot Alpha: 0.5
+      Name: RobotModel
       Robot Description: robot_description
-      Robot State Topic: display_robot_state
-      Show All Links: true
-      Show Highlights: true
+      TF Prefix: ""
+      Update Interval: 0
       Value: true
       Visual Enabled: true
     - Alpha: 1
@@ -473,7 +366,7 @@ Visualization Manager:
           Scale: 1
           Value: true
         Value: true
-      Enabled: true
+      Enabled: false
       Keep: 100
       Name: Odometry
       Position Tolerance: 0.100000001
@@ -489,7 +382,7 @@ Visualization Manager:
         Value: Arrow
       Topic: ""
       Unreliable: false
-      Value: true
+      Value: false
     - Alpha: 1
       Axes Length: 1
       Axes Radius: 0.100000001
@@ -506,169 +399,19 @@ Visualization Manager:
       Unreliable: false
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        bare_base_link:
-          Value: false
-        base:
-          Value: false
-        base_footprint:
-          Value: true
-        base_imu_link:
-          Value: false
-        base_link:
-          Value: false
-        ee_link:
-          Value: false
-        forearm_link:
-          Value: false
-        front_left_wheel_link:
-          Value: false
-        front_right_wheel_link:
-          Value: false
-        inertial_link:
-          Value: false
-        kinect1_base_link:
-          Value: false
-        kinect1_depth_frame:
-          Value: false
-        kinect1_depth_optical_frame:
-          Value: false
-        kinect1_frame_optical:
-          Value: false
-        kinect1_head_link:
-          Value: false
-        kinect1_link:
-          Value: false
-        kinect1_neck_link:
-          Value: false
-        kinect1_rgb_frame:
-          Value: false
-        kinect1_rgb_optical_frame:
-          Value: false
-        kinect2_base_link:
-          Value: false
-        kinect2_frame_optical:
-          Value: false
-        kinect2_head_link:
-          Value: false
-        kinect2_link:
-          Value: false
-        kinect2_neck_link:
-          Value: false
-        left_inner_finger:
-          Value: false
-        left_inner_finger_pad:
-          Value: false
-        left_inner_knuckle:
-          Value: false
-        left_outer_finger:
-          Value: false
-        left_outer_knuckle:
-          Value: false
-        map:
-          Value: false
-        odom:
-          Value: false
-        rear_left_wheel_link:
-          Value: false
-        rear_right_wheel_link:
-          Value: false
-        right_inner_finger:
-          Value: false
-        right_inner_finger_pad:
-          Value: false
-        right_inner_knuckle:
-          Value: false
-        right_outer_finger:
-          Value: false
-        right_outer_knuckle:
-          Value: false
-        robotiq_arg2f_base_link:
-          Value: false
-        shoulder_link:
-          Value: false
-        tool0:
-          Value: false
-        upper_arm_link:
-          Value: false
-        wrist_1_link:
-          Value: false
-        wrist_2_link:
-          Value: false
-        wrist_3_link:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: false
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_footprint:
-              bare_base_link:
-                base_imu_link:
-                  {}
-                base_link:
-                  base:
-                    {}
-                  shoulder_link:
-                    upper_arm_link:
-                      forearm_link:
-                        wrist_1_link:
-                          wrist_2_link:
-                            wrist_3_link:
-                              ee_link:
-                                {}
-                              tool0:
-                                robotiq_arg2f_base_link:
-                                  left_inner_knuckle:
-                                    {}
-                                  left_outer_knuckle:
-                                    left_outer_finger:
-                                      left_inner_finger:
-                                        left_inner_finger_pad:
-                                          {}
-                                  right_inner_knuckle:
-                                    {}
-                                  right_outer_knuckle:
-                                    right_outer_finger:
-                                      right_inner_finger:
-                                        right_inner_finger_pad:
-                                          {}
-                front_left_wheel_link:
-                  {}
-                front_right_wheel_link:
-                  {}
-                inertial_link:
-                  {}
-                kinect1_base_link:
-                  kinect1_neck_link:
-                    kinect1_head_link:
-                      kinect1_link:
-                        kinect1_depth_frame:
-                          kinect1_depth_optical_frame:
-                            {}
-                        kinect1_frame_optical:
-                          {}
-                        kinect1_rgb_frame:
-                          kinect1_rgb_optical_frame:
-                            {}
-                kinect2_base_link:
-                  kinect2_neck_link:
-                    kinect2_head_link:
-                      kinect2_link:
-                        kinect2_frame_optical:
-                          {}
-                rear_left_wheel_link:
-                  {}
-                rear_right_wheel_link:
-                  {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -702,10 +445,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.859796286
+      Pitch: 1.56979632
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 3.33180404
+      Yaw: 2.746804
     Saved: ~
 Window Geometry:
   Displays:
