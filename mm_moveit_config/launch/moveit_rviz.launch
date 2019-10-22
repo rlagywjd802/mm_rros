@@ -16,8 +16,8 @@
   
 
   <arg name="mm" default="false" />
-  <arg     if="$(arg mm)" name="command_args" value="-d $(find ur5_moveit_config)/rviz/mm_moveit.rviz" />
-  <arg unless="$(arg mm)" name="command_args" value="-d $(find ur5_moveit_config)/rviz/moveit.rviz" />
+  <arg     if="$(arg mm)" name="command_args" value="-d $(find mm_moveit_config)/rviz/mm_moveit.rviz" />
+  <arg unless="$(arg mm)" name="command_args" value="-d $(find mm_moveit_config)/rviz/moveit.rviz" />
 
   <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
   args="$(arg command_args)" output="screen">
