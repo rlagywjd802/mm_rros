@@ -9,6 +9,7 @@
   <arg name="camera"          default="camera"/>  
   <arg name="localization"    default="false"/>
   <arg name="mm"              default="false"/>
+  <arg name="dwa"             default="true"/>
 
   <!-- mm state publisher -->
   <include unless="$(arg mm)" file="$(find mm_bringup)/launch/mm_state_publisher.launch"/>
@@ -18,8 +19,11 @@
   <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
 
   <!-- Navigation -->
-  <include if="$(arg localization)" file="$(find mm_navigation)/launch/mm_move_base.launch"/>
-  
+  <include if="$(arg localization)">
+    <include     if="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_dwa.launch"/>
+    <include unless="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_teb.launch"/>
+  </include>
+
   <!-- rtabmap -->
   <group ns="rtabmap">
 

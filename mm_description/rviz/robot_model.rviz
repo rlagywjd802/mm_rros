@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /RobotModel1
         - /TF1/Frames1
       Splitter Ratio: 0.760806918
     Tree Height: 405
@@ -72,6 +71,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
         base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_imu_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -410,18 +413,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.57673496
-        Y: -0.149642169
-        Z: 1.62626207
+        X: -0.68892318
+        Y: -0.278230011
+        Z: 1.17571557
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.444796652
+      Pitch: 0.27979672
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.94038343
+      Yaw: 3.28538823
     Saved: ~
 Window Geometry:
   Displays:

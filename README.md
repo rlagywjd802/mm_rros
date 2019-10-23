@@ -11,10 +11,8 @@ roslaunch mm_bringup mm_state_publisher.launch
 ## keyboard command
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 
-## rgbd remote
-roslaunch mm_slam mm_combine_rgbd.launch camera:=kinect1 rviz:=false
--->roslaunch mm_slam mm_rgbd_remote_viz.launch camera:=kinect1
-
+## rgbd remote visualize
+roslaunch mm_slam rgbd_remote_viz.launch camera:=kinect1
 
 ## bringup the robot (default)
 ### base
@@ -25,7 +23,9 @@ roslaunch openni_launch openni.launch device_id:=#2 camera:=kinect2 depth_regist
 ### arm (MoveIt!)
 roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=192.168.1.9
 roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch 
--->roslaunch ur5_moveit_config moveit_rviz.launch
+roslaunch ur5_moveit_config moveit_rviz.launch config:=true
+-- robot_description from ur5_upload.launch(ur5_brinup.launch)
+-- robot_state_publisher from ur_common.launch(ur5_bringup.launch)
 ### gripper
 roslaunch robotiq_2f_85_gripper_visualization test_2f_85_model.launch
 rosrun robotiq_2f_gripper_control Robotiq2FGripperRtuNode.py /dev/ttyUSB1
@@ -35,12 +35,11 @@ rosrun robotiq_2f_gripper_control Robotiq2FGripperStatusListener.py
 roslaunch razor_imu_9dof razor-pub.launch
 roslaunch robot_pose_ekf.launch vo_used:=false
 
-## move the robot (compressed)
+## move the whole robot (compressed version)
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB0
 roslaunch mm_bringup mm_kinect_bringup.launch camera1:=kinect1 camera2:=kinect2 rgbd:=true
 roslaunch mm_bringup mm_ur5_bringup.launch
 roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB1
-
 
 # changes in packages
 ## base odom publisher
@@ -73,8 +72,7 @@ roslaunch mm_slam mm_rtabmap.launch camera:=kinect1
 
 ### remote pc
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
--->roslaunch mm_slam rtabmap_rviz.launch rgbd1:=true
-
+roslaunch mm_slam base_rtabmap_rviz.launch rgbd1:=true
 rosbag record /odom /tf /tf_static /joint_states /kinect1/depth_registered/image_raw /kinect1/depth_registered/camera_info /kinect1/rgb/image_rect_color /kinect1/rgb/camera_info /kinect_scan
 rqt_console
 
@@ -89,9 +87,9 @@ rosrun map_server map_saver map:=/rtabmap/proj_map
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB0
 roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true
-
+-- robot_description, robot_state_pusblisher and joint_state_publisher from mm_rtabmap.launch
 ### remote pc
---> roslaunch mm_slam rtabmap_rviz.launch rgbd1:=true
+roslaunch mm_slam base_rtabmap_rviz.launch rgbd1:=true
 
 ## base + arm + gripper - localization - move_base (experiment)
 ### robot
@@ -104,9 +102,22 @@ roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true
 rosrun mm_moveit_config mm_moveit_gui_execution.py
 
 ### remote pc
-roslaunch mm_slam mm_rgbd_remote_viz.launch camera:=kinect1
-roslaunch mm_slam mm_rgbd_remote_viz.launch camera:=kinect2 max_depth:=2.0
-roslaunch mm_moveit_config moveit_rviz.launch mm:=true
+roslaunch mm_moveit_config moveit_rviz.launch mm:=true rgbd1:=true rgbd2:=true
+rqt
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+
+## base + arm + gripper - localization - move_base teb
+### robot
+roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB1
+roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true camera2:=true rgbd1:=true rgbd2:=true
+roslaunch mm_bringup mm_ur5_bringup.launch
+roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB0
+roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true dwa:=false
+
+rosrun mm_moveit_config mm_moveit_gui_execution.py
+
+### remote pc
+roslaunch mm_moveit_config moveit_rviz.launch mm:=true rgbd1:=true rgbd2:=true
 rqt
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 

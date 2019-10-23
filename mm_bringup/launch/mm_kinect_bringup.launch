@@ -19,12 +19,12 @@
 		<arg name="depth_registration" 	value="true"/>
 	</include>
 
-	<include if="$(arg rgbd1)" file="$(find mm_slam)/launch/mm_combine_rgbd.launch">
+	<include if="$(arg rgbd1)" file="$(find mm_slam)/launch/combine_rgbd.launch">
 		<arg name="camera" 	value="kinect1"/>
 		<arg name="rviz" 	value="false"/>
 	</include>
 
-	<include if="$(arg rgbd2)" file="$(find mm_slam)/launch/mm_combine_rgbd.launch">
+	<include if="$(arg rgbd2)" file="$(find mm_slam)/launch/combine_rgbd.launch">
 		<arg name="camera" 	value="kinect2"/>
 		<arg name="rviz" 	value="false"/>
 	</include>

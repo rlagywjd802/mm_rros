@@ -1,4 +1,5 @@
 DWAPlannerROS:
+  global_frame: /odom
   max_vel_x: 0.2
   min_vel_x: 0.0
   max_vel_y: 0.0
