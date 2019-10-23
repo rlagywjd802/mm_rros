@@ -19,10 +19,10 @@
   <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
 
   <!-- Navigation -->
-  <include if="$(arg localization)">
+  <group if="$(arg localization)">
     <include     if="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_dwa.launch"/>
     <include unless="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_teb.launch"/>
-  </include>
+  </group>
 
   <!-- rtabmap -->
   <group ns="rtabmap">

@@ -108,10 +108,10 @@ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 
 ## base + arm + gripper - localization - move_base teb
 ### robot
-roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB1
+roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSB0
 roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true camera2:=true rgbd1:=true rgbd2:=true
 roslaunch mm_bringup mm_ur5_bringup.launch
-roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB0
+roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB1
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true dwa:=false
 
 rosrun mm_moveit_config mm_moveit_gui_execution.py
