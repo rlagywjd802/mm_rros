@@ -99,8 +99,6 @@ roslaunch mm_bringup mm_ur5_bringup.launch gui:=true
 roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSB0
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true
 
-rosrun mm_moveit_config mm_moveit_gui_execution.py
-
 ### remote pc
 roslaunch mm_moveit_config moveit_rviz.launch mm:=true rgbd1:=true rgbd2:=true
 
