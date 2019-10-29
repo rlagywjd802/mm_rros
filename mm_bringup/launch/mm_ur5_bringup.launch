@@ -1,9 +1,13 @@
 <launch>
+	<arg name="gui" 	default="false"/>
+
 	<!-- manipulator -->
 	<include file="$(find ur_modern_driver)/launch/mm_ur5_bringup.launch">
 		<arg name="robot_ip" value="192.168.1.9"/>
 	</include>
 
 	<include file="$(find mm_moveit_config)/launch/mm_moveit_planning_execution.launch"/>
-	
+
+  <node if="$(arg gui)" name="mm_moveit_gui_execution" pkg="mm_moveit_config" type="mm_moveit_gui_execution.py"/>
+  	
 </launch>
