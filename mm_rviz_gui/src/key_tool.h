@@ -63,8 +63,8 @@ public Q_SLOTS:
 protected:
   rviz::MoveTool move_tool_;
   RemoteReciever remote_reciever_;
-  float speed_ = 0.2;
-  float turn_ = 0.1;
+  float speed_ = 0.1;
+  float turn_ = 0.2;
 
 };
 }  // namespace mm_rviz_gui
