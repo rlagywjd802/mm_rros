@@ -29,4 +29,6 @@
 		<arg name="rviz" 	value="false"/>
 	</include>
 
+	<node name="usb_cam_node" pkg="usb_cam" type="usb_cam_node"/>
+
 </launch>

@@ -64,7 +64,7 @@
         <joint name="wrist_3_joint" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="robotiq_2f_85" parent_link="tool0" group="gripper" />
+    <end_effector name="robotiq_2f_85" parent_link="tool0" group="manipulator" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="map" type="fixed" parent_frame="map" child_link="base_footprint" />
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
