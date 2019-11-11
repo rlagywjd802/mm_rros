@@ -95,7 +95,9 @@
 
 	<!-- rviz -->
   <group if="$(arg rviz)">
-    <include file="$(find mm_slam)/launch/rtabmap_rviz.launch"/>
+    <include file="$(find mm_slam)/launch/base_rtabmap_rviz.launch">
+      <arg name="rgbd1"        value="true"/>
+    </include>
   </group>
 
 </launch>

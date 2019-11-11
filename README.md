@@ -68,7 +68,7 @@ roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSBgripper
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSBbase
 roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
-roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 database_path:=<file_name>
+roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 mm:=false database_path:=<file_name>
 
 ### remote pc
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
