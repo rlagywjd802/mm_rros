@@ -94,10 +94,10 @@ roslaunch mm_slam base_rtabmap_rviz.launch rgbd1:=true
 ## base + arm + gripper - localization - move_base (user trial)
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSBbase
-roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true camera2:=true rgbd1:=true rgbd2:=true
+roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true camera2:=true rgbd1:=true rgbd2:=true switched:=true
 roslaunch mm_bringup mm_ur5_bringup.launch gui:=true
 roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSBgripper
-roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true
+roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true mm:=true database_path:=map_1111_4.db
 
 ### remote pc
 roslaunch mm_moveit_config moveit_rviz.launch mm:=true rgbd1:=true rgbd2:=true
