@@ -77,6 +77,9 @@ class UR5MoveGroupGUI(object):
 		self.group.stop()
 		rospy.loginfo("ur5_stop: Stopped")
 
+	# def ur5_reset_cb(self, msg):
+		
+
 
 def main():
 	try:
