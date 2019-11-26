@@ -710,8 +710,8 @@ def odom_publisher():
     y += (origin_x*sin(th) - origin_y*cos(th))
 
     # since all odometry is 6DOF we'll need a quaternion created from yaw
-    # odom_quat = tf.transformations.quaternion_from_euler(0, 0, th, axes='rxyz')
-    odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0, axes='rxyz')
+    odom_quat = tf.transformations.quaternion_from_euler(0, 0, th, axes='rxyz')
+    # odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0, axes='rxyz')
 
     # next, we'll publish the odometry message over ROS
     odom                 = Odometry()
@@ -723,12 +723,12 @@ def odom_publisher():
     base_odom.header.frame_id = "map"
 
     # set the position
-    # odom.pose.pose = Pose(Point(x, y, 0.), Quaternion(*odom_quat))
+    odom.pose.pose = Pose(Point(x, y, 0.), Quaternion(*odom_quat))
     base_odom.pose.pose = Pose(Point(x, y, 0.), Quaternion(*odom_quat))
 
     # set the velocity
     odom.child_frame_id = "base_footprint"
-    # odom.twist.twist    = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
+    odom.twist.twist    = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
 
     base_odom.child_frame_id = "base_odom"
     base_odom.twist.twist    = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
@@ -743,26 +743,26 @@ def odom_publisher():
 
     
     # publish the message
-    # odom_pub.publish(odom)
+    odom_pub.publish(odom)
     base_odom_pub.publish(odom)
 
-    # odom_broadcaster.sendTransform(
-    #    (x, y, 0.),
-    #    odom_quat,
-    #    current_time,
-    #    odom.child_frame_id,
-    #    # "base_footprint"
-    #    odom.header.frame_id
-    # )
-
     odom_broadcaster.sendTransform(
-       (0, 0, 0.),
+       (x, y, 0.),
        odom_quat,
        current_time,
        odom.child_frame_id,
        # "base_footprint"
        odom.header.frame_id
     )
+
+    # odom_broadcaster.sendTransform(
+    #    (0, 0, 0.),
+    #    odom_quat,
+    #    current_time,
+    #    odom.child_frame_id,
+    #    # "base_footprint"
+    #    odom.header.frame_id
+    # )
 
 #########################################################################################
 
@@ -784,10 +784,10 @@ mps_to_movecmd = 20.0/0.1033401
 rps_to_movecmd = 20.0/0.20862
 
 # max linear velocity
-v_max = 0.2
+v_max = 0.5
 
 # max angular velocity
-w_max = 0.4
+w_max = 0.5
 
 
 def sign(a):
