@@ -633,7 +633,7 @@ DistancePerCount_right_front = (m.pi * wheel_diameter * in_to_m) / enc_countperr
 DistancePerCount_right_front = (m.pi * wheel_diameter * in_to_m) / enc_countperrev_right_rear              
 
 lengthBetweenTwoWheels = 26.0 * in_to_m
-factor = 60.0/90.0
+factor = 0.69
 odom_old = Odometry()
 
 # distance between origin and the center of the robot
@@ -787,7 +787,7 @@ rps_to_movecmd = 20.0/0.20862
 v_max = 0.5
 
 # max angular velocity
-w_max = 0.5
+w_max = 1.0
 
 
 def sign(a):

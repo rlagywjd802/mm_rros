@@ -122,3 +122,22 @@ roslaunch mm_bringup description_publish.launch
 
 ### pc
 roslaunch robot_pose_ekf robot_pose_ekf.launch vo_used:=false
+
+########################################################
+# ORB_SLAM2
+## mono w/ logitech
+rosrun ORB_SLAM2 Monopub Vocabulary/ORBvoc.txt Examples/Monocular/logitech.yaml -1 /usb_cam/image_raw
+rosrun ORB_SLAM2 Monosub 10 1 20 -10 20 -10 0.55 0.50 1 5
+
+## mono w/ kinect
+roslaunch openni_launch openni.launch depth_registration:=true
+rosrun ORB_SLAM2 Monopub Vocabulary/ORBvoc.txt Examples/ROS/ORB_SLAM2/kinect.yaml -1 /camera/rgb/image_raw
+rosrun ORB_SLAM2 Monosub 10 1 20 -10 20 -10 0.55 0.50 1 5
+
+## rgbd w/ kinect
+rosrun ORB_SLAM2 RGBD Vocabulary/ORBvoc.txt Examples/ROS/ORB_SLAM2/kinect.yaml
+
+########################################################
+# ps3joy
+rosrun ps3joy ps3joy.py
+roslaunch teleop_twist_joy teleop.launch
