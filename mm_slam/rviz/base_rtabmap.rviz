@@ -4,6 +4,11 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Map1
+        - /Global Map1/Planner1
+        - /Local Map1
+        - /Local Map1/Planner1
+        - /Pose1
         - /TF1/Frames1
       Splitter Ratio: 0.498677254
     Tree Height: 921
@@ -391,7 +396,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: /move_base/GlobalPlanner/plan
+          Topic: /move_base/TebLocalPlannerROS/global_plan
           Unreliable: false
           Value: true
         - Alpha: 1
@@ -409,7 +414,7 @@ Visualization Manager:
           Topic: /move_base_simple/goal
           Unreliable: false
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Global Map
     - Class: rviz/Group
       Displays:
@@ -443,7 +448,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: /move_base/DWAPlannerROS/local_plan
+          Topic: /move_base/TebLocalPlannerROS/local_plan
           Unreliable: false
           Value: true
         - Alpha: 1
@@ -454,7 +459,7 @@ Visualization Manager:
           Topic: /move_base/local_costmap/footprint
           Unreliable: false
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Local Map
     - Angle Tolerance: 0.100000001
       Class: rviz/Odometry
@@ -502,7 +507,7 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.0500000007
       Shape: Arrow
-      Topic: /move_base_simple/goal
+      Topic: /move_base/current_goal
       Unreliable: false
       Value: true
     - Class: rviz/TF
@@ -532,7 +537,7 @@ Visualization Manager:
     - Class: rviz/MoveCamera
     - Class: rviz/Select
     - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
+      Topic: /move_base/current_goal
   Value: true
   Views:
     Current:
@@ -552,10 +557,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.804796994
+      Pitch: 0.919796884
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 3.54680419
+      Yaw: 3.5518043
     Saved: ~
 Window Geometry:
   Displays:

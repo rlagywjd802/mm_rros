@@ -87,7 +87,7 @@ def initialize():
 
     rospy.init_node('base_odom_publisher_node')
     rospy.loginfo('status: odometry_publisher crearted')
-    rospy.Subscriber('/cmd_vel', Twist, move_callback)
+    rospy.Subscriber('/test/cmd_vel', Twist, move_callback)
 
     odom_pub = rospy.Publisher("odom", Odometry, queue_size=50)
     base_odom_pub = rospy.Publisher("base_odom", Odometry, queue_size=50)
@@ -105,8 +105,7 @@ def initialize():
     th = rospy.get_param('/initial_th', 0.0)
     rospy.loginfo('status: odom initiated [{}, {}, {}]'.format(x, y, th))
     
-    # getRCnENC() - edit
-    getEncoders()
+    getRCnENC()
     enc_last = test_wheels
 
 #########################################################################################
@@ -333,51 +332,51 @@ def reader(query_id):
 #########################################################################################
 #########################################################################################
 
-# pulse1 = 1490
-# pulse2 = 1490
+pulse1 = 1490
+pulse2 = 1490
 
-# min_forward_pulse1 = 1510 
-# min_backward_pulse1 = 1480
-# min_forward_pulse2 = 1514 
-# min_backward_pulse2 = 1484
+min_forward_pulse1 = 1510 
+min_backward_pulse1 = 1480
+min_forward_pulse2 = 1514 
+min_backward_pulse2 = 1484
 
-# max_pulse = 1917 
-# min_pulse = 1070
+max_pulse = 1917 
+min_pulse = 1070
 
-# communication_error = 0
+communication_error = 0
 
-# def getRCInput():
+def getRCInput():
 
-#     global pulse1
-#     global pulse2
-#     global max_pulse
-#     global min_pulse
-#     global debug
-#     global rc_debug
-#     global test_debug
-#     global communication_error
+    global pulse1
+    global pulse2
+    global max_pulse
+    global min_pulse
+    global debug
+    global rc_debug
+    global test_debug
+    global communication_error
 
-#     try:
+    try:
 
-#         pulses = reader('pulse')    
-#         pulse1 = clean_messages(pulses[0])
-#         pulse2 = clean_messages(pulses[1])
+        pulses = reader('pulse')    
+        pulse1 = clean_messages(pulses[0])
+        pulse2 = clean_messages(pulses[1])
 
-#         if (pulse1 > max_pulse) or (pulse2 > max_pulse) or (pulse1 < min_pulse) or (pulse2 < min_pulse):
-#             communication_error = 1
-#             pulse1 = 1495
-#             pulse2 = 1492
+        if (pulse1 > max_pulse) or (pulse2 > max_pulse) or (pulse1 < min_pulse) or (pulse2 < min_pulse):
+            communication_error = 1
+            pulse1 = 1495
+            pulse2 = 1492
 
-#     except Exception as e: # catch *all* exceptions
+    except Exception as e: # catch *all* exceptions
 
-#         print e
-#         print( "error: getRCInput" )
+        print e
+        print( "error: getRCInput" )
 
-#     debug_printer(debug,'getRCInput - pulses',pulses)
-#     debug_printer(rc_debug,'getRCInput - pulses',pulses)
-#     debug_printer(test_debug,'getRCInput - pulses',pulses)
+    debug_printer(debug,'getRCInput - pulses',pulses)
+    debug_printer(rc_debug,'getRCInput - pulses',pulses)
+    debug_printer(test_debug,'getRCInput - pulses',pulses)
 
-#     return pulse1, pulse2
+    return pulse1, pulse2
 
 #########################################################################################
 
@@ -389,56 +388,56 @@ def reader(query_id):
 #########################################################################################
 #########################################################################################
 
-# def pulse2vel(pulses):
+def pulse2vel(pulses):
 
-#     global min_forward_pulse1 
-#     global min_backward_pulse1
-#     global min_forward_pulse2 
-#     global min_backward_pulse2
+    global min_forward_pulse1 
+    global min_backward_pulse1
+    global min_forward_pulse2 
+    global min_backward_pulse2
 
-#     signs = [0,0]
+    signs = [0,0]
 
-#     if (pulses[0] > min_forward_pulse1):
+    if (pulses[0] > min_forward_pulse1):
 
-#         speed = pulses[0] - min_forward_pulse1
-#         signs[0] = 1
-#         signs[1] = -1
-#         left  = speed * signs[0]
-#         right = speed * signs[1] 
+        speed = pulses[0] - min_forward_pulse1
+        signs[0] = 1
+        signs[1] = -1
+        left  = speed * signs[0]
+        right = speed * signs[1] 
 
-#     elif (pulses[0] < min_backward_pulse1):
+    elif (pulses[0] < min_backward_pulse1):
 
-#         speed =  -(pulses[0] - min_backward_pulse1)
-#         signs[0] = -1
-#         signs[1] = 1
-#         left  = speed * signs[0]
-#         right = speed * signs[1]
+        speed =  -(pulses[0] - min_backward_pulse1)
+        signs[0] = -1
+        signs[1] = 1
+        left  = speed * signs[0]
+        right = speed * signs[1]
 
-#     elif (pulses[1] > min_forward_pulse2):
+    elif (pulses[1] > min_forward_pulse2):
 
-#         speed = pulses[1] - min_forward_pulse2
-#         signs[0] = 1
-#         signs[1] = 1
-#         left  = speed * signs[0]
-#         right = speed * signs[1]
+        speed = pulses[1] - min_forward_pulse2
+        signs[0] = 1
+        signs[1] = 1
+        left  = speed * signs[0]
+        right = speed * signs[1]
 
-#     elif (pulses[1] < min_backward_pulse1):
+    elif (pulses[1] < min_backward_pulse1):
 
-#         speed =  -(pulses[1] - min_backward_pulse2)
-#         signs[0] = -1
-#         signs[1] = -1
-#         left  = speed * signs[0]
-#         right = speed * signs[1]
+        speed =  -(pulses[1] - min_backward_pulse2)
+        signs[0] = -1
+        signs[1] = -1
+        left  = speed * signs[0]
+        right = speed * signs[1]
 
-#     else:
+    else:
 
-#         speed = 0
-#         signs[0] = 1
-#         signs[1] = 1
-#         left  = speed * signs[0]
-#         right = speed * signs[1]
+        speed = 0
+        signs[0] = 1
+        signs[1] = 1
+        left  = speed * signs[0]
+        right = speed * signs[1]
 
-#     return left,right
+    return left,right
 
 #########################################################################################
 
@@ -455,7 +454,6 @@ def getEncoders():
     global debug
     global encoder_debug
     global test_debug
-    global test_wheels
 
     leftWheel = [0,0]
     rightWheel = [0,0]
@@ -467,12 +465,10 @@ def getEncoders():
     leftWheel = [encoder_values[0],encoder_values[2]]
     rightWheel = [encoder_values[1],encoder_values[3]]
 
-    test_wheels = [leftWheel,rightWheel]
-
     debug_printer(debug,'getEncoders - encoder_values',encoder_values)
     debug_printer(encoder_debug,'getEncoders - encoder_values',encoder_values)
 
-    return test_wheels
+    return leftWheel, rightWheel
 
 #########################################################################################
 
@@ -484,40 +480,40 @@ def getEncoders():
 #########################################################################################
 #########################################################################################
 
-# def getRCnENC():
+def getRCnENC():
 
-#     global debug
-#     global encoder_debug
-#     global rc_enc_debug
-#     global test_pulsevals
-#     global test_wheels
+    global debug
+    global encoder_debug
+    global rc_enc_debug
+    global test_pulsevals
+    global test_wheels
 
-#     leftWheel = [0,0]
-#     rightWheel = [0,0]
-#     pulse1 = 1495
-#     pulse2 = 1492
+    leftWheel = [0,0]
+    rightWheel = [0,0]
+    pulse1 = 1495
+    pulse2 = 1492
 
-#     command = "@01?PI 1_@01?PI 2_@01?C 1_@01?C 2_@02?C 1_@02?C 2_\r"
+    command = "@01?PI 1_@01?PI 2_@01?C 1_@01?C 2_@02?C 1_@02?C 2_\r"
 
-#     time.sleep(0.0015)
-#     ser.write(command)  
-#     time.sleep(0.0015)
+    time.sleep(0.0015)
+    ser.write(command)  
+    time.sleep(0.0015)
 
-#     command_count = (2*6) - 1
-#     output = getdata3(command_count)
+    command_count = (2*6) - 1
+    output = getdata3(command_count)
 
-#     test_pulsevals = [clean_messages(output[0]),clean_messages(output[1])]
-#     test_encodervals = [clean_messages(output[2]),clean_messages(output[3]),clean_messages(output[4]),clean_messages(output[5])]
+    test_pulsevals = [clean_messages(output[0]),clean_messages(output[1])]
+    test_encodervals = [clean_messages(output[2]),clean_messages(output[3]),clean_messages(output[4]),clean_messages(output[5])]
 
-#     leftWheel = [test_encodervals[0],test_encodervals[2]]
-#     rightWheel = [test_encodervals[1],test_encodervals[3]]
+    leftWheel = [test_encodervals[0],test_encodervals[2]]
+    rightWheel = [test_encodervals[1],test_encodervals[3]]
 
-#     test_wheels = [leftWheel,rightWheel]
+    test_wheels = [leftWheel,rightWheel]
 
-#     debug_printer(debug,'rc_enc output',output)
-#     debug_printer(rc_enc_debug,'rc_enc output',[test_pulsevals,test_wheels])
+    debug_printer(debug,'rc_enc output',output)
+    debug_printer(rc_enc_debug,'rc_enc output',[test_pulsevals,test_wheels])
 
-#     return
+    return
 
 #########################################################################################
 
@@ -588,8 +584,8 @@ def TEST():
 
         try:
 
-            # pulses = getRCInput()
-            # time.sleep(0.01)
+            pulses = getRCInput()
+            time.sleep(0.01)
             encabs = getEncoders()
             error = 0
             time.sleep(0.01)
@@ -674,6 +670,7 @@ def odom_publisher():
 
     current_time = rospy.Time.now()
 
+    # getRCnENC()
     enc_now = test_wheels
 
 
@@ -810,7 +807,7 @@ def move_callback(data):
     global callback_debug
 
 
-    # pulses = test_pulsevals
+    pulses = test_pulsevals
     signs = [1,-1]
 
     debug_printer(debug,"RC_MODE",RC_MODE)
@@ -822,22 +819,40 @@ def move_callback(data):
 
     pub_time = rospy.get_time()
 
-    if (abs(data.linear.x) < v_max) and (abs(data.angular.z) < w_max):
+    if (pulses[0] > 1500) and (RC_MODE != 1):  #estop activated
 
-        [left,right] = data2vel(data)
+        ser.write('@00!EX\r')
+        EM_STOP = 1
+
+    elif (EM_STOP) and (pulses[1] > 1500):
+
+        ser.write('@00!MG\r')
+        EM_STOP = 0
+        RC_MODE = 1
+
+    elif (RC_MODE):
+
+        [left,right] = pulse2vel(pulses)
+        move_command(left,right)
 
     else:
 
-        left  = 0
-        right = 0
+        if (abs(data.linear.x) < v_max) and (abs(data.angular.z) < w_max):
 
-    debug_printer(debug,"left",left)
-    debug_printer(debug,"right",right)
-    debug_printer(speed_debug,"left",left)
-    debug_printer(speed_debug,"right",right)
+            [left,right] = data2vel(data)
+
+        else:
+
+            left  = 0
+            right = 0
+
+        debug_printer(debug,"left",left)
+        debug_printer(debug,"right",right)
+        debug_printer(speed_debug,"left",left)
+        debug_printer(speed_debug,"right",right)
 
 
-    move_command(left,right)
+        move_command(left,right)
 
 #########################################################################################
 
@@ -855,8 +870,7 @@ if __name__ == "__main__":
     while (not rospy.is_shutdown()) and (communication_error == 0):
 
         try:
-            # getRCnENC() - edit
-            getEncoders()
+            getRCnENC()
             odom_publisher()
             enc_last = test_wheels
             last_time = current_time
@@ -877,7 +891,7 @@ if __name__ == "__main__":
 
             if (RC_MODE):
 
-                # [left,right] = pulse2vel(test_pulsevals)
+                [left,right] = pulse2vel(test_pulsevals)
                 # move_command(left,right)
                 move_command(0,0)
 

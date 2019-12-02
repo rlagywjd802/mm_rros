@@ -106,11 +106,11 @@ roslaunch mm_moveit_config moveit_rviz.launch mm:=true rgbd1:=true rgbd2:=true
 ## base + arm + gripper - localization - move_base teb
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSBbase
-roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true switched:=true
+roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true dwa:=false
 
 ### remote pc
-roslaunch mm_moveit_config moveit_rviz.launch mm:=true rgbd1:=true
+rosrun rviz rviz -d $(find mm_slam)/rviz/base_rtabmap_teb.rviz
 
 ########################################################
 ## odometry error
