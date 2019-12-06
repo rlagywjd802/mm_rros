@@ -16,8 +16,9 @@
   <include unless="$(arg mm)" file="$(find mm_bringup)/launch/mm_state_publisher.launch"/>
 
   <!-- Localization mode -->
-  <arg     if="$(arg localization)" name="args" default=""/>
-  <arg unless="$(arg localization)" name="args" default="--delete_db_on_start"/>
+  <arg     if="$(arg localization)" name="args" default="--delete_db_on_start"/>
+  <arg unless="$(arg localization)" name="args" default=""/>
+
 
   <!-- Navigation -->
   <group if="$(arg localization)">
@@ -69,10 +70,11 @@
         <param     if="$(arg rgbd)" name="subscribe_rgbd" type="bool" value="true"/>
 
         <param unless="$(arg rgbd)" name="subscribe_depth" type="bool" value="true"/>
-        <param unless="$(arg rgbd)" name="subscribe_scan" type="bool" value="true"/>        
+        <param unless="$(arg rgbd)" name="subscribe_scan" type="bool" value="true"/>  
 
-        <remap from="odom" to="/odom"/>
-        
+        <!-- <remap from="odom" to="/odom"/> -->
+        <remap from="odom" to="/odometry/filtered"/>
+
         <remap     if="$(arg rgbd)" from="rgbd_image" to="/rgbd_image"/>
         <remap unless="$(arg rgbd)" from="scan" to="/kinect_scan"/>
 
@@ -87,9 +89,11 @@
         <param unless="$(arg odom)" name="approx_sync" type="bool" value="false"/> 
 
         <!-- localization mode -->
-        <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
-        <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
-        <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
+        <!-- <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/> -->
+        <!-- <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/> -->
+        <param name="Mem/IncrementalMemory" type="string" value="true"/>
+        <!-- <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/> -->
+        <param name="Mem/InitWMWithAllNodes" type="string" value="false"/>
 
         <!-- RTAB-Map's parameters -->
         <param name="RGBD/ProximityBySpace" type="string" value="false"/>

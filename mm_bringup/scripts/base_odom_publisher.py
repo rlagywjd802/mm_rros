@@ -162,7 +162,6 @@ def getdata3(number_of_commands):
     output = []
 
     while (line == '\r') or (line == '') or (line == '+\r'):
-
         line = slash_r.readline()
 
     start = 1
@@ -739,7 +738,7 @@ def odom_publisher():
 
     # set the covariance
     odom.pose.covariance  = [1e-3,0,0,0,0,0, 0,1e-3,0,0,0,0, 0,0,1e-6,0,0,0, 0,0,0,1e-6,0,0, 0,0,0,0,1e-6,0, 0,0,0,0,0,1e-3] ;                                                    
-    odom.twist.covariance = [1e-3,0,0,0,0,0, 0,1e-3,0,0,0,0, 0,0,1e-6,0,0,0, 0,0,0,1e-6,0,0, 0,0,0,0,1e-6,0, 0,0,0,0,0,1e-3] ;
+    odom.twist.covariance = [1e-3,0,0,0,0,0, 0,1e-3,0,0,0,0, 0,0,1e-6,0,0,0, 0,0,0,1e-6,0,0, 0,0,0,0,1e-6,0, 0,0,0,0,0,1e-2] ;
 
     base_odom.pose.covariance  = [1e-3,0,0,0,0,0, 0,1e-3,0,0,0,0, 0,0,1e-6,0,0,0, 0,0,0,1e-6,0,0, 0,0,0,0,1e-6,0, 0,0,0,0,0,1e-3] ;                                                    
     base_odom.twist.covariance = [1e-3,0,0,0,0,0, 0,1e-3,0,0,0,0, 0,0,1e-6,0,0,0, 0,0,0,1e-6,0,0, 0,0,0,0,1e-6,0, 0,0,0,0,0,1e-3] ;

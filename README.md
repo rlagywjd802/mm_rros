@@ -110,7 +110,7 @@ roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
 roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 localization:=true dwa:=false
 
 ### remote pc
-rosrun rviz rviz -d $(find mm_slam)/rviz/base_rtabmap_teb.rviz
+rosrun rviz rviz -d /home/mm/catkin_ws/src/mm_rros/mm_slam/rviz/base_rtabmap_teb.rviz
 
 ########################################################
 ## odometry error
@@ -121,7 +121,7 @@ roslaunch mm_bringup mm_odom_pusblisher.launch
 roslaunch mm_bringup description_publish.launch
 
 ### pc
-roslaunch robot_pose_ekf robot_pose_ekf.launch vo_used:=false
+<!-- roslaunch robot_pose_ekf robot_pose_ekf.launch vo_used:=false -->
 
 ########################################################
 # ORB_SLAM2
@@ -141,3 +141,7 @@ rosrun ORB_SLAM2 RGBD Vocabulary/ORBvoc.txt Examples/ROS/ORB_SLAM2/kinect.yaml
 # ps3joy
 rosrun ps3joy ps3joy.py
 roslaunch teleop_twist_joy teleop.launch
+
+1. slam + clean start
+2. slam + restart
+3. localization 

@@ -12,7 +12,8 @@
 		<rosparam file="$(find mm_navigation)/params/teb_local_planner_params.yaml" command="load"/>
 
 		<remap from="cmd_vel" 	to="/cmd_vel"/>
-		<remap from="odom"		to="/odom"/>
+		<!-- <remap from="odom"		to="/odom"/> -->
+		<remap from="odom"		to="/odometry/filtered"/>
 		<remap from="scan"		to="/kinect_scan"/>
 	</node>
 
