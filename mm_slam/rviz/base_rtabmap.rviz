@@ -4,11 +4,9 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Map1
         - /Global Map1/Planner1
-        - /Local Map1
         - /Local Map1/Planner1
-        - /Pose1
+        - /Odometry1
         - /TF1/Frames1
       Splitter Ratio: 0.498677254
     Tree Height: 921
@@ -66,6 +64,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
         base_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_lidar_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -524,6 +526,36 @@ Visualization Manager:
         {}
       Update Interval: 0
       Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/LaserScan
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 772
+      Min Color: 0; 0; 0
+      Min Intensity: 238
+      Name: LaserScan
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.00999999978
+      Style: Flat Squares
+      Topic: /scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -542,25 +574,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 47.6239777
+      Distance: 10.1232147
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -12.295886
-        Y: 4.53958654
+        X: 0.436872244
+        Y: 1.94925761
         Z: -1.68383076e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.42479646
+      Pitch: 1.09479642
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 2.49680161
+      Yaw: 0.711801648
     Saved: ~
 Window Geometry:
   Displays:

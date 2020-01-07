@@ -1,8 +1,5 @@
 controller_list:
-  - name: fake_base_controller
-    joints:
-      []
-  - name: fake_manipulator_controller
+  - name: fake_ur5_controller
     joints:
       - shoulder_pan_joint
       - shoulder_lift_joint
@@ -10,6 +7,9 @@ controller_list:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
-  - name: fake_gripper_controller
+  - name: fake_robotiq_controller
+    joints:
+      []
+  - name: fake_inspectorbot_controller
     joints:
       []

@@ -14,7 +14,7 @@ obstacle_layer:
   observation_sources: scan
   scan: 
    data_type: LaserScan
-   topic: /kinect_scan
+   topic: /scan_filtered
    marking: true
    clearing: true
    

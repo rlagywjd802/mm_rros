@@ -1,0 +1,27 @@
+<launch>
+	<arg name="gui"						default="true"/>
+	<arg name="new_map_name"	default="rtabmap.db"/>
+
+	<include file="$(find mm_bringup)/launch/mm_mobile_bringup.launch"/>
+
+	<include file="$(find mm_bringup)/launch/mm_kinect_bringup.launch">
+		<arg name="camera1" value="true"/>
+		<arg name="rgbd1" 	value="true"/>
+		<arg name="webcam" 	value="false"/>
+	</include>
+
+	<include file="$(find mm_bringup)/launch/mm_imu_bringup.launch"/>
+	
+	<include file="$(find mm_bringup)/launch/mm_laser_bringup.launch"/>
+
+	<include file="$(find mm_slam)/launch/mm_rtabmap.launch">
+		<arg name="camera" 				value="kinect1"/>
+		<arg name="odom"					value="false"/>
+		<arg name="rgbd"					value="true"/>
+		<arg name="database_path" value="$(arg new_map_name)"/>
+	</include>
+	
+
+  <node if="$(arg gui)" name="rviz" pkg="rviz" type="rviz" args="-d $(find mm_slam)/rviz/base_rtabmap_teb.rviz"/>
+  	
+</launch>

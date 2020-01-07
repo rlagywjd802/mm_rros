@@ -8,17 +8,13 @@
   <arg name="rviz"            default="false"/>
   <arg name="camera"          default="camera"/>  
   <arg name="localization"    default="false"/>
-  <arg name="mm"              default="false"/>
+  <arg name="state_publish"   default="true"/>
   <arg name="dwa"             default="true"/>
   <arg name="odom"            default="true"/>
+  <arg name="args"            default=""/>
 
   <!-- mm state publisher -->
-  <include unless="$(arg mm)" file="$(find mm_bringup)/launch/mm_state_publisher.launch"/>
-
-  <!-- Localization mode -->
-  <arg     if="$(arg localization)" name="args" default="--delete_db_on_start"/>
-  <arg unless="$(arg localization)" name="args" default=""/>
-
+  <include if="$(arg state_publish)" file="$(find mm_bringup)/launch/mm_state_publisher.launch"/>
 
   <!-- Navigation -->
   <group if="$(arg localization)">
@@ -49,7 +45,7 @@
     </node>
 
     <!-- Kinect cloud to laser scan -->
-    <node unless="$(arg rgbd)" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+<!--     <node unless="$(arg rgbd)" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
       <remap from="image" to="/$(arg camera)/depth_registered/image_raw"/>
       <remap from="camera_info" to="/$(arg camera)/depth_registered/camera_info"/>
       <remap from="scan" to="/kinect_scan"/>
@@ -57,7 +53,7 @@
       <param name="scan_height" type="double" value="100"/>
       <param name="range_max" type="int" value="4"/>
       <param name="output_frame_id" type="string" value="$(arg camera)_depth_frame"/>
-    </node>
+    </node> -->
 
     <!-- slam -->
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg args)">
@@ -76,7 +72,7 @@
         <remap from="odom" to="/odometry/filtered"/>
 
         <remap     if="$(arg rgbd)" from="rgbd_image" to="/rgbd_image"/>
-        <remap unless="$(arg rgbd)" from="scan" to="/kinect_scan"/>
+        <remap unless="$(arg rgbd)" from="scan" to="/scan_filtered"/>
 
         <!-- input -->
         <remap from="rgb/image" to="/$(arg camera)/rgb/image_rect_color"/>

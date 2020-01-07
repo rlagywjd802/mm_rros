@@ -1,0 +1,9 @@
+<library path="lib/libmm_gui_rviz_demo">
+	<class name="mm_gui_rviz_demo/MMGuiRvizDemo"
+				type="mm_gui_rviz_demo::MMGuiRvizDemo"
+				base_class_type="rviz::Panel">
+		<description>
+			A panel widget allowing control of a ROS pipeline
+		</description>
+	</class>
+</library>

@@ -120,7 +120,7 @@ def initialize():
 #########################################################################################
 
 debug = 0
-encoder_debug = 0
+encoder_debug = 1
 rc_debug = 0
 mode_debug = 0
 speed_debug = 1
@@ -135,9 +135,9 @@ def debug_printer(debug,variable,variable_value):
 
     if debug == 1:
 
-        # print '======',variable,':',variable_value,'======'
-        msg = "======" + str(variable) + ":" + str(variable_value)
-        rospy.loginfo(msg)
+        print '======',variable,':',variable_value,'======'
+        # msg = "======" + str(variable) + ":" + str(variable_value)
+        # rospy.loginfo(msg)
 
     return 
 
@@ -158,11 +158,19 @@ def getdata3(number_of_commands):
     global debug
     global getdata_debug
 
-    line = slash_r.readline()
+    # line = slash_r.readline()
     output = []
+    line = ''
+    try:
+        while (line == '\r') or (line == '') or (line == '+\r'):
+            line = slash_r.readline()
+    except Exception as e:
+        return output
+    else:
+        pass
+    finally:
+        pass
 
-    while (line == '\r') or (line == '') or (line == '+\r'):
-        line = slash_r.readline()
 
     start = 1
 
@@ -456,22 +464,26 @@ def getEncoders():
     global test_debug
     global test_wheels
 
-    leftWheel = [0,0]
-    rightWheel = [0,0]
+    leftWheel = [-1,-1]
+    rightWheel = [-1,-1]
 
     encoder_absolute = reader('enc_abs')
 
-    encoder_values = [clean_messages(encoder_absolute[0]),clean_messages(encoder_absolute[1]),clean_messages(encoder_absolute[2]),clean_messages(encoder_absolute[3])]
-    
-    leftWheel = [encoder_values[0],encoder_values[2]]
-    rightWheel = [encoder_values[1],encoder_values[3]]
-
-    test_wheels = [leftWheel,rightWheel]
-
+    test_wheels = [leftWheel, rightWheel]
+    # if len(encoder_absolute) != 0:    #############
+    if len(encoder_absolute) == 4:
+        encoder_values = [clean_messages(encoder_absolute[0]),clean_messages(encoder_absolute[1]),clean_messages(encoder_absolute[2]),clean_messages(encoder_absolute[3])]
+        leftWheel = [encoder_values[0],encoder_values[2]]
+        rightWheel = [encoder_values[1],encoder_values[3]]
+        test_wheels = [leftWheel,rightWheel]
+    else:
+        print(len(encoder_absolute))    #############
+        return False, test_wheels
+        # pass
     debug_printer(debug,'getEncoders - encoder_values',encoder_values)
     debug_printer(encoder_debug,'getEncoders - encoder_values',encoder_values)
 
-    return test_wheels
+    return True, test_wheels
 
 #########################################################################################
 
@@ -588,7 +600,7 @@ def TEST():
         try:
 
             # pulses = getRCInput()
-            # time.sleep(0.01)
+            time.sleep(0.01)
             encabs = getEncoders()
             error = 0
             time.sleep(0.01)
@@ -786,10 +798,10 @@ mps_to_movecmd = 20.0/0.1033401
 rps_to_movecmd = 20.0/0.20862
 
 # max linear velocity
-v_max = 0.5
+v_max = 0.9
 
 # max angular velocity
-w_max = 1.0
+w_max = 1.2
 
 
 def sign(a):
@@ -826,6 +838,7 @@ def move_callback(data):
         [left,right] = data2vel(data)
 
     else:
+        rospy.logwarn("cmdvel out of bound")
 
         left  = 0
         right = 0
@@ -850,46 +863,51 @@ def move_callback(data):
 
 if __name__ == "__main__":
     TEST()
-    initialize()
-    while (not rospy.is_shutdown()) and (communication_error == 0):
+    battery_level = reader('battery')   ####
+    print('*'*50)                       ####
+    print(battery_level)                ####
+    # initialize()
+    # while (not rospy.is_shutdown()) and (communication_error == 0):
 
-        try:
-            # getRCnENC() - edit
-            getEncoders()
-            odom_publisher()
-            enc_last = test_wheels
-            last_time = current_time
-            r.sleep()
-            time_now = rospy.get_time()
-            # print "time diff:",time_now - pub_time
+    #     try:
+    #         # getRCnENC() - edit
+    #         (_, flag) = getEncoders()
+    #         if False == flag:
+    #             continue
+    #         odom_publisher()
+    #         enc_last = test_wheels
+    #         last_time = current_time
+    #         r.sleep()
+    #         time_now = rospy.get_time()
+    #         # print "time diff:",time_now - pub_time
 
-            cmd_vel_timeout = 0.6 # seconds
+    #         cmd_vel_timeout = 0.6 # seconds
 
-            if (time_now - pub_time > cmd_vel_timeout):
+    #         if (time_now - pub_time > cmd_vel_timeout):
 
-                RC_MODE = 1
-                ser.write('@00!MG\r')
+    #             RC_MODE = 1
+    #             ser.write('@00!MG\r')
 
-            else:
+    #         else:
 
-                RC_MODE = 0
+    #             RC_MODE = 0
 
-            if (RC_MODE):
+    #         if (RC_MODE):
 
-                # [left,right] = pulse2vel(test_pulsevals)
-                # move_command(left,right)
-                move_command(0,0)
+    #             # [left,right] = pulse2vel(test_pulsevals)
+    #             # move_command(left,right)
+    #             move_command(0,0)
 
-        except KeyboardInterrupt:
+    #     except KeyboardInterrupt:
 
-            left = 0
-            right = 0
-            move_command(left,right)
-            ser.close()
+    #         left = 0
+    #         right = 0
+    #         move_command(left,right)
+    #         ser.close()
 
-    left = 0
-    right = 0
-    move_command(left,right)
+    # left = 0
+    # right = 0
+    # move_command(left,right)
     ser.close()
 
 #########################################################################################

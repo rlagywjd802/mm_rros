@@ -7,11 +7,9 @@ Panels:
         - /Global Options1
         - /Map1
         - /Local Planner1
-        - /Global Planner1/GlobalPath1
+        - /Global Planner1
         - /Robot1
-        - /Robot1/TF1
         - /Robot1/TF1/Frames1
-        - /Pose1
       Splitter Ratio: 0.605095983
     Tree Height: 772
   - Class: rviz/Selection
@@ -32,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2
+    SyncSource: LaserScan
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -189,17 +187,17 @@ Visualization Manager:
           Enabled: true
           Invert Rainbow: false
           Max Color: 255; 255; 255
-          Max Intensity: 1
+          Max Intensity: 773
           Min Color: 0; 0; 0
-          Min Intensity: 1
+          Min Intensity: 231
           Name: LaserScan
           Position Transformer: XYZ
           Queue Size: 10
           Selectable: true
-          Size (Pixels): 3
-          Size (m): 0.100000001
-          Style: Flat Squares
-          Topic: /kinect_scan
+          Size (Pixels): 5
+          Size (m): 0.0299999993
+          Style: Points
+          Topic: /scan_filtered
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true
@@ -233,8 +231,30 @@ Visualization Manager:
               Value: true
             base_imu_link:
               Value: false
+            base_laser_link:
+              Value: true
             base_link:
               Value: false
+            camera_bottom_screw_frame:
+              Value: true
+            camera_color_frame:
+              Value: true
+            camera_color_optical_frame:
+              Value: true
+            camera_depth_frame:
+              Value: true
+            camera_depth_optical_frame:
+              Value: true
+            camera_left_ir_frame:
+              Value: true
+            camera_left_ir_optical_frame:
+              Value: true
+            camera_link:
+              Value: true
+            camera_right_ir_frame:
+              Value: true
+            camera_right_ir_optical_frame:
+              Value: true
             ee_link:
               Value: false
             forearm_link:
@@ -263,16 +283,6 @@ Visualization Manager:
               Value: false
             kinect1_rgb_optical_frame:
               Value: false
-            kinect2_base_link:
-              Value: false
-            kinect2_frame_optical:
-              Value: false
-            kinect2_head_link:
-              Value: false
-            kinect2_link:
-              Value: false
-            kinect2_neck_link:
-              Value: false
             left_inner_finger:
               Value: false
             left_inner_finger_pad:
@@ -286,6 +296,10 @@ Visualization Manager:
             map:
               Value: true
             odom:
+              Value: true
+            realsense_base_link:
+              Value: true
+            realsense_mount_link:
               Value: true
             rear_left_wheel_link:
               Value: false
@@ -302,8 +316,6 @@ Visualization Manager:
             right_outer_knuckle:
               Value: false
             robotiq_arg2f_base_link:
-              Value: false
-            robotiq_ee:
               Value: false
             shoulder_link:
               Value: false
@@ -328,6 +340,8 @@ Visualization Manager:
                 base_footprint:
                   bare_base_link:
                     base_imu_link:
+                      {}
+                    base_laser_link:
                       {}
                     base_link:
                       base:
@@ -356,8 +370,6 @@ Visualization Manager:
                                           right_inner_finger:
                                             right_inner_finger_pad:
                                               {}
-                                    robotiq_ee:
-                                      {}
                     front_left_wheel_link:
                       {}
                     front_right_wheel_link:
@@ -376,12 +388,22 @@ Visualization Manager:
                             kinect1_rgb_frame:
                               kinect1_rgb_optical_frame:
                                 {}
-                    kinect2_base_link:
-                      kinect2_neck_link:
-                        kinect2_head_link:
-                          kinect2_link:
-                            kinect2_frame_optical:
-                              {}
+                    realsense_mount_link:
+                      realsense_base_link:
+                        camera_bottom_screw_frame:
+                          camera_link:
+                            camera_depth_frame:
+                              camera_color_frame:
+                                camera_color_optical_frame:
+                                  {}
+                              camera_depth_optical_frame:
+                                {}
+                              camera_left_ir_frame:
+                                camera_left_ir_optical_frame:
+                                  {}
+                              camera_right_ir_frame:
+                                camera_right_ir_optical_frame:
+                                  {}
                     rear_left_wheel_link:
                       {}
                     rear_right_wheel_link:
@@ -510,25 +532,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 23.0814056
+      Distance: 19.4127846
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.706073523
-        Y: 0.0815832913
-        Z: -4.56334019
+        X: -1.12513232
+        Y: -2.77879381
+        Z: -3.67166018
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.45479643
+      Pitch: 1.50979638
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.15541506
+      Yaw: 3.10542083
     Saved: ~
 Window Geometry:
   Displays:

@@ -4,6 +4,7 @@
 	<arg name="switched" 	default="false"/>
 	<arg name="rgbd1" 		default="false"/>
 	<arg name="rgbd2" 		default="false"/>
+	<arg name="webcam" 		default="true"/>
 
 	<include if="$(arg camera1)" file="$(find openni_launch)/launch/openni.launch">
 		<arg unless="$(arg switched)" 	name="device_id"	value="#1"/>
@@ -29,6 +30,6 @@
 		<arg name="rviz" 	value="false"/>
 	</include>
 
-	<node name="usb_cam_node" pkg="usb_cam" type="usb_cam_node"/>
+	<node if="$(arg webcam)" name="usb_cam_node" pkg="usb_cam" type="usb_cam_node"/>
 
 </launch>

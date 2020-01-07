@@ -1,0 +1,32 @@
+<launch>
+	<arg name="rviz"	default="false"/>
+	<arg name="gui"		default="true"/>
+
+	<!-- cameras -->
+	<include file="$(find mm_bringup)/launch/mm_realsense_bringup.launch"/>
+	
+	<!-- arm -->
+	<include file="$(find ur_modern_driver)/launch/mm_ur5_bringup.launch">
+		<arg name="robot_ip" 		value="192.168.2.2"/>
+	</include>
+
+	<include file="$(find mm_moveit_config)/launch/mm_moveit_planning_execution.launch"/>
+
+	<!-- gripper -->
+	<include file="$(find mm_bringup)/launch/mm_gripper_bringup.launch"/>
+
+	<!-- gui execution -->
+  	<node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run_demo" type="mm_gui_moveit_approach_execution.py"/>
+  	<node name="mm_gui_pcl_execution" pkg="mm_gui_run_demo" type="mm_gui_pcl_execution.py" output="screen"/>
+
+  	<!-- rviz -->
+	<arg name="debug" default="false" />
+	<arg unless="$(arg debug)" name="launch_prefix" value="" />
+	<arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+	<node if="$(arg rviz)" name="demo_rviz" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" args="-d $(find mm_gui_rviz_demo)/rviz/mm_demo_moveit.rviz" output="screen">
+		<rosparam command="load" file="$(find mm_moveit_config)/config/kinematics.yaml"/>
+	</node>
+
+  	
+</launch>

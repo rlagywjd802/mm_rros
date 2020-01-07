@@ -1,0 +1,12 @@
+<launch>
+	<include file="$(find openni_launch)/launch/openni.launch">
+		<arg name="camera" 				value="kinect1"/>
+		<arg name="depth_registration" 	value="true"/>
+	</include>
+
+	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
+		<arg name="filters" 			value="pointcloud"/>
+	</include>
+
+	<include file="$(find usb_cam)/launch/usb_cam.launch"/>
+</launch>

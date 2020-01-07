@@ -1,9 +1,10 @@
 <launch>
 	<arg name="device" 	default="/dev/ttyUSBbase"/>
-  
+
   <node name="mm_odom_publisher" pkg="mm_bringup" type="base_odom_publisher.py" args="$(arg device)" output="screen" respawn="true">
   	<param name="initial_x" type="double" value="1.0"/>
   	<param name="initial_y" type="double" value="0.0"/>
   	<param name="initial_th" type="double" value="0.0"/>
   </node>
+  
 </launch>

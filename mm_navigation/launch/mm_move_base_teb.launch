@@ -14,7 +14,7 @@
 		<remap from="cmd_vel" 	to="/cmd_vel"/>
 		<!-- <remap from="odom"		to="/odom"/> -->
 		<remap from="odom"		to="/odometry/filtered"/>
-		<remap from="scan"		to="/kinect_scan"/>
+		<remap from="scan"		to="/scan_filtered"/>
 	</node>
 
 </launch>

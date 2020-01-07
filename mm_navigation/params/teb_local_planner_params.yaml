@@ -1,6 +1,6 @@
 TebLocalPlannerROS:
   odom_topic: /odometry/filtered # odom   test_1202 
-  map_frame: /map
+  map_frame: /odom
     
   # Trajectory
 
@@ -13,21 +13,21 @@ TebLocalPlannerROS:
     
   # Robot
          
-  max_vel_x: 0.2
-  max_vel_x_backwards: 0.2
+  max_vel_x: 0.4
+  max_vel_x_backwards: 0.05
   max_vel_theta: 0.2
-  acc_lim_x: 1.5
-  acc_lim_theta: 1.5
-  min_turning_radius: 0.5 # 0.0   test_1202
+  acc_lim_x: 0.10
+  acc_lim_theta: 0.1
+  min_turning_radius: 0.0 # 0.0   test_1202
   footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
     type: "polygon"
-    # vertices: [[0.25, -0.45], [0.25, 0.85], [-1.05, 0.85], [-1.05, -0.45]]
-    vertices: [[0.05, -0.25], [0.05, 0.65], [-0.85, 0.65], [-0.85, -0.25]]
+    vertices: [[0.15, -0.35], [0.15, 0.75], [-0.95, 0.75], [-0.95, -0.35]]
+    # vertices: [[0.05, -0.25], [0.05, 0.65], [-0.85, 0.65], [-0.85, -0.25]]
 
   # GoalTolerance
 
-  xy_goal_tolerance: 0.2
-  yaw_goal_tolerance: 0.3
+  xy_goal_tolerance: 0.3
+  yaw_goal_tolerance: 0.4
   free_goal_vel: False
     
   # Obstacles
@@ -47,15 +47,15 @@ TebLocalPlannerROS:
   optimization_activate: True
   optimization_verbose: False
   penalty_epsilon: 0.1 # 0.1 - test_1202
-  weight_max_vel_x: 2
+  weight_max_vel_x: 1
   weight_max_vel_theta: 1
   weight_acc_lim_x: 1
   weight_acc_lim_theta: 1
-  weight_kinematics_nh: 1000
-  weight_kinematics_forward_drive: 1
-  weight_kinematics_turning_radius: 1.0 # 1 - test_1202
-  weight_optimaltime: 1 # 1 - test_1202
-  weight_obstacle: 20 # 50 - test_1202
+  weight_kinematics_nh: 300
+  weight_kinematics_forward_drive: 4.0
+  weight_kinematics_turning_radius: 1.5 # 1 - test_1202
+  weight_optimaltime: 0.3 # 1 - test_1202
+  weight_obstacle: 50 # 50 - test_1202
   weight_dynamic_obstacle: 10 # not in use yet
   alternative_time_cost: False # not in use yet
 
@@ -63,7 +63,7 @@ TebLocalPlannerROS:
 
   # Homotopy Class Planner
 
-  enable_homotopy_class_planning: False # True - test_1202
+  enable_homotopy_class_planning: True # True - test_1202
   enable_multithreading: True
   simple_exploration: False
   max_number_classes: 4

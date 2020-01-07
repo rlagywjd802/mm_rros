@@ -21,7 +21,7 @@ rosrun mm_bringup base_odom_publisher.py
 roslaunch openni_launch openni.launch device_id:=#1 camera:=kinect1 depth_registration:=true
 roslaunch openni_launch openni.launch device_id:=#2 camera:=kinect2 depth_registration:=true
 ### arm (MoveIt!)
-roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=192.168.1.9
+roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=192.168.2.2
 roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch 
 roslaunch ur5_moveit_config moveit_rviz.launch config:=true
 -- robot_description from ur5_upload.launch(ur5_brinup.launch)
@@ -68,8 +68,8 @@ roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSBgripper
 ### robot
 roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSBbase
 roslaunch mm_bringup mm_kinect_bringup.launch camera1:=true rgbd1:=true
-roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 mm:=false database_path:=<file_name>
--> roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 mm:=false odom:=false database_path:=<file_name>
+roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 database_path:=<file_name>
+-> roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 odom:=false database_path:=<file_name>
 
 ### remote pc
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
@@ -79,7 +79,7 @@ rqt_console
 
 ## base - slam playback
 rosbag play "<file_name>.bag"
-roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 mm:=false rviz:=true
+roslaunch mm_slam mm_rtabmap.launch camera:=kinect1 rviz:=true
 rosrun map_server map_saver map:=/rtabmap/proj_map
 ** tf error
 
@@ -141,7 +141,28 @@ rosrun ORB_SLAM2 RGBD Vocabulary/ORBvoc.txt Examples/ROS/ORB_SLAM2/kinect.yaml
 # ps3joy
 rosrun ps3joy ps3joy.py
 roslaunch teleop_twist_joy teleop.launch
+########################################################
 
-1. slam + clean start
-2. slam + restart
-3. localization 
+
+
+
+
+
+
+
+
+########################################################
+# robot state publisher
+roslaunch mm_slam mm_rtabmap.launch state_publish:=true(default)
+roslaunch mm_bringup mm_ur5_bringup.launch description:=false(default)
+--> roslaunch ur_modern_driver mm_ur5_bringup.launch description:=false(default)
+mm_moveit_planning_execution.launch -> move_group.launch -> planning_execution.launch
+
+########################################################
+# common errors
+
+[ WARN] [1575932977.009394537]: Could not get transform from /odom to /base_footprint after 0.200000 seconds (for stamp=1575932976.754261)! Error="Could not find a connection between 'odom' and 'base_footprint' because they are not part of the same tree.Tf has two or more unconnected trees.. canTransform returned after 0.201348 timeout was 0.2.".
+
+turn on the base
+
+/camera/depth/color/points
