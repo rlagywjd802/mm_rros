@@ -1,6 +1,6 @@
 <launch>
 	<arg name="rviz"	default="false"/>
-	<arg name="gui"		default="true"/>
+	<arg name="sim"		default="false"/>
 
 	<!-- cameras -->
 	<include file="$(find mm_bringup)/launch/mm_realsense_bringup.launch"/>
@@ -16,19 +16,19 @@
 	<include file="$(find mm_bringup)/launch/mm_gripper_bringup.launch"/>
 
 	<!-- gui execution -->
-  	<node name="mm_gui_pcl_execution" pkg="mm_gui_run_demo" type="mm_gui_pcl_execution.py" output="screen"/>
+  	<node name="mm_gui_pcl_execution" pkg="mm_gui_run" type="mm_gui_pcl_execution.py" output="screen"/>
 	
 	<!-- demo 12/13 -->
-	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run_demo" type="mm_gui_moveit_approach_execution.py"/> -->
+	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run" type="mm_gui_moveit_approach_execution.py"/> -->
 	
 	<!-- demo 01/10 -->
-  	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run_demo" type="mm_gui_moveit_interpolation_execution.py"/> -->
-  	<!-- <node name="waypoint_controls" pkg="mm_gui_run_demo" type="waypoint_controls.py"/> -->
+  	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run" type="mm_gui_moveit_interpolation_execution.py"/> -->
+  	<!-- <node name="waypoint_controls" pkg="mm_gui_run" type="waypoint_controls.py"/> -->
   	
   	<!-- rviz -->
 	<node if="$(arg rviz)" name="demo_rviz" pkg="rviz" type="rviz" respawn="false" 
-		args="-d $(find mm_gui_rviz_demo)/rviz/mm_demo_moveit.rviz" output="screen">
-		<rosparam command="load" file="$(find mm_moveit_config)/config/kinematics.yaml"/>
+		args="-d $(find mm_bringup)/rviz/mm_demo.rviz" output="screen">
+		<!-- <rosparam command="load" file="$(find mm_moveit_config)/config/kinematics.yaml"/> -->
 	</node>
 
   	

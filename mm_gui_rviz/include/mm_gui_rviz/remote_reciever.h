@@ -32,15 +32,15 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#ifndef MM_GUI_RVIZ_DEMO_REMOTE_RECIEVER_H
-#define MM_GUI_RVIZ_DEMO_REMOTE_RECIEVER_H
+#ifndef MM_GUI_RVIZ_REMOTE_RECIEVER_H
+#define MM_GUI_RVIZ_REMOTE_RECIEVER_H
 
 #include <std_msgs/Bool.h>
 #include <actionlib_msgs/GoalID.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
-namespace mm_gui_rviz_demo
+namespace mm_gui_rviz
 {
 class RemoteReciever
 {
@@ -291,6 +291,6 @@ protected:
   ros::NodeHandle nh_;
 };
 
-}  // end namespace mm_gui_rviz_demo
+}  // end namespace mm_gui_rviz
 
-#endif  // MM_GUI_RVIZ_DEMO_REMOTE_RECIEVER_H
+#endif  // MM_GUI_RVIZ_REMOTE_RECIEVER_H

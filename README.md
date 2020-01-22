@@ -1,7 +1,16 @@
 # mm_rros
-These are package for NIST mobile manipulator projects.
+These are packages for NIST mobile manipulator projects.
 
-version: v1.0 (demo 01/10)
+version: v1.1b
+- delete mm_rviz_gui/
+- change mm_gui_rviz_demo/ to mm_gui_rviz/ 
+- change mm_gui_run_demo/ to mm_gui_run/ and clean up
+- remove camera_ir_frame... in mobile_manipulator.srdf
+(to-do)
+- log system in python
+- integrate launch file for 3d cameras 
+- change camera to realsense1 
+- gui upgrade
 
 # packages
 
@@ -187,3 +196,6 @@ rosrun mm_gui_run_demo mm_gui_moveit_approach_execution.py
 roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=true
 rosrun mm_gui_run_demo mm_gui_moveit_interpolation_execution.py debug
 rosrun mm_gui_run_demo waypoint_controls.py debug 
+
+## 01/24
+roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=true

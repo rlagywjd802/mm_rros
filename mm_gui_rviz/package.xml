@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>mm_gui_rviz_demo</name>
+  <name>mm_gui_rviz</name>
   <version>0.0.0</version>
-  <description>The mm_gui_rviz_demo package</description>
+  <description>The mm_gui_rviz package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

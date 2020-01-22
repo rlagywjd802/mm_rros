@@ -36,10 +36,6 @@
         <link name="camera_color_frame" />
         <link name="camera_color_optical_frame" />
         <link name="camera_depth_optical_frame" />
-        <link name="camera_left_ir_frame" />
-        <link name="camera_left_ir_optical_frame" />
-        <link name="camera_right_ir_frame" />
-        <link name="camera_right_ir_optical_frame" />
         <link name="front_left_wheel_link" />
         <link name="front_right_wheel_link" />
         <link name="base_imu_link" />

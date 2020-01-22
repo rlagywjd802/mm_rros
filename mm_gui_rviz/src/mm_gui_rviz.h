@@ -32,8 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#ifndef MM_RVIZ_GUI__MM_RVIZ_GUI_H
-#define MM_RVIZ_GUI__MM_RVIZ_GUI_H
+#ifndef MM_GUI_RVIZ__MM_GUI_RVIZ_H
+#define MM_GUI_RVIZ__MM_GUI_RVIZ_H
 
 #ifndef Q_MOC_RUN
 #include <ros/ros.h>
@@ -44,20 +44,21 @@
 #include <QPushButton>
 #include <QComboBox>
 
-#include <mm_rviz_gui/remote_reciever.h>
+#include <mm_gui_rviz/remote_reciever.h>
 
 class QLineEdit;
 class QSpinBox;
 class QVBoxLayout;
+class QHBoxLayout;
 class QFrame;
 
-namespace mm_rviz_gui
+namespace mm_gui_rviz
 {
-class MMRvizGui : public rviz::Panel
+class MMGuiRviz : public rviz::Panel
 {
   Q_OBJECT
 public:
-  explicit MMRvizGui(QWidget* parent = 0);
+  explicit MMGuiRviz(QWidget* parent = 0);
 
   virtual void load(const rviz::Config& config);
   virtual void save(rviz::Config config) const;
@@ -66,9 +67,13 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
 
-  void addTitle(std::string str);
+  void addLabelX();
 
-  void moveBaseStop();
+  void addLabelY();
+
+  void addLabelZ();
+
+  void addTitle(std::string str);
 
   void moveArmPlan();
 
@@ -80,20 +85,67 @@ protected Q_SLOTS:
   
   void moveGripperClose();
 
+  void pclCapture();
+
+  void pclClear();
+
+  void approachArmPlan();
+
+  void approachArmExcute();
+
+  void emergencyStop();
+
+  void moveXP();
+
+  void moveXM();
+
+  void moveYP();
+
+  void moveYM();
+
+  void moveZP();
+
+  void moveZM();
+
+  void addWaypoint();
+
+  void removeWaypoint();
+
+  void computeInterpolation();
+
+  void executeInterpolation();
+
 protected:
   QVBoxLayout* layout;
+  QHBoxLayout* sub_layout;
+  QVBoxLayout* subx_layout;
+  QVBoxLayout* suby_layout;
+  QVBoxLayout* subz_layout;
   
-  QPushButton* btn_base_stop_;
-  QPushButton* btn_arm_plan_;
-  QPushButton* btn_arm_execute_;
-  QPushButton* btn_arm_stop_;
   QPushButton* btn_gripper_open_;
   QPushButton* btn_gripper_close_;
+  QPushButton* btn_pcl_capture_;
+  QPushButton* btn_pcl_clear_;
+  QPushButton* btn_approach_plan_;
+  QPushButton* btn_approach_execute_;
+  QPushButton* btn_emergency_stop_;
+
+  QPushButton* btn_move_xp_;
+  QPushButton* btn_move_xm_;
+  QPushButton* btn_move_yp_;
+  QPushButton* btn_move_ym_;
+  QPushButton* btn_move_zp_;
+  QPushButton* btn_move_zm_;
+
+  QPushButton* btn_waipoint_add_;
+  QPushButton* btn_waipoint_remove_;
+  QPushButton* btn_interpolation_compute_;
+  QPushButton* btn_interpolation_execute_;
 
   QFrame* line;
   RemoteReciever remote_reciever_;
 };
 
-}  // end namespace mm_rviz_gui
+}  // end namespace mm_gui_rviz
 
-#endif  // MM_RVIZ_GUI__MM_RVIZ_GUI_H
+#endif  // MM_GUI_RVIZ__MM_GUI_RVIZ_H

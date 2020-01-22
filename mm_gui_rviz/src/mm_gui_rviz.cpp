@@ -45,11 +45,11 @@
 #include <QVBoxLayout>
 #include <QFrame>
 
-#include "mm_gui_rviz_demo.h"
+#include "mm_gui_rviz.h"
 
-namespace mm_gui_rviz_demo
+namespace mm_gui_rviz
 {
-MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
+MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
 {
   //////////////////////////////
   // Button
@@ -209,7 +209,7 @@ MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
   btn_emergency_stop_->setEnabled(true);
 }
 
-void MMGuiRvizDemo::addLabelX()
+void MMGuiRviz::addLabelX()
 {
   QLabel* label = new QLabel(QString::fromStdString("x"));
   label->setAlignment(Qt::AlignCenter);
@@ -217,7 +217,7 @@ void MMGuiRvizDemo::addLabelX()
   subx_layout->addWidget(label);
 }
 
-void MMGuiRvizDemo::addLabelY()
+void MMGuiRviz::addLabelY()
 {
   QLabel* label = new QLabel(QString::fromStdString("y"));
   label->setAlignment(Qt::AlignCenter);
@@ -225,7 +225,7 @@ void MMGuiRvizDemo::addLabelY()
   suby_layout->addWidget(label);
 }
 
-void MMGuiRvizDemo::addLabelZ()
+void MMGuiRviz::addLabelZ()
 {
   QLabel* label = new QLabel(QString::fromStdString("z"));
   label->setAlignment(Qt::AlignCenter);
@@ -233,7 +233,7 @@ void MMGuiRvizDemo::addLabelZ()
   subz_layout->addWidget(label);
 }
 
-void MMGuiRvizDemo::addTitle(std::string str)
+void MMGuiRviz::addTitle(std::string str)
 {
   QLabel* label = new QLabel(QString::fromStdString(str));
   label->setAlignment(Qt::AlignCenter);
@@ -241,102 +241,102 @@ void MMGuiRvizDemo::addTitle(std::string str)
   layout->addWidget(label);
 }
 
-void MMGuiRvizDemo::emergencyStop()
+void MMGuiRviz::emergencyStop()
 {
   remote_reciever_.publishEmergencyStop();
 }
 
-void MMGuiRvizDemo::moveGripperOpen()
+void MMGuiRviz::moveGripperOpen()
 {
   remote_reciever_.publishGripperOpen();
 }
 
-void MMGuiRvizDemo::moveGripperClose()
+void MMGuiRviz::moveGripperClose()
 {
   remote_reciever_.publishGripperClose();
 }
 
-void MMGuiRvizDemo::pclCapture()
+void MMGuiRviz::pclCapture()
 {
   remote_reciever_.publishPclCapture();
 }
 
-void MMGuiRvizDemo::pclClear()
+void MMGuiRviz::pclClear()
 {
   remote_reciever_.publishPclClear();
 }
 
-void MMGuiRvizDemo::approachArmPlan()
+void MMGuiRviz::approachArmPlan()
 {
   remote_reciever_.publishApproachPlan();
 }
 
-void MMGuiRvizDemo::approachArmExcute()
+void MMGuiRviz::approachArmExcute()
 {
   remote_reciever_.publishApproachExcute();
 }
 
-void MMGuiRvizDemo::moveXP()
+void MMGuiRviz::moveXP()
 {
   remote_reciever_.publishMoveXP();
 }
 
-void MMGuiRvizDemo::moveXM()
+void MMGuiRviz::moveXM()
 {
   remote_reciever_.publishMoveXM();
 }
 
-void MMGuiRvizDemo::moveYP()
+void MMGuiRviz::moveYP()
 {
   remote_reciever_.publishMoveYP();
 }
 
-void MMGuiRvizDemo::moveYM()
+void MMGuiRviz::moveYM()
 {
   remote_reciever_.publishMoveYM();
 }
 
-void MMGuiRvizDemo::moveZP()
+void MMGuiRviz::moveZP()
 {
   remote_reciever_.publishMoveZP();
 }
 
-void MMGuiRvizDemo::moveZM()
+void MMGuiRviz::moveZM()
 {
   remote_reciever_.publishMoveZM();
 }
 
-void MMGuiRvizDemo::addWaypoint()
+void MMGuiRviz::addWaypoint()
 {
   remote_reciever_.publishAddWaypoint();
 }
 
-void MMGuiRvizDemo::removeWaypoint()
+void MMGuiRviz::removeWaypoint()
 {
   remote_reciever_.publishRemoveWaypoint();
 }
 
-void MMGuiRvizDemo::computeInterpolation()
+void MMGuiRviz::computeInterpolation()
 {
   remote_reciever_.publishComputeInterpolation();
 }
 
-void MMGuiRvizDemo::executeInterpolation()
+void MMGuiRviz::executeInterpolation()
 {
   remote_reciever_.publishExecuteInterpolation();
 }
 
 
-void MMGuiRvizDemo::save(rviz::Config config) const
+void MMGuiRviz::save(rviz::Config config) const
 {
   rviz::Panel::save(config);
 }
 
-void MMGuiRvizDemo::load(const rviz::Config& config)
+void MMGuiRviz::load(const rviz::Config& config)
 {
   rviz::Panel::load(config);
 }
-}  // end namespace mm_gui_rviz_demo
+}  // end namespace mm_gui_rviz
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mm_gui_rviz_demo::MMGuiRvizDemo, rviz::Panel)
+PLUGINLIB_EXPORT_CLASS(mm_gui_rviz::MMGuiRviz, rviz::Panel)
