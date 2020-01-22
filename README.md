@@ -1,29 +1,23 @@
 # mm_rros
 These are packages for NIST mobile manipulator projects.
 
-version: v1.1b
-- delete mm_rviz_gui/
-- change mm_gui_rviz_demo/ to mm_gui_rviz/ 
-- change mm_gui_run_demo/ to mm_gui_run/ and clean up
-- remove camera_ir_frame... in mobile_manipulator.srdf
-(to-do)
-- log system in python
-- integrate launch file for 3d cameras 
-- change camera to realsense1 
-- gui upgrade
+version: **v1.0.1**
+- [ ] solve eef orientation problem 
+- [ ] add option for changing gripper direction
+- [ ] add radio button in rviz panel
 
 # packages
 
 ## list(mm_ws/src)
 - mm_rros
-- realsense-ros
+- realsense-ros(https://github.com/IntelRealSense/realsense-ros)
 - usb_cam
 - razor_imu_9dof
 - robot_pose_ekf
 - ur_modern_driver
 - universal_robot
 - robotiq
-- robot_self_filter
+- robot_self_filter(https://github.com/rlagywjd802/robot_self_filter)
 
 ## changes in packages
 ### base odom publisher

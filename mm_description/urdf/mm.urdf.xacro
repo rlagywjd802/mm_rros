@@ -39,13 +39,15 @@
         <origin xyz="0 0 0" rpy="0 0 0"/>
       </joint>
 
+      <!-- actual end-effector -->
       <joint name="ur_ee_fixed_joint" type="fixed">
         <parent link="tool0"/>
         <child link="robotiq_ee"/>
-        <origin xyz="0 0 0.125" rpy="0 0 0"/>
+        <origin xyz="0 0 0.13" rpy="0 -${M_PI/2} 0"/>
       </joint>
 
       <link name="robotiq_ee"/>
+
       <xacro:robotiq_arg2f_85 prefix=""/>
     </xacro:if>
   </xacro:if>

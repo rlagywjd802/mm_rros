@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<robot name="int_marker_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
+
+<link name="base_link">
+  <visual>
+    <origin rpy="0.0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://mm_description/meshes/gripper/robotiq_2f85_opened_combined_axis_mated.STL"/>
+    </geometry>
+  </visual>
+</link>
+
+</robot>

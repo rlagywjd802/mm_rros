@@ -11,15 +11,12 @@ from geometry_msgs.msg import *
 from std_msgs.msg import *
 
 FRAME_ID = "base_footprint"
-# GRASP_ORIEN_X = 0.514690293398
-# GRASP_ORIEN_Y = 0.492745545107
-# GRASP_ORIEN_Z = -0.510770083592
-# GRASP_ORIEN_W = 0.481050570488
 GRASP_ORIEN_X = 0.0
 GRASP_ORIEN_Y = 0.0
 GRASP_ORIEN_Z = 0.0
 GRASP_ORIEN_W = 0.0
 
+PRE_OFFSET = 0.15
 
 def normalizeQuaternion( quaternion_msg ):
     norm = quaternion_msg.x**2 + quaternion_msg.y**2 + quaternion_msg.z**2 + quaternion_msg.w**2
@@ -39,6 +36,8 @@ class WaypointsGUIControl():
         rospy.Subscriber("add_waypoint", Bool, self.add_waypoint_cb)
         rospy.Subscriber("remove_waypoint", Bool, self.remove_waypoint_cb)
 
+        rospy.Subscriber("change_direction", Bool, self.change_direction_cb)
+
         # publisher
         self.update_rate = rospy.Rate(2)
 
@@ -46,6 +45,7 @@ class WaypointsGUIControl():
         self.server = InteractiveMarkerServer("waypoints")
 
         # interactive markers
+        self.direction = 'd'    # forward or downward
         self.last_poses = []
         self.num_of_wpt = 0
 
@@ -109,7 +109,7 @@ class WaypointsGUIControl():
     def make_mesh(self, offset=0):
         marker = Marker()
         marker.type = Marker.MESH_RESOURCE
-        marker.mesh_resource = "package://mm_description/meshes/gripper/robotiq_arg2f_85_combined_opened_t.STL";
+        marker.mesh_resource = "package://mm_description/meshes/gripper/robotiq_2f85_opened_combined_axis_mated.STL"
         marker.scale.x = 1.0
         marker.scale.y = 1.0
         marker.scale.z = 1.0
@@ -117,21 +117,28 @@ class WaypointsGUIControl():
         marker.color.g = 0.0
         marker.color.b = 0.0
         marker.color.a = 0.5
-        # marker.pose.position.x = -0.13
-        # marker.pose.position.y = 0.15/2. + 0.004
-        # marker.pose.position.z = -0.07/2. - 0.001
-        # marker.pose.position.x = -0.07/2. - 0.001
-        # marker.pose.position.y = -0.15/2. - 0.004
-        # marker.pose.position.z = -0.13 - offset
-        marker.pose.position.x = 0.0
-        marker.pose.position.y = 0.0
-        marker.pose.position.z = -0.13 -offset
-        quat = tf.transformations.quaternion_from_euler(math.pi/2, 0, math.pi/2)
 
-        marker.pose.orientation.x = quat[0]
-        marker.pose.orientation.y = quat[1]
-        marker.pose.orientation.z = quat[2]
-        marker.pose.orientation.w = quat[3]
+        if self.direction is 'd':
+            marker.pose.position.x = 0.0
+            marker.pose.position.y = 0.0 + offset
+            marker.pose.position.z = 0.0
+            
+            quat = tf.transformations.quaternion_from_euler(0, 0, -math.pi/2)
+            marker.pose.orientation.x = quat[0]
+            marker.pose.orientation.y = quat[1]
+            marker.pose.orientation.z = quat[2]
+            marker.pose.orientation.w = quat[3]
+
+        else:
+            marker.pose.position.x = 0.0
+            marker.pose.position.y = 0.0
+            marker.pose.position.z = -0.13 - offset
+        
+            quat = tf.transformations.quaternion_from_euler(math.pi/2, 0, math.pi/2)
+            marker.pose.orientation.x = quat[0]
+            marker.pose.orientation.y = quat[1]
+            marker.pose.orientation.z = quat[2]
+            marker.pose.orientation.w = quat[3]
 
         return marker
 
@@ -143,7 +150,7 @@ class WaypointsGUIControl():
         int_marker.scale = .1
 
         # create a box marker
-        box_marker = self.make_sphere(.03);
+        box_marker = self.make_sphere(.03)
 
         # create a non-interactive control which contains the box
         box_control = InteractiveMarkerControl()
@@ -163,7 +170,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 0
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         rotate_control = InteractiveMarkerControl()
         rotate_control.name = "move_y"
@@ -173,7 +180,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 1
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         rotate_control = InteractiveMarkerControl()
         rotate_control.name = "move_z"
@@ -183,7 +190,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 0
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         # add the interactive marker tolast_poses our collection
         self.server.insert(int_marker, self.process_feedback)
@@ -199,7 +206,7 @@ class WaypointsGUIControl():
         int_marker.description = "wpt "+int_marker.name
         int_marker.scale = .1
 
-        gripper_maker = self.make_mesh();
+        gripper_maker = self.make_mesh()
 
         # create a non-interactive control which contains the box
         gripper_control = InteractiveMarkerControl()
@@ -220,7 +227,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 0
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         rotate_control = InteractiveMarkerControl()
         rotate_control.name = "move_x"
@@ -230,7 +237,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 0
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         rotate_control = InteractiveMarkerControl()
         rotate_control.name = "move_y"
@@ -240,7 +247,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 1
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         rotate_control = InteractiveMarkerControl()
         rotate_control.name = "move_z"
@@ -250,7 +257,7 @@ class WaypointsGUIControl():
         rotate_control.orientation.z = 0
         normalizeQuaternion(rotate_control.orientation)
         rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+        int_marker.controls.append(rotate_control)
 
         # add the interactive marker tolast_poses our collection
         self.server.insert(int_marker, self.process_feedback)
@@ -260,66 +267,109 @@ class WaypointsGUIControl():
         self.server.applyChanges()
 
     def insert_gripper(self, num, initial_pose):
+        rospy.logdebug('insert_gripper| direction={}, pose={}'.format(self.direction, initial_pose))
         int_marker = InteractiveMarker()
         int_marker.header.frame_id = FRAME_ID
         int_marker.name = str(num)
         int_marker.description = "wpt "+int_marker.name
         int_marker.scale = .1
 
-        gripper_maker = self.make_mesh();
-        gripper_maker_pre = self.make_mesh(0.15);
+        gripper_maker = self.make_mesh()
+        gripper_maker_pre = self.make_mesh(PRE_OFFSET)
 
         # create a non-interactive control which contains the box
         gripper_control = InteractiveMarkerControl()
         gripper_control.always_visible = True
         # gripper_control.interaction_mode = InteractiveMarkerControl.MOVE_3D
         gripper_control.markers.append( gripper_maker )
-        gripper_control.markers.append( gripper_maker_pre )
+        # gripper_control.markers.append( gripper_maker_pre )
 
         # add the control to the interactive marker
         int_marker.controls.append( gripper_control )
         int_marker.controls[0].interaction_mode = InteractiveMarkerControl.MOVE_ROTATE_3D
 
         # create a control which will move the box
-        rotate_control = InteractiveMarkerControl()
-        rotate_control.name = "rotate_x"
-        rotate_control.orientation.w = 1
-        rotate_control.orientation.x = 1
-        rotate_control.orientation.y = 0
-        rotate_control.orientation.z = 0
-        normalizeQuaternion(rotate_control.orientation)
-        rotate_control.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
-        int_marker.controls.append(rotate_control);
+        if self.direction is 'd':
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "move_x"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 1
+            rotate_control.orientation.y = 0
+            rotate_control.orientation.z = 0
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
+            int_marker.controls.append(rotate_control)
 
-        rotate_control = InteractiveMarkerControl()
-        rotate_control.name = "move_x"
-        rotate_control.orientation.w = 1
-        rotate_control.orientation.x = 1
-        rotate_control.orientation.y = 0
-        rotate_control.orientation.z = 0
-        normalizeQuaternion(rotate_control.orientation)
-        rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "move_y"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 0
+            rotate_control.orientation.y = 0
+            rotate_control.orientation.z = 1
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
+            int_marker.controls.append(rotate_control)
 
-        rotate_control = InteractiveMarkerControl()
-        rotate_control.name = "move_y"
-        rotate_control.orientation.w = 1
-        rotate_control.orientation.x = 0
-        rotate_control.orientation.y = 0
-        rotate_control.orientation.z = 1
-        normalizeQuaternion(rotate_control.orientation)
-        rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "move_z"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 0
+            rotate_control.orientation.y = 1
+            rotate_control.orientation.z = 0
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
+            int_marker.controls.append(rotate_control)
 
-        rotate_control = InteractiveMarkerControl()
-        rotate_control.name = "move_z"
-        rotate_control.orientation.w = 1
-        rotate_control.orientation.x = 0
-        rotate_control.orientation.y = 1
-        rotate_control.orientation.z = 0
-        normalizeQuaternion(rotate_control.orientation)
-        rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
-        int_marker.controls.append(rotate_control);
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "rotate_z"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 0
+            rotate_control.orientation.y = 1
+            rotate_control.orientation.z = 0
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
+            int_marker.controls.append(rotate_control)
+        else:
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "rotate_x"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 1
+            rotate_control.orientation.y = 0
+            rotate_control.orientation.z = 0
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.ROTATE_AXIS
+            int_marker.controls.append(rotate_control)
+
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "move_x"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 1
+            rotate_control.orientation.y = 0
+            rotate_control.orientation.z = 0
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
+            int_marker.controls.append(rotate_control)
+
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "move_y"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 0
+            rotate_control.orientation.y = 0
+            rotate_control.orientation.z = 1
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
+            int_marker.controls.append(rotate_control)
+
+            rotate_control = InteractiveMarkerControl()
+            rotate_control.name = "move_z"
+            rotate_control.orientation.w = 1
+            rotate_control.orientation.x = 0
+            rotate_control.orientation.y = 1
+            rotate_control.orientation.z = 0
+            normalizeQuaternion(rotate_control.orientation)
+            rotate_control.interaction_mode = InteractiveMarkerControl.MOVE_AXIS
+            int_marker.controls.append(rotate_control)            
+
 
         # add the interactive marker tolast_poses our collection
         self.server.insert(int_marker, self.process_feedback)
@@ -327,7 +377,6 @@ class WaypointsGUIControl():
 
         self.server.setPose( int_marker.name, initial_pose )
         self.server.applyChanges()
-
 
     def erase_waypoint(self):
         # remove the interactive marker from server
@@ -346,8 +395,9 @@ class WaypointsGUIControl():
         initial_pose.orientation.y = quat[1]
         initial_pose.orientation.z = quat[2]
         initial_pose.orientation.w = quat[3]
+
         # add one waypoint to the server
-        self.insert_gripper(str(0), initial_pose)
+        self.insert_gripper(0, initial_pose)
 
         # update interactive marker information
         self.last_poses = [initial_pose]
@@ -398,6 +448,30 @@ class WaypointsGUIControl():
             # update interactive marker information
             self.last_poses.pop()
             self.num_of_wpt -= 1
+
+    def change_direction_cb(self, msg):
+        rospy.loginfo("change_direction_cb|")
+
+        # data is True if remove button is clicked
+        if msg.data:
+            if self.num_of_wpt != 1:
+                rospy.logerr("change_direction_cb| num_of_wpt is {}".format(self.num_of_wpt))
+                return
+
+            # remove last waypoint to the server
+            self.erase_waypoint()
+
+            # update interactive marker information
+            # self.last_poses.pop()
+            # self.num_of_wpt -= 1
+
+            # flip direction
+            if self.direction is 'f':
+                self.direction = 'd'
+            else:
+                self.direction = 'f'
+
+            self.insert_gripper(0, self.last_poses[0])
 
 def main(arg):
     if len(arg) > 1:
