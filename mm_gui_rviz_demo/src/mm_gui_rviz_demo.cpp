@@ -51,6 +51,10 @@ namespace mm_gui_rviz_demo
 {
 MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
 {
+  //////////////////////////////
+  // Button
+  //////////////////////////////
+  
   // Create a push button
   btn_emergency_stop_ = new QPushButton(this);
   btn_emergency_stop_->setText("Stop");
@@ -116,7 +120,23 @@ MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
   btn_move_zm_->setText("-");
   connect(btn_move_zm_, SIGNAL(clicked()), this, SLOT(moveZM()));
 
+  // Create a push button
+  btn_waipoint_add_ = new QPushButton("add", this);
+  btn_waipoint_remove_ = new QPushButton("remove", this);
+  btn_interpolation_compute_ = new QPushButton("interpolate", this);
+  btn_interpolation_execute_ = new QPushButton("execute", this);
+  
+  connect(btn_waipoint_add_, SIGNAL(clicked()), this, SLOT(addWaypoint()));  
+  connect(btn_waipoint_remove_, SIGNAL(clicked()), this, SLOT(removeWaypoint()));
+  connect(btn_interpolation_compute_, SIGNAL(clicked()), this, SLOT(computeInterpolation()));
+  connect(btn_interpolation_execute_, SIGNAL(clicked()), this, SLOT(executeInterpolation()));
+
+
+  //////////////////////////////
   // Layout
+  //////////////////////////////
+
+  // Main Layout
   layout = new QVBoxLayout;
 
   addTitle("Capture Point Cloud Data");
@@ -151,6 +171,14 @@ MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
   sub_layout->addLayout(subz_layout);
   layout->addLayout(sub_layout);
   
+  addTitle("Add or Remove Movable Waypoints");
+  layout->addWidget(btn_waipoint_add_);
+  layout->addWidget(btn_waipoint_remove_);
+
+  addTitle("Traverse Waypoints");
+  layout->addWidget(btn_interpolation_compute_);
+  layout->addWidget(btn_interpolation_execute_);
+
   addTitle("Gripper Actions");
   layout->addWidget(btn_gripper_open_);
   layout->addWidget(btn_gripper_close_);
@@ -160,8 +188,6 @@ MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
 
   setLayout(layout);
 
-  btn_gripper_open_->setEnabled(true);
-  btn_gripper_close_->setEnabled(true);
   btn_pcl_capture_->setEnabled(true);
   btn_pcl_clear_->setEnabled(true);
   btn_approach_plan_->setEnabled(true);
@@ -172,6 +198,14 @@ MMGuiRvizDemo::MMGuiRvizDemo(QWidget* parent) : rviz::Panel(parent)
   btn_move_ym_->setEnabled(true);
   btn_move_zp_->setEnabled(true);
   btn_move_zm_->setEnabled(true);
+
+  btn_waipoint_add_->setEnabled(true);
+  btn_waipoint_remove_->setEnabled(true);
+  btn_interpolation_compute_->setEnabled(true);
+  btn_interpolation_execute_->setEnabled(true);
+
+  btn_gripper_open_->setEnabled(true);
+  btn_gripper_close_->setEnabled(true);
   btn_emergency_stop_->setEnabled(true);
 }
 
@@ -270,6 +304,26 @@ void MMGuiRvizDemo::moveZP()
 void MMGuiRvizDemo::moveZM()
 {
   remote_reciever_.publishMoveZM();
+}
+
+void MMGuiRvizDemo::addWaypoint()
+{
+  remote_reciever_.publishAddWaypoint();
+}
+
+void MMGuiRvizDemo::removeWaypoint()
+{
+  remote_reciever_.publishRemoveWaypoint();
+}
+
+void MMGuiRvizDemo::computeInterpolation()
+{
+  remote_reciever_.publishComputeInterpolation();
+}
+
+void MMGuiRvizDemo::executeInterpolation()
+{
+  remote_reciever_.publishExecuteInterpolation();
 }
 
 

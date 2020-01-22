@@ -95,5 +95,25 @@
     </xacro:sensor_d435>
 
   </xacro:if>
+<!-- 
+  <joint name="test_fixed_joint" type="fixed">
+    <parent link="bare_base_link"/>
+    <child link="test_link"/>
+    <origin xyz = "0.0 -0.6 0.8" rpy="0 0 0"/>
+  </joint>
 
+  <link name="test_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.3" radius="0.1"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="0.3" radius="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+ -->
 </robot>

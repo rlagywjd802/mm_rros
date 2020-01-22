@@ -65,6 +65,11 @@ public:
     move_zp_publisher_ = nh_.advertise<std_msgs::Bool>("move_zp", 1);
     move_zm_publisher_ = nh_.advertise<std_msgs::Bool>("move_zm", 1);
 
+    add_waypoint_publisher_ = nh_.advertise<std_msgs::Bool>("add_waypoint", 1);
+    remove_waypoint_publisher_ = nh_.advertise<std_msgs::Bool>("remove_waypoint", 1);
+    compute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("compute_interpolation", 1);
+    execute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("execute_interpolation", 1);
+
   }
 
   void publishEmergencyStop()
@@ -219,6 +224,44 @@ public:
     move_zm_publisher_.publish(msg);
   }
 
+
+
+  void publishAddWaypoint()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "AddWaypoint");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    add_waypoint_publisher_.publish(msg); 
+  }
+
+  void publishRemoveWaypoint()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "RemoveWaypoint");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    remove_waypoint_publisher_.publish(msg); 
+  }
+
+  void publishComputeInterpolation()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "ComputeInterpolation");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    compute_interpolation_publisher_.publish(msg); 
+  }
+
+  void publishExecuteInterpolation()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "ExecuteInterpolation");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    execute_interpolation_publisher_.publish(msg); 
+  }
+
 protected:
   // The ROS publishers
   // ros::Publisher joy_publisher_;
@@ -239,7 +282,11 @@ protected:
   ros::Publisher move_ym_publisher_;
   ros::Publisher move_zm_publisher_;
 
-
+  ros::Publisher add_waypoint_publisher_;
+  ros::Publisher remove_waypoint_publisher_;
+  ros::Publisher compute_interpolation_publisher_;
+  ros::Publisher execute_interpolation_publisher_;
+  
   // The ROS node handle.
   ros::NodeHandle nh_;
 };

@@ -107,6 +107,13 @@ protected Q_SLOTS:
 
   void moveZM();
 
+  void addWaypoint();
+
+  void removeWaypoint();
+
+  void computeInterpolation();
+
+  void executeInterpolation();
 
 protected:
   QVBoxLayout* layout;
@@ -129,6 +136,11 @@ protected:
   QPushButton* btn_move_ym_;
   QPushButton* btn_move_zp_;
   QPushButton* btn_move_zm_;
+
+  QPushButton* btn_waipoint_add_;
+  QPushButton* btn_waipoint_remove_;
+  QPushButton* btn_interpolation_compute_;
+  QPushButton* btn_interpolation_execute_;
 
   QFrame* line;
   RemoteReciever remote_reciever_;

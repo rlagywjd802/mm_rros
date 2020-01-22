@@ -1,0 +1,19 @@
+<launch>
+<!-- 	<arg name="serial_no_camera1" defalut="923322071323"/>
+	<arg name="serial_no_camera2" defalut="840412060409"/>
+	<arg name="camera1" 					defalut="realsense1"/>
+	<arg name="camera2" 					defalut="realsense2"/> -->
+
+	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
+		<arg name="filters" 			value="pointcloud"/>
+		<arg name="camera" 				value="realsense1"/>
+		<arg name="serial_no" 		value="923322071323"/>
+	</include>
+
+	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
+		<arg name="filters" 			value="pointcloud"/>
+		<arg name="camera" 				value="realsense2"/>
+		<arg name="serial_no" 		value="840412060409"/>
+	</include>
+	
+</launch>
