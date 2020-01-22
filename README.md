@@ -1,3 +1,42 @@
+# mm_rros
+These are package for NIST mobile manipulator projects.
+
+version: v1.0 (demo 01/10)
+
+# packages
+
+## list(mm_ws/src)
+- mm_rros
+- realsense-ros
+- usb_cam
+- razor_imu_9dof
+- robot_pose_ekf
+- ur_modern_driver
+- universal_robot
+- robotiq
+- robot_self_filter
+
+## changes in packages
+### base odom publisher
+- changed v_max=0.2 and w_max=0.4
+- delete test_pose
+- add odom_test_pose
+- add device
+
+### ur_moder_driver
+- add mm_ur5_bringup.launch to /launch
+
+### razor_imu_9dof
+- deleted remapping odom to /pr2~/odom
+- changed subscribed topic from imu_data to imu
+
+### robotiq
+- 
+
+### robot_pose_ekf
+- 
+
+
 # basic commands
 ## ssh
 ssh -X mm@192.168.0.111
@@ -40,27 +79,6 @@ roslaunch mm_bringup mm_mobile_bringup.launch device:=/dev/ttyUSBbase
 roslaunch mm_bringup mm_kinect_bringup.launch camera1:=kinect1 camera2:=kinect2 rgbd:=true
 roslaunch mm_bringup mm_ur5_bringup.launch
 roslaunch mm_bringup mm_gripper_bringup.launch device:=/dev/ttyUSBgripper
-
-# changes in packages
-## base odom publisher
-- changed v_max=0.2 and w_max=0.4
-- delete test_pose
-- add odom_test_pose
-- add device
-
-## ur_moder_driver
-- add mm_ur5_bringup.launch to /launch
-
-## razor_imu_9dof
-- deleted remapping odom to /pr2~/odom
-- changed subscribed topic from imu_data to imu
-
-## robotiq
-- 
-
-## robot_pose_ekf
-- 
-
 
 # test modes
 
@@ -141,15 +159,6 @@ rosrun ORB_SLAM2 RGBD Vocabulary/ORBvoc.txt Examples/ROS/ORB_SLAM2/kinect.yaml
 # ps3joy
 rosrun ps3joy ps3joy.py
 roslaunch teleop_twist_joy teleop.launch
-########################################################
-
-
-
-
-
-
-
-
 
 ########################################################
 # robot state publisher
@@ -163,6 +172,18 @@ mm_moveit_planning_execution.launch -> move_group.launch -> planning_execution.l
 
 [ WARN] [1575932977.009394537]: Could not get transform from /odom to /base_footprint after 0.200000 seconds (for stamp=1575932976.754261)! Error="Could not find a connection between 'odom' and 'base_footprint' because they are not part of the same tree.Tf has two or more unconnected trees.. canTransform returned after 0.201348 timeout was 0.2.".
 
-turn on the base
-
+--> turn on the base
+########################################################
+# point cloud
 /camera/depth/color/points
+
+########################################################
+# run demo
+## 12/13
+roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=true
+rosrun mm_gui_run_demo mm_gui_moveit_approach_execution.py 
+
+## 01/10
+roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=true
+rosrun mm_gui_run_demo mm_gui_moveit_interpolation_execution.py debug
+rosrun mm_gui_run_demo waypoint_controls.py debug 
