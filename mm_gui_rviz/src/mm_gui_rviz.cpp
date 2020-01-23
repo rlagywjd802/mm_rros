@@ -121,15 +121,26 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   connect(btn_move_zm_, SIGNAL(clicked()), this, SLOT(moveZM()));
 
   // Create a push button
-  btn_waipoint_add_ = new QPushButton("add", this);
-  btn_waipoint_remove_ = new QPushButton("remove", this);
-  btn_interpolation_compute_ = new QPushButton("interpolate", this);
-  btn_interpolation_execute_ = new QPushButton("execute", this);
+  btn_waipoint_add_ = new QPushButton("Add", this);
+  btn_waipoint_remove_ = new QPushButton("Remove", this);
+  btn_interpolation_compute_ = new QPushButton("Plan", this);
+  btn_interpolation_execute_ = new QPushButton("Execute", this);
   
   connect(btn_waipoint_add_, SIGNAL(clicked()), this, SLOT(addWaypoint()));  
   connect(btn_waipoint_remove_, SIGNAL(clicked()), this, SLOT(removeWaypoint()));
   connect(btn_interpolation_compute_, SIGNAL(clicked()), this, SLOT(computeInterpolation()));
   connect(btn_interpolation_execute_, SIGNAL(clicked()), this, SLOT(executeInterpolation()));
+
+  rbtn_1_ = new QRadioButton("Forward", this);
+  rbtn_2_ = new QRadioButton("Downward", this);
+  connect(rbtn_1_, SIGNAL(clicked()), this, SLOT(testRB1()));  
+  connect(rbtn_2_, SIGNAL(clicked()), this, SLOT(testRB2()));  
+  
+  timer_ = new QTimer(this);
+  connect(timer_, SIGNAL(timeout()), this, SLOT(updateText()));
+  timer_->start(100);
+
+  text_browser_ = new QTextBrowser(this);
 
 
   //////////////////////////////
@@ -139,21 +150,46 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   // Main Layout
   layout = new QVBoxLayout;
 
+  // addTitle("Instruction Panel");
+  layout->addWidget(text_browser_);
+
   addTitle("Capture Point Cloud Data");
   layout->addWidget(btn_pcl_capture_);
   layout->addWidget(btn_pcl_clear_);
 
-  addTitle("Approach to Clicked Point");
-  layout->addWidget(btn_approach_plan_);
-  layout->addWidget(btn_approach_execute_);
+  addTitle("Set pre-grasp approach direction");
+  rb_layout = new QHBoxLayout;
+  rb_layout->addWidget(rbtn_1_);
+  rb_layout->addWidget(rbtn_2_);
+  layout->addLayout(rb_layout);
 
-  // Sub Layout
+  addTitle("Move to clicked point");
+  plan_layout = new QHBoxLayout;
+  plan1_layout = new QVBoxLayout;
+  plan2_layout = new QVBoxLayout;
+
+  addTitlePlan1("RRTConnect");
+  plan1_layout->addWidget(btn_approach_plan_);
+  plan1_layout->addWidget(btn_approach_execute_);
+
+  addTitlePlan2("Linear motion");
+  plan2_layout->addWidget(btn_interpolation_compute_);
+  plan2_layout->addWidget(btn_interpolation_execute_);
+
+  plan_layout->addLayout(plan1_layout);
+  plan_layout->addLayout(plan2_layout);
+  layout->addLayout(plan_layout);
+
+  addTitle("Set waypoints");
+  layout->addWidget(btn_waipoint_add_);
+  layout->addWidget(btn_waipoint_remove_);
+
+  addTitle("UR5 actions");  
   sub_layout = new QHBoxLayout;
   subx_layout = new QVBoxLayout;
   suby_layout = new QVBoxLayout;
   subz_layout = new QVBoxLayout;
 
-  addTitle("UR5 Actions");  
   subx_layout->addWidget(btn_move_xp_);
   addLabelX();
   subx_layout->addWidget(btn_move_xm_);
@@ -170,16 +206,8 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   sub_layout->addLayout(suby_layout);
   sub_layout->addLayout(subz_layout);
   layout->addLayout(sub_layout);
-  
-  addTitle("Add or Remove Movable Waypoints");
-  layout->addWidget(btn_waipoint_add_);
-  layout->addWidget(btn_waipoint_remove_);
 
-  addTitle("Traverse Waypoints");
-  layout->addWidget(btn_interpolation_compute_);
-  layout->addWidget(btn_interpolation_execute_);
-
-  addTitle("Gripper Actions");
+  addTitle("Gripper actions");
   layout->addWidget(btn_gripper_open_);
   layout->addWidget(btn_gripper_close_);
 
@@ -187,6 +215,11 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   layout->addWidget(btn_emergency_stop_);
 
   setLayout(layout);
+
+
+  //////////////////////////////
+  // Initial Setting
+  //////////////////////////////
 
   btn_pcl_capture_->setEnabled(true);
   btn_pcl_clear_->setEnabled(true);
@@ -207,6 +240,8 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   btn_gripper_open_->setEnabled(true);
   btn_gripper_close_->setEnabled(true);
   btn_emergency_stop_->setEnabled(true);
+
+  rbtn_1_->setChecked(true);
 }
 
 void MMGuiRviz::addLabelX()
@@ -231,6 +266,22 @@ void MMGuiRviz::addLabelZ()
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet("QLabel { color : black; }");
   subz_layout->addWidget(label);
+}
+
+void MMGuiRviz::addTitlePlan1(std::string str)
+{
+  QLabel* label = new QLabel(QString::fromStdString(str));
+  label->setAlignment(Qt::AlignCenter);
+  label->setStyleSheet("QLabel { color : black; }");
+  plan1_layout->addWidget(label);
+}
+
+void MMGuiRviz::addTitlePlan2(std::string str)
+{
+  QLabel* label = new QLabel(QString::fromStdString(str));
+  label->setAlignment(Qt::AlignCenter);
+  label->setStyleSheet("QLabel { color : black; }");
+  plan2_layout->addWidget(label);
 }
 
 void MMGuiRviz::addTitle(std::string str)
@@ -326,6 +377,19 @@ void MMGuiRviz::executeInterpolation()
   remote_reciever_.publishExecuteInterpolation();
 }
 
+void MMGuiRviz::testRB1()
+{
+  remote_reciever_.publishRB1();
+}
+void MMGuiRviz::testRB2()
+{
+  remote_reciever_.publishRB2();
+}
+
+void MMGuiRviz::updateText()
+{
+  text_browser_->setText(QString::fromStdString(remote_reciever_.get_instruction()));
+}
 
 void MMGuiRviz::save(rviz::Config config) const
 {

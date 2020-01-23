@@ -5,7 +5,6 @@ import rospy
 import tf
 import math
 
-
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
@@ -48,9 +47,9 @@ class MoveGroupGUIControl():
 
         self.group = moveit_commander.MoveGroupCommander("ur5")
         # self.group = moveit_commander.MoveGroupCommander("manipulator")         
-        self.group.set_planner_id("RRTConnectkConfigDefault")
-        self.group.set_planning_time(5.0)
-        self.group.set_num_planning_attempts(10)
+        # self.group.set_planner_id("RRTConnectkConfigDefault")
+        # self.group.set_planning_time(5.0)
+        # self.group.set_num_planning_attempts(10)
         self.group.set_max_velocity_scaling_factor(0.1)
         self.group.set_max_acceleration_scaling_factor(0.1)
 
@@ -139,7 +138,9 @@ class MoveGroupGUIControl():
         # rospy.sleep(5)
         rospy.loginfo("move cb go: Finished")
 
-    ####################################################
+    ##################################################################################################
+    ##################################################################################################
+
     def compute_interpolation_cb(self, msg):
         rospy.loginfo("compute_interpolation_cb|")
         cur_pose = self.group.get_current_pose().pose

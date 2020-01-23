@@ -8,7 +8,7 @@ NODE = "pcl_capture"
 
 class PointCloudGUI():
 	def __init__(self):
-		rospy.init_node("pcl_capture", log_level="")
+		rospy.init_node("pcl_capture")
 		
 		# Subscriber
 		rospy.Subscriber("/pcl_capture", Bool, self.pcl_capture_cb)

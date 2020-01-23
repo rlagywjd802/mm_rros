@@ -44,6 +44,9 @@
 #include <QPushButton>
 #include <QComboBox>
 
+#include <QRadioButton>
+#include <QTextBrowser>
+
 #include <mm_gui_rviz/remote_reciever.h>
 
 class QLineEdit;
@@ -64,6 +67,7 @@ public:
   virtual void save(rviz::Config config) const;
 
 public Q_SLOTS:
+  void updateText();
 
 protected Q_SLOTS:
 
@@ -74,6 +78,10 @@ protected Q_SLOTS:
   void addLabelZ();
 
   void addTitle(std::string str);
+
+  void addTitlePlan1(std::string str);
+
+  void addTitlePlan2(std::string str);
 
   void moveArmPlan();
 
@@ -115,12 +123,20 @@ protected Q_SLOTS:
 
   void executeInterpolation();
 
+  void testRB1();
+
+  void testRB2();
+
 protected:
   QVBoxLayout* layout;
   QHBoxLayout* sub_layout;
   QVBoxLayout* subx_layout;
   QVBoxLayout* suby_layout;
   QVBoxLayout* subz_layout;
+
+  QHBoxLayout* plan_layout;
+  QVBoxLayout* plan1_layout;
+  QVBoxLayout* plan2_layout;
   
   QPushButton* btn_gripper_open_;
   QPushButton* btn_gripper_close_;
@@ -142,8 +158,17 @@ protected:
   QPushButton* btn_interpolation_compute_;
   QPushButton* btn_interpolation_execute_;
 
+  QHBoxLayout* rb_layout;
+  QRadioButton* rbtn_1_;
+  QRadioButton* rbtn_2_;
+
+  QTimer* timer_;
+  QTextBrowser* text_browser_;
+
   QFrame* line;
   RemoteReciever remote_reciever_;
+  
+
 };
 
 }  // end namespace mm_gui_rviz

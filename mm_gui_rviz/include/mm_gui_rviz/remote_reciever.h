@@ -40,10 +40,16 @@
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
+#include <std_msgs/String.h>
+#include <string>
+
 namespace mm_gui_rviz
 {
 class RemoteReciever
 {
+private:
+  std::string tb_string;
+
 public:
   RemoteReciever()
   {
@@ -69,6 +75,12 @@ public:
     remove_waypoint_publisher_ = nh_.advertise<std_msgs::Bool>("remove_waypoint", 1);
     compute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("compute_interpolation", 1);
     execute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("execute_interpolation", 1);
+
+    ////////////////// Radio Button //////////////////
+    rb_publisher_ = nh_.advertise<std_msgs::Bool>("approach_forward", 1);
+
+    ////////////////// Text Browser //////////////////
+    tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
 
   }
 
@@ -225,7 +237,6 @@ public:
   }
 
 
-
   void publishAddWaypoint()
   {
     ROS_DEBUG_STREAM_NAMED("gui", "AddWaypoint");
@@ -262,6 +273,31 @@ public:
     execute_interpolation_publisher_.publish(msg); 
   }
 
+  void publishRB1()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "RB1");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    rb_publisher_.publish(msg);  
+  }
+
+  void publishRB2()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "RB2");
+
+    std_msgs::Bool msg;
+    msg.data = false;
+    rb_publisher_.publish(msg);  
+  }
+
+  void instruction_cb(const std_msgs::String::ConstPtr& msg)
+  {
+    tb_string = msg->data.c_str();
+  }
+
+  const std::string& get_instruction() {return tb_string;}
+
 protected:
   // The ROS publishers
   // ros::Publisher joy_publisher_;
@@ -286,9 +322,16 @@ protected:
   ros::Publisher remove_waypoint_publisher_;
   ros::Publisher compute_interpolation_publisher_;
   ros::Publisher execute_interpolation_publisher_;
+
+  ////////////////// Radio Button //////////////////
+  ros::Publisher rb_publisher_;
+
+  ////////////////// Text Browser //////////////////
+  ros::Subscriber tb_subscriber_;
   
   // The ROS node handle.
   ros::NodeHandle nh_;
+
 };
 
 }  // end namespace mm_gui_rviz
