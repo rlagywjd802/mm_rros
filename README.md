@@ -1,10 +1,8 @@
 # mm_rros
 These are packages for NIST mobile manipulator projects.
 
-version: **v1.0.1**
-- [ ] solve eef orientation problem 
-- [ ] add option for changing gripper direction
-- [ ] add radio button in rviz panel
+version: **v2.0**
+- demo 01/24
 
 # packages
 
@@ -193,3 +191,5 @@ rosrun mm_gui_run_demo waypoint_controls.py debug
 
 ## 01/24
 roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=true
+rosrun mm_gui_run waypoint_controls.py 
+rosrun mm_gui_run mm_gui_moveit_approach_execution.py

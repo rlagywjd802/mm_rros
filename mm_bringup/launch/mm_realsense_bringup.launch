@@ -8,5 +8,5 @@
 		<arg name="filters" 			value="pointcloud"/>
 	</include>
 
-	<!-- <include file="$(find usb_cam)/launch/usb_cam.launch"/> -->
+	<include file="$(find usb_cam)/launch/usb_cam.launch"/>
 </launch>

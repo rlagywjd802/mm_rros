@@ -6,12 +6,13 @@ import rospy
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
-from std_msgs.msg import String, Bool
-from geometry_msgs.msg import Pose, PointStamped
+from std_msgs.msg import String, Bool, Int32
+from geometry_msgs.msg import Pose, PointStamped, PoseStamped
 from visualization_msgs.msg import InteractiveMarkerUpdate
 from sensor_msgs.msg import Joy
 
 from utils import *
+from const import *
 
 class UR5MoveGroupGUI():
     def __init__(self, log_level):
@@ -32,15 +33,19 @@ class UR5MoveGroupGUI():
         rospy.Subscriber("move_zm", Bool, self.move_zm_cb)
 
         rospy.Subscriber("waypoints/update", InteractiveMarkerUpdate, self.waypoints_update_cb)
+        rospy.Subscriber("rotate_axis", String, self.rotate_axis_cb)
+        rospy.Subscriber("distance", Int32, self.distance_cb)
 
         # Publisher
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.msg.DisplayTrajectory, queue_size=50)
+
+        self.instruction_pub = rospy.Publisher('/instruction', String, queue_size=1)
         
         # moveit commander
         self.robot = moveit_commander.RobotCommander()
 
         self.scene = moveit_commander.PlanningSceneInterface()
-        self.scene.attach_mesh("base_footprint", 'base_scene', filename='./base_scene.STL') ## doesn't work
+        # self.scene.attach_mesh("base_footprint", 'base_scene', filename='./base_scene.STL') ## doesn't work
         
         self.group = moveit_commander.MoveGroupCommander("ur5")         
         self.group.set_planner_id("RRTConnectkConfigDefault")
@@ -53,6 +58,11 @@ class UR5MoveGroupGUI():
         self.ee_pose = Pose()
 
         self.plan = moveit_msgs.msg.RobotTrajectory()
+
+        self.last_offset = 10.0
+
+        self.listener = tf.TransformListener()
+
 
     ##################################################################################################
     ##################################################################################################
@@ -113,7 +123,7 @@ class UR5MoveGroupGUI():
     #     self.ee_pose.orientation = current_pose_orientation
 
     def approach_plan_cb(self, msg):
-        self.group.set_pose_target(self.ee_pose)
+        self.group.set_pose_target(self.last_waypoints[0])
         self.plan = self.group.plan()
         rospy.loginfo("approach_plan: Waiting while RVIZ displays the plan...")
         rospy.sleep(5)
@@ -133,6 +143,9 @@ class UR5MoveGroupGUI():
         rospy.sleep(5)
         rospy.loginfo("approach_execute: Finished")
 
+        self.instruction_pub.publish(STEP4)
+
+
     def approach_stop_cb(self, msg):
         self.group.stop()
         rospy.loginfo("approach_stop: Stopped")
@@ -140,17 +153,35 @@ class UR5MoveGroupGUI():
     def waypoints_update_cb(self, msg):
         rospy.logdebug("waypoints_update_cb")
         if msg.poses:
-            self.last_waypoints = []
-            for i in reversed(range(len(msg.poses))):
-                pp = msg.poses[i].pose.position
-                po = msg.poses[i].pose.orientation
+            # listen tf of 'target_pose' 
+            try:
+                (trans, rot) = self.listener.lookupTransform(FRAME_ID, 'target_pose', rospy.Time(0))
+                rospy.logdebug("waypoints_update_cb| trans:{}, rot:{}".format(trans, rot))
 
-                ## set pre-grasp position as target
-                if i == 0:
-                    pp.y += 0.15
-                rospy.logdebug("marker{} pose: {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}"
-                                .format(msg.poses[i].name, pp.x, pp.y, pp.z, po.x, po.y, po.z, po.w))
-                self.last_waypoints.append(msg.poses[i].pose)
+                self.last_waypoints = []
+                for i in reversed(range(len(msg.poses))):
+                    if i == len(msg.poses)-1:
+                        target_pose = Pose()
+                        target_pose.position = Point(trans[0], trans[1], trans[2])
+                        target_pose.orientation = Quaternion(rot[0], rot[1], rot[2], rot[3])
+                    else:
+                        target_pose = msg.poses[i].pose
+                    rospy.logdebug("waypoints_update_cb| marker{} ".format(i)+print_pose(msg.poses[i].pose))
+                    self.last_waypoints.append(target_pose)
+            except:
+                pass
+
+    def rotate_axis_cb(self, msg):
+        rotate_axis = msg.data
+
+        rospy.loginfo("rotate_axis_cb| msg: {}".format(rotate_axis))
+        self.last_r_axis = rotate_axis
+
+    def distance_cb(self, msg):
+        offset = msg.data
+
+        rospy.loginfo("distance_cb| msg: {}".format(offset))
+        self.last_offset = offset
 
 def main(arg):
     if len(arg) > 1:

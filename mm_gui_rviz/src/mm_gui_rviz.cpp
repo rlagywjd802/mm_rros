@@ -158,7 +158,7 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   timer_->start(100);
 
   text_browser_ = new QTextBrowser(this);
-
+  text_browser_->setStyleSheet("font: 15pt");
 
   //////////////////////////////
   // Layout

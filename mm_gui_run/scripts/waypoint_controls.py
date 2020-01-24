@@ -2,8 +2,6 @@
 import rospy
 import sys
 
-import tf
-import math
 import copy
 
 from interactive_markers.interactive_marker_server import *
@@ -12,13 +10,7 @@ from geometry_msgs.msg import *
 from std_msgs.msg import *
 
 from utils import *
-
-FRAME_ID = "base_footprint"
-GRIPPER_MESH = "package://mm_description/meshes/gripper/robotiq_2f85_opened_combined_axis_mated.STL"
-
-INIT_R_AXIS = "z"
-INIT_ORIENT = euler_to_quat(0, 0, -math.pi/2.0) 
-INIT_OFFSET = 10.0
+from const import *
 
 def normalizeQuaternion(quaternion_msg):
     norm = quaternion_msg.x**2 + quaternion_msg.y**2 + quaternion_msg.z**2 + quaternion_msg.w**2
@@ -32,21 +24,24 @@ class WaypointsGUIControl():
     def __init__(self, log_level):
         rospy.init_node("waypoints_gui_control", log_level=log_level)
 
-        # subscriber
+        # Subscriber
         rospy.Subscriber("clicked_point", PointStamped, self.clicked_cb)
  
         rospy.Subscriber("add_waypoint", Bool, self.add_waypoint_cb)
         rospy.Subscriber("remove_waypoint", Bool, self.remove_waypoint_cb)
 
-        # rospy.Subscriber("change_direction", Bool, self.change_direction_cb)
-        # rospy.Subscriber("approach_forward", Bool, self.approach_forward_cb)
         rospy.Subscriber("rotate_axis", String, self.rotate_axis_cb)
         rospy.Subscriber("distance", Int32, self.distance_cb)
 
         rospy.Subscriber("clear_imarker", Bool, self.clear_imarker_cb)
 
-        # publisher
-        self.update_rate = rospy.Rate(2)
+        # Pubisher
+        # self.waypoint0_pub = rospy.Publisher('waypoint0_target', Pose, queue_size=1)
+        self.target_pose_br = tf.TransformBroadcaster()
+        self.update_rate = rospy.Rate(5)
+
+        self.instruction_pub = rospy.Publisher('/instruction', String, queue_size=1)
+        self.is_published = False
 
         # create an interactive marker server on the topic namespace waypoint
         self.server = InteractiveMarkerServer("waypoints")
@@ -73,6 +68,8 @@ class WaypointsGUIControl():
         self.last_poses[int(f_name)] = f_pose
         self.server.applyChanges()
 
+        self.update_tf(f_pose, self.last_offset)
+
     def update_imarker(self):
         if self.num_of_wpt <= 0:
             rospy.logerr("update_imarker| num_of_wpt is {}".format(self.num_of_wpt))
@@ -93,6 +90,28 @@ class WaypointsGUIControl():
         
         self.server.publish(int_marker_update)
         self.server.applyChanges()
+
+        self.update_tf(int_marker_poses[0].pose, self.last_offset)
+
+    def update_tf(self, pose, offset):
+        time_now = rospy.Time.now()
+        pp = pose.position
+        po = pose.orientation
+        offset = offset/100.0
+        
+        # FRAME_ID --> marker_pose
+        self.target_pose_br.sendTransform((pp.x, pp.y, pp.z), 
+                            (po.x, po.y, po.z, po.w), 
+                            time_now, 
+                            "marker_pose", 
+                            FRAME_ID)
+
+        # grasping_pose --> target_pose
+        self.target_pose_br.sendTransform((-offset, 0, 0), 
+                            (0.0, 0.0, 0.0, 1.0), 
+                            time_now, 
+                            "target_pose", 
+                            "marker_pose")
 
     def make_mesh_marker(self, offset=0.0):
         marker = Marker()
@@ -142,7 +161,7 @@ class WaypointsGUIControl():
         log_msg = 'insert_gripper| num: {}'.format(num)
         log_msg += ', r_axis:' + r_axis
         log_msg += ', offset: {}'.format(offset)
-        log_msg += print_pose(pose)
+        log_msg += print_pose(pose, ', pose:')
         rospy.loginfo(log_msg)         
         
         # create an interactive marker
@@ -157,15 +176,16 @@ class WaypointsGUIControl():
         gripper_control.always_visible = True
         
         if num == 0:
-            gripper_marker_pre = self.make_mesh_marker(offset)  ## e
-            gripper_control.markers.append( gripper_marker_pre )    ## e
+            gripper_marker_pre = self.make_mesh_marker(offset)
+            gripper_control.markers.append( gripper_marker_pre )
         else:
             gripper_marker = self.make_mesh_marker()
             gripper_control.markers.append( gripper_marker )
 
         # add the control to the interactive marker
         int_marker.controls.append( gripper_control )
-        int_marker.controls[0].interaction_mode = InteractiveMarkerControl.MOVE_ROTATE_3D
+        # int_marker.controls[0].interaction_mode = InteractiveMarkerControl.MOVE_ROTATE_3D
+        int_marker.controls[0].interaction_mode = InteractiveMarkerControl.ROTATE_3D
 
         if num == 0:
             rotate_control = self.make_imarker_ctrl("rotate", r_axis)
@@ -204,6 +224,8 @@ class WaypointsGUIControl():
         self.num_of_wpt = 1
 
         self.clicked_pose = initial_pose
+
+        self.instruction_pub.publish(STEP3)
       
     def add_waypoint_cb(self, msg):
         rospy.loginfo("add_waypoint_cb| {}".format(msg.data))
@@ -268,6 +290,11 @@ class WaypointsGUIControl():
             self.erase_waypoint()
             self.insert_gripper(0, self.clicked_pose, INIT_R_AXIS, INIT_OFFSET)
 
+    def publish_step1(self):
+        if not self.is_published:
+            self.instruction_pub.publish(STEP1)
+            self.is_published = True
+
 def main(arg):
     if len(arg) > 1:
         if arg[1] == "debug":
@@ -278,10 +305,18 @@ def main(arg):
     try:
         wgc = WaypointsGUIControl(log_level)
 
+        count = 0
+
         while not rospy.is_shutdown():
+            if(count > 10):
+                wgc.publish_step1()
+
             if wgc.num_of_wpt > 0:
                 wgc.update_imarker()
+            
+            count += 1
             wgc.update_rate.sleep()
+
 
     except KeyboardInterrupt:
         return

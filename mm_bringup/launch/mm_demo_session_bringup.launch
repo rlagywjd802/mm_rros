@@ -27,7 +27,14 @@
   	
   	<!-- demo 01/24 -->
   	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run" type="mm_gui_moveit_approach_execution.py"/> -->
-  	
+
+  	<!-- self-filter -->
+	<rosparam file="$(find robot_self_filter)/config/self_see_links.yaml" command="load" ns="robot_self_filter"/>
+  
+	<node name="robot_self_filter" pkg="robot_self_filter" type="self_filter" output="screen">
+		<remap from="cloud_in" to="/camera/depth/color/points"/>
+	</node>
+
   	<!-- rviz -->
 	<node if="$(arg rviz)" name="demo_rviz" pkg="rviz" type="rviz" respawn="false" 
 		args="-d $(find mm_bringup)/rviz/mm_demo.rviz" output="screen">
