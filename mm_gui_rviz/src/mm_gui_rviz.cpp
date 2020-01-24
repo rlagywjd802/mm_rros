@@ -131,11 +131,28 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   connect(btn_interpolation_compute_, SIGNAL(clicked()), this, SLOT(computeInterpolation()));
   connect(btn_interpolation_execute_, SIGNAL(clicked()), this, SLOT(executeInterpolation()));
 
-  rbtn_1_ = new QRadioButton("Forward", this);
-  rbtn_2_ = new QRadioButton("Downward", this);
+  // Create a radio button
+  rbtn_1_ = new QRadioButton("rx(red)", this);
+  rbtn_2_ = new QRadioButton("ry(green)", this);
+  rbtn_3_ = new QRadioButton("rz(blue)", this);
   connect(rbtn_1_, SIGNAL(clicked()), this, SLOT(testRB1()));  
   connect(rbtn_2_, SIGNAL(clicked()), this, SLOT(testRB2()));  
+  connect(rbtn_3_, SIGNAL(clicked()), this, SLOT(testRB3()));
   
+  // Create a slider
+  slider_ = new QSlider(Qt::Horizontal, this);
+  slider_->setMinimum(0);
+  slider_->setMaximum(20);
+  slider_->setValue(10);
+  connect(slider_, SIGNAL(valueChanged(int)), this, SLOT(setDistance(int)));
+
+  // Create a push button
+  btn_imarker_clear_ = new QPushButton(this);
+  btn_imarker_clear_->setText("Clear");
+  connect(btn_imarker_clear_, SIGNAL(clicked()), this, SLOT(clearIMarker()));
+
+
+  // Create a text browser
   timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateText()));
   timer_->start(100);
@@ -157,11 +174,18 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   layout->addWidget(btn_pcl_capture_);
   layout->addWidget(btn_pcl_clear_);
 
-  addTitle("Set pre-grasp approach direction");
+  addTitle("Set pre-grasp approach");
+  sl_layout = new QHBoxLayout;
+  sl_layout->addWidget(slider_);
+  layout->addLayout(sl_layout);
+
   rb_layout = new QHBoxLayout;
   rb_layout->addWidget(rbtn_1_);
   rb_layout->addWidget(rbtn_2_);
+  rb_layout->addWidget(rbtn_3_);
   layout->addLayout(rb_layout);
+
+  layout->addWidget(btn_imarker_clear_);
 
   addTitle("Move to clicked point");
   plan_layout = new QHBoxLayout;
@@ -241,7 +265,9 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   btn_gripper_close_->setEnabled(true);
   btn_emergency_stop_->setEnabled(true);
 
-  rbtn_1_->setChecked(true);
+  rbtn_3_->setChecked(true);
+
+  btn_imarker_clear_->setEnabled(true);
 }
 
 void MMGuiRviz::addLabelX()
@@ -379,16 +405,34 @@ void MMGuiRviz::executeInterpolation()
 
 void MMGuiRviz::testRB1()
 {
-  remote_reciever_.publishRB1();
+  remote_reciever_.publishRB(1);
 }
+
 void MMGuiRviz::testRB2()
 {
-  remote_reciever_.publishRB2();
+  remote_reciever_.publishRB(2);
+}
+
+void MMGuiRviz::testRB3()
+{
+  remote_reciever_.publishRB(3);
+}
+
+void MMGuiRviz::setDistance(int value)
+{
+  remote_reciever_.publishDistance(value);
 }
 
 void MMGuiRviz::updateText()
 {
   text_browser_->setText(QString::fromStdString(remote_reciever_.get_instruction()));
+}
+
+void MMGuiRviz::clearIMarker()
+{
+  rbtn_3_->setChecked(true);
+  slider_->setValue(10);
+  remote_reciever_.publishClearIMarker();
 }
 
 void MMGuiRviz::save(rviz::Config config) const

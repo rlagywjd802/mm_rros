@@ -46,6 +46,7 @@
 
 #include <QRadioButton>
 #include <QTextBrowser>
+#include <QSlider>
 
 #include <mm_gui_rviz/remote_reciever.h>
 
@@ -127,6 +128,12 @@ protected Q_SLOTS:
 
   void testRB2();
 
+  void testRB3();
+
+  void setDistance(int);
+
+  void clearIMarker();
+
 protected:
   QVBoxLayout* layout;
   QHBoxLayout* sub_layout;
@@ -161,13 +168,18 @@ protected:
   QHBoxLayout* rb_layout;
   QRadioButton* rbtn_1_;
   QRadioButton* rbtn_2_;
+  QRadioButton* rbtn_3_;
+
+  QHBoxLayout* sl_layout;
+  QSlider* slider_;
+
+  QPushButton* btn_imarker_clear_;
 
   QTimer* timer_;
   QTextBrowser* text_browser_;
 
   QFrame* line;
-  RemoteReciever remote_reciever_;
-  
+  RemoteReciever remote_reciever_;  
 
 };
 

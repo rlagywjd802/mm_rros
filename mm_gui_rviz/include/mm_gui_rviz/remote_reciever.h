@@ -35,12 +35,15 @@
 #ifndef MM_GUI_RVIZ_REMOTE_RECIEVER_H
 #define MM_GUI_RVIZ_REMOTE_RECIEVER_H
 
-#include <std_msgs/Bool.h>
-#include <actionlib_msgs/GoalID.h>
-#include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
+#include <std_msgs/Bool.h>
+#include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
+
+#include <geometry_msgs/Twist.h>
+#include <actionlib_msgs/GoalID.h>
+
 #include <string>
 
 namespace mm_gui_rviz
@@ -76,10 +79,10 @@ public:
     compute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("compute_interpolation", 1);
     execute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("execute_interpolation", 1);
 
-    ////////////////// Radio Button //////////////////
-    rb_publisher_ = nh_.advertise<std_msgs::Bool>("approach_forward", 1);
+    rb_publisher_ = nh_.advertise<std_msgs::String>("rotate_axis", 1);
+    sl_publisher_ = nh_.advertise<std_msgs::Int32>("distance", 1);
+    clear_imarker_publisher_ = nh_.advertise<std_msgs::Bool>("clear_imarker", 1);
 
-    ////////////////// Text Browser //////////////////
     tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
 
   }
@@ -273,22 +276,35 @@ public:
     execute_interpolation_publisher_.publish(msg); 
   }
 
-  void publishRB1()
+  void publishRB(int value)
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "RB1");
+    ROS_DEBUG_STREAM_NAMED("gui", "RB");
 
-    std_msgs::Bool msg;
-    msg.data = true;
+    std_msgs::String msg;
+    
+    if (value == 1)      msg.data = "x";
+    else if (value == 2) msg.data = "y";
+    else if (value == 3) msg.data = "z";
+
     rb_publisher_.publish(msg);  
   }
 
-  void publishRB2()
+  void publishDistance(int value)
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "RB2");
+    ROS_DEBUG_STREAM_NAMED("gui", "Distance");
+
+    std_msgs::Int32 msg;
+    msg.data = value;
+    sl_publisher_.publish(msg);
+  }
+
+  void publishClearIMarker()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "ClearIMarker");
 
     std_msgs::Bool msg;
-    msg.data = false;
-    rb_publisher_.publish(msg);  
+    msg.data = true;
+    clear_imarker_publisher_.publish(msg);  
   }
 
   void instruction_cb(const std_msgs::String::ConstPtr& msg)
@@ -323,10 +339,10 @@ protected:
   ros::Publisher compute_interpolation_publisher_;
   ros::Publisher execute_interpolation_publisher_;
 
-  ////////////////// Radio Button //////////////////
   ros::Publisher rb_publisher_;
+  ros::Publisher sl_publisher_;
+  ros::Publisher clear_imarker_publisher_;
 
-  ////////////////// Text Browser //////////////////
   ros::Subscriber tb_subscriber_;
   
   // The ROS node handle.

@@ -1,3 +1,18 @@
+import tf
+
+from geometry_msgs.msg import *
+
+def euler_to_quat(r, p, y):
+	quat_array = tf.transformations.quaternion_from_euler(r, p, y)
+	
+	quat = Quaternion()
+	quat.x = quat_array[0]
+	quat.y = quat_array[1]
+	quat.z = quat_array[2]
+	quat.w = quat_array[3]
+
+	return quat
+
 ## print functions
 def print_pose(pose, name="pose: "):
     pp = pose.position
