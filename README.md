@@ -1,8 +1,7 @@
 # mm_rros
 These are packages for NIST mobile manipulator projects.
 
-version: **v2.0**
-- demo 01/24
+version: **v2.1**
 
 # packages
 
