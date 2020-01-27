@@ -3,6 +3,7 @@ import rospy
 import sys
 
 import copy
+import math
 
 from interactive_markers.interactive_marker_server import *
 from visualization_msgs.msg import *
@@ -38,7 +39,7 @@ class WaypointsGUIControl():
         # Pubisher
         # self.waypoint0_pub = rospy.Publisher('waypoint0_target', Pose, queue_size=1)
         self.target_pose_br = tf.TransformBroadcaster()
-        self.update_rate = rospy.Rate(5)
+        self.update_rate = rospy.Rate(4)
 
         self.instruction_pub = rospy.Publisher('/instruction', String, queue_size=1)
         self.is_published = False
@@ -67,8 +68,6 @@ class WaypointsGUIControl():
 
         self.last_poses[int(f_name)] = f_pose
         self.server.applyChanges()
-
-        self.update_tf(f_pose, self.last_offset)
 
     def update_imarker(self):
         if self.num_of_wpt <= 0:
@@ -106,12 +105,19 @@ class WaypointsGUIControl():
                             "marker_pose", 
                             FRAME_ID)
 
-        # grasping_pose --> target_pose
+        # marker_pose --> target_pose
         self.target_pose_br.sendTransform((-offset, 0, 0), 
                             (0.0, 0.0, 0.0, 1.0), 
                             time_now, 
-                            "target_pose", 
+                            "gripper_pose", 
                             "marker_pose")
+
+        quat = euler_to_quat(math.pi/2, 0, 0)
+        self.target_pose_br.sendTransform((-0.13, 0, 0), 
+                    (quat.x, quat.y, quat.z, quat.w), 
+                    time_now, 
+                    "eef_pose", 
+                    "gripper_pose")
 
     def make_mesh_marker(self, offset=0.0):
         marker = Marker()
@@ -268,7 +274,7 @@ class WaypointsGUIControl():
     def rotate_axis_cb(self, msg):
         rotate_axis = msg.data
 
-        rospy.loginfo("rotate_axis_cb| msg: {}".format(rotate_axis))
+        rospy.loginfo("rotate_axis_cb| r_axis: {}, offset: {}".format(rotate_axis, self.last_offset))
 
         self.erase_waypoint()
         self.insert_gripper(0, self.last_poses[0], rotate_axis, self.last_offset)
@@ -277,7 +283,7 @@ class WaypointsGUIControl():
 
     def distance_cb(self, msg):
         offset = msg.data
-        rospy.loginfo("distance_cb| msg: {}".format(offset))
+        rospy.loginfo("distance_cb| r_axis: {}, offset: {}".format(self.last_r_axis, offset))
 
         self.erase_waypoint()
         self.insert_gripper(0, self.last_poses[0], self.last_r_axis, offset)
@@ -286,9 +292,12 @@ class WaypointsGUIControl():
 
     def clear_imarker_cb(self, msg):
         if msg.data:
-            rospy.loginfo("clear_imarker_cb| ")
-            self.erase_waypoint()
-            self.insert_gripper(0, self.clicked_pose, INIT_R_AXIS, INIT_OFFSET)
+            self.erase_waypoint()            
+            self.last_r_axis = INIT_R_AXIS
+            self.last_offset = INIT_OFFSET
+            self.last_poses[0] = self.clicked_pose
+            rospy.loginfo("clear_imarker_cb| r_axis:{}, offset:{}, ".format(self.last_r_axis, self.last_offset)+print_pose(self.last_poses[0]))
+            self.insert_gripper(0, self.last_poses[0], self.last_r_axis, self.last_offset)
 
     def publish_step1(self):
         if not self.is_published:

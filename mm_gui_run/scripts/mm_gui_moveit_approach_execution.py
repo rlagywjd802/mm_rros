@@ -155,7 +155,7 @@ class UR5MoveGroupGUI():
         if msg.poses:
             # listen tf of 'target_pose' 
             try:
-                (trans, rot) = self.listener.lookupTransform(FRAME_ID, 'target_pose', rospy.Time(0))
+                (trans, rot) = self.listener.lookupTransform(FRAME_ID, 'gripper_pose', rospy.Time(0))
                 rospy.logdebug("waypoints_update_cb| trans:{}, rot:{}".format(trans, rot))
 
                 self.last_waypoints = []

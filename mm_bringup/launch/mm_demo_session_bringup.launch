@@ -26,6 +26,7 @@
   	<!-- <node name="waypoint_controls" pkg="mm_gui_run" type="waypoint_controls.py"/> -->
   	
   	<!-- demo 01/24 -->
+  	<!-- <node name="waypoint_controls" pkg="mm_gui_run" type="waypoint_controls.py"/> -->
   	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run" type="mm_gui_moveit_approach_execution.py"/> -->
 
   	<!-- self-filter -->

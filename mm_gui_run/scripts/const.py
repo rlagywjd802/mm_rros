@@ -1,6 +1,7 @@
 from geometry_msgs.msg import Quaternion
 
 FRAME_ID = "base_footprint"
+EEF = "eef_pose"
 
 GRIPPER_MESH = "package://mm_description/meshes/gripper/robotiq_2f85_opened_combined_axis_mated.STL"
 
