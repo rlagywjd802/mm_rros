@@ -11,8 +11,15 @@ from geometry_msgs.msg import Pose, PointStamped, PoseStamped
 from visualization_msgs.msg import InteractiveMarkerUpdate
 from sensor_msgs.msg import Joy
 
+from ur5_inv_kin_wrapper import ur5_inv_kin_wrapper
 from utils import *
 from const import *
+
+def convert_base_axis(pose_mat):
+    z_180 = tf.transformations.euler_matrix(0, 0, math.pi)
+    pose_mat = tf.transformations.concatenate_matrices(z_180, pose_mat)
+    
+    return pose_mat
 
 class UR5MoveGroupGUI():
     def __init__(self, log_level):
@@ -33,8 +40,9 @@ class UR5MoveGroupGUI():
         rospy.Subscriber("move_zm", Bool, self.move_zm_cb)
 
         rospy.Subscriber("waypoints/update", InteractiveMarkerUpdate, self.waypoints_update_cb)
-        rospy.Subscriber("rotate_axis", String, self.rotate_axis_cb)
         rospy.Subscriber("distance", Int32, self.distance_cb)
+
+        rospy.Subscriber("solution_num", Int32, self.solution_cb)
 
         # Publisher
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.msg.DisplayTrajectory, queue_size=50)
@@ -62,6 +70,12 @@ class UR5MoveGroupGUI():
         self.last_offset = 10.0
 
         self.listener = tf.TransformListener()
+
+        # IK
+        self.ur5_inv = ur5_inv_kin_wrapper()
+        self.last_target_joint = None
+        self.last_target_pose = None
+        self.sol_num = None
 
 
     ##################################################################################################
@@ -122,8 +136,23 @@ class UR5MoveGroupGUI():
     #     print(current_pose_orientation)
     #     self.ee_pose.orientation = current_pose_orientation
 
+    # def approach_plan_cb(self, msg):
+    #     self.group.set_pose_target(self.last_waypoints[0])
+    #     self.plan = self.group.plan()
+    #     rospy.loginfo("approach_plan: Waiting while RVIZ displays the plan...")
+    #     rospy.sleep(5)
+    #     rospy.loginfo("approach_plan: Visualizing the plan")
+    #     self.display_trajectory = moveit_msgs.msg.DisplayTrajectory()
+    #     self.display_trajectory.trajectory_start = self.robot.get_current_state()
+    #     self.display_trajectory.trajectory.append(self.plan)
+    #     self.display_trajectory_publisher.publish(self.display_trajectory);
+    #     rospy.loginfo("approach_plan: Waiting while plan is visualized (again)...")
+    #     rospy.sleep(5)
+    #     self.group.clear_pose_targets()
+    #     rospy.loginfo("approach_plan: Finished")
+
     def approach_plan_cb(self, msg):
-        self.group.set_pose_target(self.last_waypoints[0])
+        self.group.set_joint_value_target(self.last_target_joint)
         self.plan = self.group.plan()
         rospy.loginfo("approach_plan: Waiting while RVIZ displays the plan...")
         rospy.sleep(5)
@@ -145,43 +174,64 @@ class UR5MoveGroupGUI():
 
         self.instruction_pub.publish(STEP4)
 
-
     def approach_stop_cb(self, msg):
         self.group.stop()
         rospy.loginfo("approach_stop: Stopped")
 
+    # def waypoints_update_cb(self, msg):
+    #     rospy.logdebug("waypoints_update_cb")
+    #     if msg.poses:
+    #         # listen tf of 'target_pose' 
+    #         try:
+    #             (trans, rot) = self.listener.lookupTransform(FRAME_ID, EEF_LINK, rospy.Time(0))
+    #             rospy.logdebug("waypoints_update_cb| trans:{}, rot:{}".format(trans, rot))
+
+    #             self.last_waypoints = []
+    #             for i in reversed(range(len(msg.poses))):
+    #                 if i == len(msg.poses)-1:
+    #                     target_pose = Pose()
+    #                     target_pose.position = Point(trans[0], trans[1], trans[2])
+    #                     target_pose.orientation = Quaternion(rot[0], rot[1], rot[2], rot[3])
+    #                 else:
+    #                     target_pose = msg.poses[i].pose
+    #                 rospy.logdebug("waypoints_update_cb| marker{} ".format(i)+print_pose(msg.poses[i].pose))
+    #                 self.last_waypoints.append(target_pose)
+    #         except:
+    #             pass
+
     def waypoints_update_cb(self, msg):
         rospy.logdebug("waypoints_update_cb")
         if msg.poses:
-            # listen tf of 'target_pose' 
             try:
-                (trans, rot) = self.listener.lookupTransform(FRAME_ID, 'gripper_pose', rospy.Time(0))
+                (trans, rot) = self.listener.lookupTransform('/base_link', REAL_EEF_LINK, rospy.Time(0))
                 rospy.logdebug("waypoints_update_cb| trans:{}, rot:{}".format(trans, rot))
 
-                self.last_waypoints = []
-                for i in reversed(range(len(msg.poses))):
-                    if i == len(msg.poses)-1:
-                        target_pose = Pose()
-                        target_pose.position = Point(trans[0], trans[1], trans[2])
-                        target_pose.orientation = Quaternion(rot[0], rot[1], rot[2], rot[3])
-                    else:
-                        target_pose = msg.poses[i].pose
-                    rospy.logdebug("waypoints_update_cb| marker{} ".format(i)+print_pose(msg.poses[i].pose))
-                    self.last_waypoints.append(target_pose)
-            except:
+                current_joint = self.group.get_current_joint_values()
+
+                self.ur5_inv.solve_(trans, rot, current_joint)
+                if self.sol_num is None: 
+                    self.ur5_inv.publish_state(-1)
+                # self.ur5_inv.solve(trans, rot)
+                # self.ur5_inv.publish_cost(current_joint)
+
+            except Exception as e:
+                rospy.logdebug(e)
                 pass
-
-    def rotate_axis_cb(self, msg):
-        rotate_axis = msg.data
-
-        rospy.loginfo("rotate_axis_cb| msg: {}".format(rotate_axis))
-        self.last_r_axis = rotate_axis
 
     def distance_cb(self, msg):
         offset = msg.data
 
         rospy.loginfo("distance_cb| msg: {}".format(offset))
         self.last_offset = offset
+
+    def solution_cb(self, msg):
+        # publish selected solution and save it as a target
+        solution_num = msg.data
+
+        rospy.loginfo("solution_cb| msg: {}".format(solution_num))
+    
+        self.last_target_joint = self.ur5_inv.publish_state(solution_num)
+        self.sol_num = solution_num
 
 def main(arg):
     if len(arg) > 1:

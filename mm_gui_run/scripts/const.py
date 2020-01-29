@@ -1,7 +1,15 @@
 from geometry_msgs.msg import Quaternion
 
+# only ur5
+# MOVE_GROUP = "manipulator"
+# FRAME_ID = "world"
+# REAL_EEF_LINK = "real_ee_link"
+
+# mm
+MOVE_GROUP = "ur5"
 FRAME_ID = "base_footprint"
-EEF = "eef_pose"
+EEF_LINK = "eef_pose"
+REAL_EEF_LINK = "real_eef_pose"
 
 GRIPPER_MESH = "package://mm_description/meshes/gripper/robotiq_2f85_opened_combined_axis_mated.STL"
 
@@ -16,3 +24,5 @@ STEP2 = "Step2. Click grasping point"
 STEP3 = "Step3. Move to the clicked point"
 STEP4 = "Step4. Pick the object"
 STEP5 = "Step5. Move to initial pose"
+
+INIT_SOL = 1

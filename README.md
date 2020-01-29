@@ -1,7 +1,8 @@
 # mm_rros
 These are packages for NIST mobile manipulator projects.
 
-version: **v2.1**
+version: **v2.2**
+- select IK solution(checkbox)
 
 # packages
 

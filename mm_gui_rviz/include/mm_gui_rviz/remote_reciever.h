@@ -40,11 +40,13 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Float32MultiArray.h>
 
 #include <geometry_msgs/Twist.h>
 #include <actionlib_msgs/GoalID.h>
 
 #include <string>
+#include <vector>
 
 namespace mm_gui_rviz
 {
@@ -52,10 +54,12 @@ class RemoteReciever
 {
 private:
   std::string tb_string;
+  // std::vector<float>* ik_cost(float);
 
 public:
   RemoteReciever()
   {
+    // Publisher
     // joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_gui_joy", 1);
     base_stop_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("move_base/cancel", 1);
     gripper_publisher_ = nh_.advertise<std_msgs::Bool>("gripper_joint", 1);
@@ -83,22 +87,16 @@ public:
     sl_publisher_ = nh_.advertise<std_msgs::Int32>("distance", 1);
     clear_imarker_publisher_ = nh_.advertise<std_msgs::Bool>("clear_imarker", 1);
 
-    tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
+    solution_publisher_ = nh_.advertise<std_msgs::Int32>("solution_num", 1);
+    solve_ik_publisher_ = nh_.advertise<std_msgs::Bool>("solve_ik", 1);
 
+    // Subscriber
+    tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
+    // ik_cost_subscriber_ = nh_.subscribe<std_msgs::Float32MultiArray>("inv_kin_cost", 5, &RemoteReciever::ik_cost_cb, this);
   }
 
   void publishEmergencyStop()
   {
-    // ROS_DEBUG_STREAM_NAMED("gui", "BaseStop");
-    // // sensor_msgs::Joy msg;
-    // // msg.buttons.resize(9);
-    // // msg.buttons[1] = 1;
-    // // joy_publisher_.publish(msg);
-
-    // actionlib_msgs::GoalID msg;
-    // msg.id = "";
-    // base_stop_publisher_.publish(msg);
-
     ROS_DEBUG_STREAM_NAMED("gui", "ApproachStop");
 
     std_msgs::Bool msg;
@@ -110,11 +108,6 @@ public:
   {
     ROS_DEBUG_STREAM_NAMED("gui", "GripperOpen");
 
-    // sensor_msgs::Joy msg;
-    // msg.buttons.resize(9);
-    // msg.buttons[5] = 1;
-    // joy_publisher_.publish(msg);
-
     std_msgs::Bool msg;
     msg.data = false;
     gripper_publisher_.publish(msg);
@@ -123,11 +116,6 @@ public:
   void publishGripperClose()
   {
     ROS_DEBUG_STREAM_NAMED("gui", "GripperClose");
-
-    // sensor_msgs::Joy msg;
-    // msg.buttons.resize(9);
-    // msg.buttons[6] = 1;
-    // joy_publisher_.publish(msg);
 
     std_msgs::Bool msg;
     msg.data = true;
@@ -307,12 +295,40 @@ public:
     clear_imarker_publisher_.publish(msg);  
   }
 
+  void publishSolution(int value)
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "SolutionNum");
+
+    std_msgs::Int32 msg;
+    msg.data = value;
+    solution_publisher_.publish(msg);    
+  }
+
+  void publishSolveIK(bool value)
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "SolveIK");
+
+    std_msgs::Bool msg;
+    msg.data = value;
+    solve_ik_publisher_.publish(msg);
+  }
+
   void instruction_cb(const std_msgs::String::ConstPtr& msg)
   {
     tb_string = msg->data.c_str();
   }
 
+  // void ik_cost_cb(const std_msgs::Float32MultiArray::ConstPtr &msg)
+  // {
+  //   std::vector<float>* tmp;
+  //   tmp->push_back(1.0);
+  //   tmp->push_back(2.0);
+  //   ik_cost = tmp;
+  // }
+
   const std::string& get_instruction() {return tb_string;}
+
+  // const std::vector<float>* get_ik_cost() {return ik_cost;}
 
 protected:
   // The ROS publishers
@@ -343,7 +359,11 @@ protected:
   ros::Publisher sl_publisher_;
   ros::Publisher clear_imarker_publisher_;
 
+  ros::Publisher solution_publisher_;
+  ros::Publisher solve_ik_publisher_;
+
   ros::Subscriber tb_subscriber_;
+  // ros::Subscriber ik_cost_subscriber_;
   
   // The ROS node handle.
   ros::NodeHandle nh_;

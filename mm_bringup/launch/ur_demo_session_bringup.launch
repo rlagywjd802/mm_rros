@@ -1,0 +1,18 @@
+<launch>
+	<arg name="rviz"	default="false"/>
+	<arg name="sim"		default="false"/>
+	
+	<!-- arm -->
+	<include file="$(find ur_modern_driver)/launch/ur5_bringup.launch">
+		<arg name="robot_ip" 		value="192.168.2.2"/>
+		<arg name="limited"			value="true"/>
+	</include>
+
+	<include file="$(find ur5_moveit_config)/launch/ur5_moveit_planning_execution.launch"/>
+
+	<node if="$(arg rviz)" name="demo_rviz" pkg="rviz" type="rviz" respawn="false" 
+		args="-d $(find mm_bringup)/rviz/mm_demo.rviz" output="screen">
+		<!-- <rosparam command="load" file="$(find mm_moveit_config)/config/kinematics.yaml"/> -->
+	</node>
+  	
+</launch>

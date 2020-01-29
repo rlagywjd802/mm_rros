@@ -34,6 +34,7 @@
 
 #include <cstdio>
 #include <string>
+#include <vector>
 
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -151,14 +152,52 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   btn_imarker_clear_->setText("Clear");
   connect(btn_imarker_clear_, SIGNAL(clicked()), this, SLOT(clearIMarker()));
 
-
   // Create a text browser
   timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateText()));
+  connect(timer_, SIGNAL(timeout()), this, SLOT(updateIKCost()));
   timer_->start(100);
 
   text_browser_ = new QTextBrowser(this);
   text_browser_->setStyleSheet("font: 15pt");
+
+  // Create a push button
+  // btn_solve_ik_ = new QPushButton(this);
+  // btn_solve_ik_->setText("Solve");
+  // connect(btn_solve_ik_, SIGNAL(clicked()), this, SLOT(solveIK()));
+
+  // Create a push button
+  // btn_clear_ik_ = new QPushButton(this);
+  // btn_clear_ik_->setText("Clear");
+  // connect(btn_clear_ik_, SIGNAL(clicked()), this, SLOT(clearIK()));
+
+  // Create a table
+  // table_widget_ = new QTableWidget(this);
+  // table_widget_-> setRowCount(8);
+  // table_widget_-> setColumnCount(2);
+  // table_header_<<"#"<<"cost";
+
+  // table_widget_->setHorizontalHeaderLabels(table_header_);
+  // table_widget_->setShowGrid(false);
+  // table_widget_->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  // table_widget_->setSelectionBehavior(QAbstractItemView::SelectRows);
+  // table_widget_->setSelectionMode(QAbstractItemView::SingleSelection);
+  // table_widget_->verticalHeader()->hide();
+  // connect(table_widget_, SIGNAL(cellClicked(int, int)), this, SLOT(selectSolutionT(int, int)));
+
+  // Create a combo box
+  combo_box_ = new QComboBox(this);
+  combo_box_->addItem("");
+  combo_box_->addItem("sol 0");
+  combo_box_->addItem("sol 1");
+  combo_box_->addItem("sol 2");
+  combo_box_->addItem("sol 3");
+  combo_box_->addItem("sol 4");
+  combo_box_->addItem("sol 5");
+  combo_box_->addItem("sol 6");
+  combo_box_->addItem("sol 7");
+  connect(combo_box_, SIGNAL(currentIndexChanged(int)), this, SLOT(selectSolution(int)));
+
 
   //////////////////////////////
   // Layout
@@ -186,6 +225,12 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   layout->addLayout(rb_layout);
 
   layout->addWidget(btn_imarker_clear_);
+
+  addTitle("Select IK Solution");
+  // layout->addWidget(btn_solve_ik_);
+  // layout->addWidget(btn_clear_ik_);
+  // layout->addWidget(table_widget_);
+  layout->addWidget(combo_box_);
 
   addTitle("Move to clicked point");
   plan_layout = new QHBoxLayout;
@@ -268,6 +313,10 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   rbtn_3_->setChecked(true);
 
   btn_imarker_clear_->setEnabled(true);
+
+  // btn_solve_ik_->setEnabled(true);
+  // btn_clear_ik_->setEnabled(true);
+
 }
 
 void MMGuiRviz::addLabelX()
@@ -434,6 +483,36 @@ void MMGuiRviz::clearIMarker()
   slider_->setValue(10);
   remote_reciever_.publishClearIMarker();
 }
+
+void MMGuiRviz::selectSolution(int value)
+{
+  remote_reciever_.publishSolution(value-1);
+}
+
+// void MMGuiRviz::solveIK()
+// {
+//   remote_reciever_.publishSolveIK(true);
+// }
+
+// void MMGuiRviz::updateIKCost()
+// {
+//   std::vector<float>* costs;
+//   costs = remote_reciever_.get_ik_cost();
+//   for (int i=0; i<8; i++){
+//     table_widget_->setItem(i, 0, new QTableWidgetItem(QString::number(i+1)));
+//     table_widget_->setItem(i, 1, new QTableWidgetItem(QString::number(costs[i])));
+//   }
+// }
+
+// void MMGuiRviz::clearIK()
+// {
+//   remote_reciever_.publishSolveIK(false);
+// }
+
+// void MMGuiRviz::selectSolutionT(int row, int col)
+// {
+//   remote_reciever_.publishSolution(row);
+// }
 
 void MMGuiRviz::save(rviz::Config config) const
 {

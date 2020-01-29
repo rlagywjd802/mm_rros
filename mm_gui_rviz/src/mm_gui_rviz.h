@@ -47,6 +47,9 @@
 #include <QRadioButton>
 #include <QTextBrowser>
 #include <QSlider>
+#include <QTableWidget>
+#include <QStringList>
+#include <QHeaderView>
 
 #include <mm_gui_rviz/remote_reciever.h>
 
@@ -68,7 +71,10 @@ public:
   virtual void save(rviz::Config config) const;
 
 public Q_SLOTS:
+  
   void updateText();
+
+  // void updateIKCost();
 
 protected Q_SLOTS:
 
@@ -134,6 +140,14 @@ protected Q_SLOTS:
 
   void clearIMarker();
 
+  void selectSolution(int);
+
+  // void solveIK();
+
+  // void clearIK();
+
+  // void selectSolutionT(int, int);
+
 protected:
   QVBoxLayout* layout;
   QHBoxLayout* sub_layout;
@@ -177,6 +191,13 @@ protected:
 
   QTimer* timer_;
   QTextBrowser* text_browser_;
+
+  QComboBox *combo_box_;
+
+  // QPushButton* btn_solve_ik_;
+  // QPushButton* btn_clear_ik_;
+  // QTableWidget *table_widget_;
+  // QStringList table_header_;
 
   QFrame* line;
   RemoteReciever remote_reciever_;  

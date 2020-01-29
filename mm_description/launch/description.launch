@@ -6,7 +6,9 @@
   <arg name="ur_enabled" default="true"/>
   <arg name="gripper_enabled" default="true"/>
  -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find mm_description)/urdf/mm.urdf.xacro' use_nominal_extrinsics:=true" />
+  <param name="robot_description" command="$(find xacro)/xacro '$(find mm_description)/urdf/mm.urdf.xacro' --inorder use_nominal_extrinsics:=true" />
+
+<!--  -->
 
 </launch>
 

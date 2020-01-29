@@ -93,6 +93,7 @@ class WaypointsGUIControl():
         self.update_tf(int_marker_poses[0].pose, self.last_offset)
 
     def update_tf(self, pose, offset):
+        # updat tf for eef_pose
         time_now = rospy.Time.now()
         pp = pose.position
         po = pose.orientation
@@ -105,19 +106,28 @@ class WaypointsGUIControl():
                             "marker_pose", 
                             FRAME_ID)
 
-        # marker_pose --> target_pose
+        # marker_pose --> gripper_pose
         self.target_pose_br.sendTransform((-offset, 0, 0), 
                             (0.0, 0.0, 0.0, 1.0), 
                             time_now, 
                             "gripper_pose", 
                             "marker_pose")
 
+        # gripper_pose --> eef_pose
         quat = euler_to_quat(math.pi/2, 0, 0)
         self.target_pose_br.sendTransform((-0.13, 0, 0), 
                     (quat.x, quat.y, quat.z, quat.w), 
                     time_now, 
                     "eef_pose", 
                     "gripper_pose")
+
+        # eef_pose --> real_eef_pose
+        quat = euler_to_quat(-math.pi/2, 0, -math.pi/2)
+        self.target_pose_br.sendTransform((0, 0, 0), 
+                    (quat.x, quat.y, quat.z, quat.w), 
+                    time_now, 
+                    "real_eef_pose", 
+                    "eef_pose")
 
     def make_mesh_marker(self, offset=0.0):
         marker = Marker()

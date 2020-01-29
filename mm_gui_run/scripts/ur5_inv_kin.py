@@ -5,7 +5,6 @@ from numpy.linalg import inv
 from numpy import linalg as la
 from time import time
 
-
 class ur5:
     def __init__(self):
         self.a = [0, -0.425, -0.39225, 0, 0, 0]

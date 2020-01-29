@@ -28,6 +28,14 @@
       <origin xyz="${ur5_x_location} 0.0 ${ur5_z_location}" rpy="0.0 0.0 -${M_PI/2}" />
     </joint>
 
+    <joint name="ur_real_ee_fixed_joint" type="fixed">
+      <parent link="ee_link" />
+      <child link="real_ee_link" />
+      <origin xyz="0.0 0.0 0.0" rpy="-${M_PI/2} 0.0 -${M_PI/2}" />
+    </joint>
+
+    <link name="real_ee_link"/>
+
     <xacro:ur5_robot prefix="" joint_limited="false"/>
 
     <!-- gripper -->
