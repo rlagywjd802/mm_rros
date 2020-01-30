@@ -64,7 +64,7 @@ class ur5_inv_kin_wrapper(ur5):
 				inv_sol[0, i] -= math.pi*2
 			# if inv_sol[1, i] > J2[1]*deg2rad:
 			# 	inv_sol[1, i] -= math.pi*2
-			if inv_sol[3, i] > J4[1]*deg2rad:
+ 			if inv_sol[3, i] > J4[1]*deg2rad:
 				inv_sol[3, i] -= math.pi*2
 			# if inv_sol[5, i] > J6[1]*deg2rad:
 			# 	inv_sol[5, i] -= math.pi*2

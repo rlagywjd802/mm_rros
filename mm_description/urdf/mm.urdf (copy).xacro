@@ -15,7 +15,7 @@
   <xacro:include filename="$(find mm_description)/urdf/accessories/kinect_tilted_camera.urdf.xacro"/>
   <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
   <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" />
-  <xacro:include filename="$(find realsense2_description)/urdf/_d415.urdf.xacro" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
 
   <!-- ur5 robot -->
   <xacro:if value="$(arg ur_enabled)">    
@@ -83,17 +83,26 @@
   </xacro:if>
 
   <xacro:if value="$(arg realsense_enabled)">
+    <xacro:property name="realsense_height" value="${0.415+0.077}"/>
+    
+    <link name="realsense_mount_link" />
+    
+    <joint name="base_realsense_fixed_joint" type="fixed">
+      <parent link="bare_base_link"/>
+      <child link="realsense_mount_link"/>
+      <origin xyz="${-base_x_size/2 - profile_size/2} ${-base_y_size/2 + profile_size*1.5} ${base_center_height + base_z_size/2 + realsense_height}" rpy="0 0 ${-M_PI/4}"/>
+    </joint>
 
     <link name="realsense_base_link" />
     <joint name="realsense_mount_fixed_joint" type="fixed">
-      <parent link="ee_link"/>
+      <parent link="realsense_mount_link"/>
       <child link="realsense_base_link"/>
-      <origin xyz="-0.02 0.077 0.0" rpy="${-M_PI/2} 0 0"/>
+      <origin xyz="0.035 0 0.025" rpy="0 ${M_PI/6} 0"/>
     </joint>
 
-    <xacro:sensor_d415 parent="realsense_base_link">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:sensor_d415>
+    <xacro:sensor_d435 parent="realsense_base_link">
+      <origin xyz="0.010 0 -0.0125" rpy="0 0 0"/>
+    </xacro:sensor_d435>
 
   </xacro:if>
 </robot>
