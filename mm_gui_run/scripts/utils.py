@@ -5,6 +5,30 @@ from const import *
 from geometry_msgs.msg import *
 
 # transformation related
+def pose_to_mat(pose):
+	pp = pose.position
+	po = pose.orientation
+	trans_mat = tf.transformations.translation_matrix([pp.x, pp.y, pp.z])
+	rot_mat = tf.transformations.quaternion_matrix([po.x, po.y, po.z, po.w])
+	pose_mat = tf.transformations.concatenate_matrices(trans_mat, rot_mat)
+	
+	return pose_mat
+
+def mat_to_pose(pose_mat):
+	trans = tf.transformations.translation_from_matrix(pose_mat)
+	rot = tf.transformations.quaternion_from_matrix(pose_mat)
+
+	pose = Pose()
+	pose.position.x = trans[0]
+	pose.position.y = trans[1]
+	pose.position.z = trans[2]
+	pose.orientation.x = rot[0]
+	pose.orientation.y = rot[1]
+	pose.orientation.z = rot[2]
+	pose.orientation.w = rot[3]
+
+	return pose
+
 def euler_to_quat(r, p, y):
 	quat_array = tf.transformations.quaternion_from_euler(r, p, y)
 	

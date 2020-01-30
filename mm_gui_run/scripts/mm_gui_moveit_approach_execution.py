@@ -2,6 +2,7 @@
 import sys
 import copy
 import rospy
+import tf
 
 import moveit_commander
 import moveit_msgs.msg
@@ -15,11 +16,15 @@ from ur5_inv_kin_wrapper import ur5_inv_kin_wrapper
 from utils import *
 from const import *
 
-def convert_base_axis(pose_mat):
-    z_180 = tf.transformations.euler_matrix(0, 0, math.pi)
-    pose_mat = tf.transformations.concatenate_matrices(z_180, pose_mat)
-    
-    return pose_mat
+DXYZ = 0.02
+
+def dpose_wrt_eef(cur_pose, dxyz):
+    cur_pose_mat = pose_to_mat(cur_pose)
+    dpose_mat = tf.transformations.translation_matrix(dxyz)
+    pose_mat = tf.transformations.concatenate_matrices(cur_pose_mat, dpose_mat)
+    pose = mat_to_pose(pose_mat)
+
+    return pose
 
 class UR5MoveGroupGUI():
     def __init__(self, log_level):
@@ -29,7 +34,9 @@ class UR5MoveGroupGUI():
         # rospy.Subscriber("clicked_point", PointStamped, self.clicked_cb)
 
         rospy.Subscriber("approach_plan", Bool, self.approach_plan_cb)
-        rospy.Subscriber("approach_execute", Bool, self.approach_execute_cb)  
+        rospy.Subscriber("approach_execute", Bool, self.approach_execute_cb)
+        rospy.Subscriber("plan2", Bool, self.plan2_cb)
+        rospy.Subscriber("execute2", Bool, self.execute2_cb)  
         rospy.Subscriber("approach_stop", Bool, self.approach_stop_cb)
 
         rospy.Subscriber("move_xp", Bool, self.move_xp_cb)
@@ -74,8 +81,11 @@ class UR5MoveGroupGUI():
         # IK
         self.ur5_inv = ur5_inv_kin_wrapper()
         self.last_target_joint = None
-        self.last_target_pose = None
+        self.last_trans = None
+        self.last_rot = None
         self.sol_num = None
+
+        self.init_target_joint = self.group.get_current_joint_values()
 
 
     ##################################################################################################
@@ -100,56 +110,51 @@ class UR5MoveGroupGUI():
 
     def move_xp_cb(self, msg):
         rospy.loginfo("move_xp_cb")
-        # self.go(0.01, 0, 0)
-        self.go(0, -0.01, 0)
+        cur_pose = self.group.get_current_pose().pose
+        des_pose = dpose_wrt_eef(cur_pose, [DXYZ, 0, 0])
+        self.group.set_pose_target(des_pose)
+        self.group.go(wait=True)
+        self.group.clear_pose_targets()
 
     def move_xm_cb(self, msg):
-        rospy.loginfo("move_zm_cb")
-        # self.go(-0.01, 0, 0)
-        self.go(0, 0.01, 0)
+        rospy.loginfo("move_xm_cb")
+        cur_pose = self.group.get_current_pose().pose
+        des_pose = dpose_wrt_eef(cur_pose, [-DXYZ, 0, 0])
+        self.group.set_pose_target(des_pose)
+        self.group.go(wait=True)
+        self.group.clear_pose_targets()
 
     def move_yp_cb(self, msg):
         rospy.loginfo("move_yp_cb")
-        # self.go(0, 0.01, 0)
-        self.go(0.01, 0, 0)
+        cur_pose = self.group.get_current_pose().pose
+        des_pose = dpose_wrt_eef(cur_pose, [0, 0, -DXYZ])
+        self.group.set_pose_target(des_pose)
+        self.group.go(wait=True)
+        self.group.clear_pose_targets()
 
     def move_ym_cb(self, msg):
         rospy.loginfo("move_ym_cb")
-        # self.go(0, -0.01, 0)
-        self.go(-0.01, 0, 0)
+        cur_pose = self.group.get_current_pose().pose
+        des_pose = dpose_wrt_eef(cur_pose, [0, 0, DXYZ])
+        self.group.set_pose_target(des_pose)
+        self.group.go(wait=True)
+        self.group.clear_pose_targets()
 
     def move_zp_cb(self, msg):
         rospy.loginfo("move_zp_cb")
-        self.go(0, 0, 0.01)
+        cur_pose = self.group.get_current_pose().pose
+        des_pose = dpose_wrt_eef(cur_pose, [0, DXYZ, 0])
+        self.group.set_pose_target(des_pose)
+        self.group.go(wait=True)
+        self.group.clear_pose_targets()
 
     def move_zm_cb(self, msg):
         rospy.loginfo("move_zm_cb")
-        self.go(0, 0, -0.01)
-
-    # def clicked_cb(self, msg):
-    #     rospy.loginfo("clicked [x, y, z]: "+str(msg.point.x)+","+str(msg.point.y)+","+str(msg.point.z))
-    #     self.ee_pose.position.x = msg.point.x
-    #     self.ee_pose.position.y = msg.point.y
-    #     self.ee_pose.position.z = msg.point.z + 0.2
-
-    #     current_pose_orientation = self.group.get_current_pose().pose.orientation
-    #     print(current_pose_orientation)
-    #     self.ee_pose.orientation = current_pose_orientation
-
-    # def approach_plan_cb(self, msg):
-    #     self.group.set_pose_target(self.last_waypoints[0])
-    #     self.plan = self.group.plan()
-    #     rospy.loginfo("approach_plan: Waiting while RVIZ displays the plan...")
-    #     rospy.sleep(5)
-    #     rospy.loginfo("approach_plan: Visualizing the plan")
-    #     self.display_trajectory = moveit_msgs.msg.DisplayTrajectory()
-    #     self.display_trajectory.trajectory_start = self.robot.get_current_state()
-    #     self.display_trajectory.trajectory.append(self.plan)
-    #     self.display_trajectory_publisher.publish(self.display_trajectory);
-    #     rospy.loginfo("approach_plan: Waiting while plan is visualized (again)...")
-    #     rospy.sleep(5)
-    #     self.group.clear_pose_targets()
-    #     rospy.loginfo("approach_plan: Finished")
+        cur_pose = self.group.get_current_pose().pose
+        des_pose = dpose_wrt_eef(cur_pose, [0, -DXYZ, 0])
+        self.group.set_pose_target(des_pose)
+        self.group.go(wait=True)
+        self.group.clear_pose_targets()
 
     def approach_plan_cb(self, msg):
         self.group.set_joint_value_target(self.last_target_joint)
@@ -178,26 +183,20 @@ class UR5MoveGroupGUI():
         self.group.stop()
         rospy.loginfo("approach_stop: Stopped")
 
-    # def waypoints_update_cb(self, msg):
-    #     rospy.logdebug("waypoints_update_cb")
-    #     if msg.poses:
-    #         # listen tf of 'target_pose' 
-    #         try:
-    #             (trans, rot) = self.listener.lookupTransform(FRAME_ID, EEF_LINK, rospy.Time(0))
-    #             rospy.logdebug("waypoints_update_cb| trans:{}, rot:{}".format(trans, rot))
+    def plan2_cb(self, msg):
+        self.group.set_joint_value_target(self.init_target_joint)
+        self.plan = self.group.plan()
+        rospy.loginfo("plan2_cb: Waiting while RVIZ displays the plan...")
+        rospy.sleep(5)
+        rospy.loginfo("plan2_cb: Visualizing the plan")
+        self.group.clear_pose_targets()
+        rospy.loginfo("plan2_cb: Finished")
 
-    #             self.last_waypoints = []
-    #             for i in reversed(range(len(msg.poses))):
-    #                 if i == len(msg.poses)-1:
-    #                     target_pose = Pose()
-    #                     target_pose.position = Point(trans[0], trans[1], trans[2])
-    #                     target_pose.orientation = Quaternion(rot[0], rot[1], rot[2], rot[3])
-    #                 else:
-    #                     target_pose = msg.poses[i].pose
-    #                 rospy.logdebug("waypoints_update_cb| marker{} ".format(i)+print_pose(msg.poses[i].pose))
-    #                 self.last_waypoints.append(target_pose)
-    #         except:
-    #             pass
+    def execute2_cb(self, msg):
+        rospy.loginfo("execute2_cb: The Plan Execution Started")
+        self.group.execute(self.plan, wait=False)
+        rospy.sleep(5)
+        rospy.loginfo("execute2_cb: Finished")
 
     def waypoints_update_cb(self, msg):
         rospy.logdebug("waypoints_update_cb")
@@ -211,8 +210,9 @@ class UR5MoveGroupGUI():
                 self.ur5_inv.solve_(trans, rot, current_joint)
                 if self.sol_num is None: 
                     self.ur5_inv.publish_state(-1)
-                # self.ur5_inv.solve(trans, rot)
-                # self.ur5_inv.publish_cost(current_joint)
+
+                self.last_trans = trans
+                self.last_rot = rot
 
             except Exception as e:
                 rospy.logdebug(e)
@@ -229,8 +229,10 @@ class UR5MoveGroupGUI():
         solution_num = msg.data
 
         rospy.loginfo("solution_cb| msg: {}".format(solution_num))
-    
-        self.last_target_joint = self.ur5_inv.publish_state(solution_num)
+        
+        target_joint = self.ur5_inv.publish_state(solution_num)
+        if solution_num != -1:
+            self.last_target_joint = target_joint
         self.sol_num = solution_num
 
 def main(arg):
