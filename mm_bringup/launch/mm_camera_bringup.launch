@@ -1,0 +1,21 @@
+<launch>
+	<arg name="webcam" 		default="false"/>
+	<arg name="kinect1"		default="true"/>
+	<arg name="kinect2"		default="false"/>
+	<arg name="realsense1"	default="false"/>
+	<arg name="realsense2"	default="true"/>
+
+	<!-- camera1=false, camera2=false (default)-->
+	<include file="$(find mm_bringup)/launch/mm_kinect_bringup.launch">
+		<arg if="$(arg kinect1)" 	name="camera1" value="true"/>
+		<arg if="$(arg kinect2)" 	name="camera2" value="true"/>
+	</include>
+
+	<!-- camera1=false, camera2=false (default)-->
+	<include file="$(find mm_bringup)/launch/mm_realsense_bringup.launch">
+		<arg if="$(arg realsense1)" name="camera1" 	value="true"/>
+		<arg if="$(arg realsense2)" name="camera2" 	value="true"/>
+	</include>
+
+	<include if="$(arg webcam)" file="$(find usb_cam)/launch/usb_cam.launch"/>
+</launch>

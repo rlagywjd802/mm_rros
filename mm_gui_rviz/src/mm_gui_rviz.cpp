@@ -72,6 +72,11 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   connect(btn_gripper_close_, SIGNAL(clicked()), this, SLOT(moveGripperClose()));
 
   // Create a push button
+  btn_pcl_record_ = new QPushButton(this);
+  btn_pcl_record_->setText("Record");
+  connect(btn_pcl_record_, SIGNAL(clicked()), this, SLOT(pclRecord()));
+
+  // Create a push button
   btn_pcl_capture_ = new QPushButton(this);
   btn_pcl_capture_->setText("Capture");
   connect(btn_pcl_capture_, SIGNAL(clicked()), this, SLOT(pclCapture()));
@@ -210,6 +215,7 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   layout->addWidget(text_browser_);
 
   addTitle("Capture Point Cloud Data");
+  layout->addWidget(btn_pcl_record_);
   layout->addWidget(btn_pcl_capture_);
   layout->addWidget(btn_pcl_clear_);
 
@@ -290,6 +296,7 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   // Initial Setting
   //////////////////////////////
 
+  btn_pcl_record_->setEnabled(true);
   btn_pcl_capture_->setEnabled(true);
   btn_pcl_clear_->setEnabled(true);
   btn_approach_plan_->setEnabled(true);
@@ -380,6 +387,11 @@ void MMGuiRviz::moveGripperOpen()
 void MMGuiRviz::moveGripperClose()
 {
   remote_reciever_.publishGripperClose();
+}
+
+void MMGuiRviz::pclRecord()
+{
+  remote_reciever_.publishPclRecord();
 }
 
 void MMGuiRviz::pclCapture()

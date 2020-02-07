@@ -9,7 +9,7 @@ controller_list:
       - wrist_3_joint
   - name: fake_robotiq_controller
     joints:
-      []
+      - finger_joint
   - name: fake_inspectorbot_controller
     joints:
       []

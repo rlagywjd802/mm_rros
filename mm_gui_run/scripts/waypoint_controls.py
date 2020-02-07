@@ -27,9 +27,6 @@ class WaypointsGUIControl():
 
         # Subscriber
         rospy.Subscriber("clicked_point", PointStamped, self.clicked_cb)
- 
-        rospy.Subscriber("add_waypoint", Bool, self.add_waypoint_cb)
-        rospy.Subscriber("remove_waypoint", Bool, self.remove_waypoint_cb)
 
         rospy.Subscriber("rotate_axis", String, self.rotate_axis_cb)
         rospy.Subscriber("distance", Int32, self.distance_cb)
@@ -37,7 +34,6 @@ class WaypointsGUIControl():
         rospy.Subscriber("clear_imarker", Bool, self.clear_imarker_cb)
 
         # Pubisher
-        # self.waypoint0_pub = rospy.Publisher('waypoint0_target', Pose, queue_size=1)
         self.target_pose_br = tf.TransformBroadcaster()
         self.update_rate = rospy.Rate(4)
 
@@ -64,36 +60,46 @@ class WaypointsGUIControl():
         f_name = feedback.marker_name
         f_pose = feedback.pose
 
-        rospy.logdebug("process_feedback| {} is now at ".format(f_name) + print_pose(f_pose, ""))
+        # update marker pose when mouse button is released 
+        if feedback.event_type == InteractiveMarkerFeedback.MOUSE_UP:
+            rospy.loginfo("process_feedback| {} is now at ".format(f_name) + print_pose(f_pose, ""))
 
-        self.last_poses[int(f_name)] = f_pose
-        self.server.applyChanges()
+            self.update_tf(f_pose)
+            self.last_poses[int(f_name)] = f_pose
+            self.server.applyChanges()
 
-    def update_imarker(self):
-        if self.num_of_wpt <= 0:
-            rospy.logerr("update_imarker| num_of_wpt is {}".format(self.num_of_wpt))
-            return
+    # def update_imarker(self):
+    #     if self.num_of_wpt <= 0:
+    #         rospy.logerr("update_imarker| num_of_wpt is {}".format(self.num_of_wpt))
+    #         return
 
-        # add last feedback pose in update msg
-        int_marker_poses = []
-        for i in range(self.num_of_wpt):
-            imp = InteractiveMarkerPose()
-            imp.pose = self.last_poses[i]
-            imp.header.frame_id = FRAME_ID
-            imp.name = str(i)
-            int_marker_poses.append(imp)
+    #     # add last feedback pose in update msg
+    #     int_marker_poses = []
+    #     for i in range(self.num_of_wpt):
+    #         imp = InteractiveMarkerPose()
+    #         imp.pose = self.last_poses[i]
+    #         imp.header.frame_id = FRAME_ID
+    #         imp.name = str(i)
+    #         int_marker_poses.append(imp)
 
-        int_marker_update = InteractiveMarkerUpdate()
-        int_marker_update.server_id = 'waypoints_gui_control'
-        int_marker_update.poses = int_marker_poses
+    #     int_marker_update = InteractiveMarkerUpdate()
+    #     int_marker_update.server_id = 'waypoints_gui_control'
+    #     int_marker_update.poses = int_marker_poses
         
-        self.server.publish(int_marker_update)
-        self.server.applyChanges()
+    #     self.server.publish(int_marker_update)
+    #     self.server.applyChanges()
 
-        self.update_tf(int_marker_poses[0].pose, self.last_offset)
+    #     self.update_tf(int_marker_poses[0].pose, self.last_offset)
 
-    def update_tf(self, pose, offset):
-        # updat tf for eef_pose
+    def update_tf(self, pose=None, offset=None):
+        '''
+        update tf for real_eef_pose
+        '''
+        if pose is None:
+            pose = self.last_poses[0]
+        if offset is None:
+            offset = self.last_offset
+
         time_now = rospy.Time.now()
         pp = pose.position
         po = pose.orientation
@@ -206,8 +212,11 @@ class WaypointsGUIControl():
         if num == 0:
             rotate_control = self.make_imarker_ctrl("rotate", r_axis)
             int_marker.controls.append(rotate_control)
+
+        # update tf
+        self.update_tf(pose, offset)
         
-        # add the interactive marker tolast_poses our collection
+        # add the interactive marker to last_poses our collection
         self.server.insert(int_marker, self.process_feedback)
         self.server.applyChanges()
 
@@ -242,44 +251,6 @@ class WaypointsGUIControl():
         self.clicked_pose = initial_pose
 
         self.instruction_pub.publish(STEP3)
-      
-    def add_waypoint_cb(self, msg):
-        rospy.loginfo("add_waypoint_cb| {}".format(msg.data))
-
-        # data is True if add button is clicked
-        # if msg.data:
-        #     # user can add waypoint only after grasping point is clicked
-        #     if self.num_of_wpt > 0:
-        #         # set initial position of the interactive marker
-        #         initial_point = Point()
-        #         initial_point.x = self.clicked_pose.position.x
-        #         initial_point.y = self.clicked_pose.position.y - 1.0
-        #         initial_point.z = self.clicked_pose.position.z
-                
-        #         # add one waypoint to the server
-        #         inserted_pose = self.insert_gripper(self.num_of_wpt, initial_point)
-
-        #         # update interactive marker information
-        #         self.last_poses.append(inserted_pose)
-        #         self.num_of_wpt += 1
-        #     else:
-        #         rospy.logerr("add_waypoint_cb| num_of_wpt is {}".format(self.num_of_wpt))
-    
-    def remove_waypoint_cb(self, msg):
-        rospy.loginfo("remove_waypoint_cb|")
-
-        # data is True if remove button is clicked
-        # if msg.data:
-        #     if self.num_of_wpt <= 0:
-        #         rospy.logerr("remove_waypoint_cb| num_of_wpt is {}".format(self.num_of_wpt))
-        #         return
-
-        #     # remove last waypoint to the server
-        #     self.erase_waypoint()
-
-        #     # update interactive marker information
-        #     self.last_poses.pop()
-        #     self.num_of_wpt -= 1
 
     def rotate_axis_cb(self, msg):
         rotate_axis = msg.data
@@ -323,20 +294,15 @@ def main(arg):
 
     try:
         wgc = WaypointsGUIControl(log_level)
-
         count = 0
-
+        
         while not rospy.is_shutdown():
             if(count > 10):
                 wgc.publish_step1()
-
-            if wgc.num_of_wpt > 0:
-                wgc.update_imarker()
-            
+            # if wgc.num_of_wpt > 0:
+            #     wgc.update_tf()
             count += 1
             wgc.update_rate.sleep()
-
-
     except KeyboardInterrupt:
         return
 

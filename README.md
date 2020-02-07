@@ -1,8 +1,8 @@
 # mm_rros
 These are packages for NIST mobile manipulator projects.
 
-version: **v2.2.1**
-- move xyz wrt eef
+version: **v4.0**
+- demo on 02/07
 
 # packages
 
@@ -16,6 +16,7 @@ version: **v2.2.1**
 - universal_robot
 - robotiq
 - robot_self_filter(https://github.com/rlagywjd802/robot_self_filter)
+- PCLFusionColor
 
 ## changes in packages
 ### base odom publisher

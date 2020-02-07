@@ -5,12 +5,12 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /RobotModel1/Links1
+        - /PlanningScene1/Scene Robot1
         - /MotionPlanning1/Scene Geometry1
         - /MotionPlanning1/Scene Robot1
-        - /Grasping Point1/Clicked Point1
+        - /MotionPlanning1/Planning Request1
         - /TF1/Frames1
-      Splitter Ratio: 0.818443775
+      Splitter Ratio: 0.563888907
     Tree Height: 816
   - Class: rviz/Help
     Name: Help
@@ -49,7 +49,7 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
-        All Links Enabled: false
+        All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
@@ -80,47 +80,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_bottom_screw_frame:
+        camera_profile:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        camera_color_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_color_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra1_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra1_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra2_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra2_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
+          Value: true
         ee_link:
           Alpha: 1
           Show Axes: false
@@ -195,14 +159,100 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        realsense_base_link:
+        realsense1_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        realsense_mount_link:
+        realsense1_bottom_screw_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        realsense1_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        realsense1_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -318,43 +368,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_bottom_screw_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_color_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_color_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra1_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra1_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra2_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra2_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_link:
+        camera_profile:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -433,14 +447,100 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        realsense_base_link:
+        realsense1_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        realsense_mount_link:
+        realsense1_bottom_screw_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        realsense1_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        realsense1_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -526,6 +626,303 @@ Visualization Manager:
       Trail Step Size: 1
       Trajectory Topic: /move_group/display_planned_path
       Value: true
+    - Class: moveit_rviz_plugin/PlanningScene
+      Enabled: false
+      Move Group Namespace: ""
+      Name: PlanningScene
+      Planning Scene Topic: move_group/monitored_planning_scene
+      Robot Description: robot_description
+      Scene Geometry:
+        Scene Alpha: 0.899999976
+        Scene Color: 50; 230; 50
+        Scene Display Time: 0.200000003
+        Show Scene Geometry: true
+        Voxel Coloring: Z-Axis
+        Voxel Rendering: Occupied Voxels
+      Scene Robot:
+        Attached Body Color: 150; 50; 150
+        Links:
+          All Links Enabled: true
+          Expand Joint Details: false
+          Expand Link Details: false
+          Expand Tree: false
+          Link Tree Style: Links in Alphabetic Order
+          bare_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          base:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          base_footprint:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          base_imu_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          base_laser_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_profile:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          ee_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          forearm_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          front_left_wheel_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          front_right_wheel_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          inertial_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect1_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect1_frame_optical:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect1_head_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect1_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect1_neck_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          left_inner_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_inner_finger_pad:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_inner_knuckle:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_outer_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_outer_knuckle:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          real_ee_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_bottom_screw_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_color_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_color_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_depth_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_depth_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_infra1_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_infra1_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_infra2_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_infra2_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense1_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          realsense1_mount_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_bottom_screw_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_color_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_color_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_depth_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_depth_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_infra1_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_infra1_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_infra2_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_infra2_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          realsense2_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          rear_left_wheel_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          rear_right_wheel_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_inner_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_inner_finger_pad:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_inner_knuckle:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_outer_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_outer_knuckle:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          robotiq_arg2f_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          robotiq_ee:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          shoulder_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          tool0:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          upper_arm_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          wrist_1_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          wrist_2_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          wrist_3_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+        Robot Alpha: 0.5
+        Show Robot Collision: false
+        Show Robot Visual: true
+      Value: false
     - Acceleration_Scaling_Factor: 1
       Class: moveit_rviz_plugin/MotionPlanning
       Enabled: false
@@ -581,8 +978,8 @@ Visualization Manager:
         Goal State Color: 250; 128; 0
         Interactive Marker Size: 0
         Joint Violation Color: 255; 0; 255
-        Planning Group: inspectorbot
-        Query Goal State: false
+        Planning Group: robotiq
+        Query Goal State: true
         Query Start State: false
         Show Workspace: false
         Start State Alpha: 1
@@ -613,7 +1010,7 @@ Visualization Manager:
       Displays:
         - Class: rviz/Image
           Enabled: true
-          Image Topic: /usb_cam/image_raw
+          Image Topic: /realsense2/color/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0
@@ -625,7 +1022,7 @@ Visualization Manager:
           Value: true
         - Class: rviz/Image
           Enabled: false
-          Image Topic: /kinect1/rgb/image_rect_color
+          Image Topic: /kinect1/rgb/image_color
           Max Value: 1
           Median window: 5
           Min Value: 0
@@ -637,7 +1034,7 @@ Visualization Manager:
           Value: false
         - Class: rviz/Image
           Enabled: true
-          Image Topic: /camera/color/image_raw
+          Image Topic: /realsense1/color/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0
@@ -746,7 +1143,7 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
-        All Links Enabled: false
+        All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
@@ -755,7 +1152,7 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         base:
           Alpha: 1
           Show Axes: false
@@ -776,48 +1173,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
-        camera_bottom_screw_frame:
+          Value: true
+        camera_profile:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        camera_color_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_color_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra1_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra1_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra2_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_infra2_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
+          Value: true
         ee_link:
           Alpha: 1
           Show Axes: false
@@ -832,12 +1193,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         front_right_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         inertial_link:
           Alpha: 1
           Show Axes: false
@@ -858,7 +1219,7 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         kinect1_neck_link:
           Alpha: 1
           Show Axes: false
@@ -867,79 +1228,165 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         left_inner_finger_pad:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         left_inner_knuckle:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         left_outer_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         left_outer_knuckle:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         real_ee_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        realsense_base_link:
+        realsense1_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        realsense_mount_link:
+        realsense1_bottom_screw_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        realsense1_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        realsense1_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         rear_right_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         right_inner_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         right_inner_finger_pad:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         right_inner_knuckle:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         right_outer_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         right_outer_knuckle:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         robotiq_arg2f_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         robotiq_ee:
           Alpha: 1
           Show Axes: false
@@ -977,10 +1424,70 @@ Visualization Manager:
       Robot Alpha: 0.5
       Robot Description: robot_description
       Robot State Topic: /inv_kin_sol
-      Show All Links: false
+      Show All Links: true
       Show Highlights: true
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.00999999978
+      Style: Points
+      Topic: /pcl_fusion_node_color/pcl_fusion_node/fused_points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.00999999978
+      Style: Points
+      Topic: /realsense2/depth/color/points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -996,29 +1503,30 @@ Visualization Manager:
     - Class: rviz/PublishPoint
       Single click: true
       Topic: /clicked_point
+    - Class: rviz/Measure
   Value: true
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 3.07787609
+      Distance: 3.0191164
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.234480947
-        Y: -0.3345716
-        Z: 5.11109874e-06
+        X: -0.457435846
+        Y: -0.107483029
+        Z: 5.94766334e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.434796572
+      Pitch: 0.669795275
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 2.52863383
+      Yaw: 0.810502708
     Saved: ~
 Window Geometry:
   Displays:
@@ -1036,7 +1544,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000003000000000000016a000003dafc0200000007fb0000001600460072006f006e007400200049006d0061006700650000000028000000710000001600fffffffc00000028000003da000003630100001dfa000000000100000003fb00000012004d004d004700750069005200760069007a0100000000ffffffff0000011d00fffffffb000000100044006900730070006c0061007900730100000000ffffffff0000016a00fffffffb0000001a004d004d004700750069005200760069007a00440065006d006f00000000000000016a0000000000000000fb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff00000000000000000000000100000210000003dafc0200000002fb00000014005300690064006500200049006d0061006700650100000028000001c70000001600fffffffb0000001800570065006200630061006d00200049006d00610067006501000001f50000020d0000001600ffffff00000002000003b90000004afc0100000002fb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720100000170000003b9000000f200fffffffc00000170000003b90000000000fffffffaffffffff0200000002fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670000000000ffffffff0000018300fffffffb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000000280000004a0000004a00ffffff000003b90000038a00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000003000000000000016a000003dafc0200000007fb0000001600460072006f006e007400200049006d0061006700650000000028000000500000001600fffffffc00000028000003da000003840100001dfa000000010100000003fb00000012004d004d004700750069005200760069007a0100000000ffffffff0000011d00fffffffb000000100044006900730070006c0061007900730100000000ffffffff0000016a00fffffffb0000001a004d004d004700750069005200760069007a00440065006d006f00000000000000016a0000000000000000fb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff00000000000000000000000100000210000003dafc0200000002fb00000014005300690064006500200049006d0061006700650100000028000001c70000001600fffffffb0000001800570065006200630061006d00200049006d00610067006501000001f50000020d0000001600ffffff00000002000003b90000004afc0100000002fb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720100000170000003b9000000f200fffffffc00000170000003b90000000000fffffffaffffffff0200000002fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670000000000ffffffff0000018300fffffffb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000000280000004a0000004a00ffffff000003b90000038a00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Side Image:
     collapsed: false
   Trajectory - Trajectory Slider:

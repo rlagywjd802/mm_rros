@@ -100,6 +100,8 @@ protected Q_SLOTS:
   
   void moveGripperClose();
 
+  void pclRecord();
+
   void pclCapture();
 
   void pclClear();
@@ -161,6 +163,7 @@ protected:
   
   QPushButton* btn_gripper_open_;
   QPushButton* btn_gripper_close_;
+  QPushButton* btn_pcl_record_;
   QPushButton* btn_pcl_capture_;
   QPushButton* btn_pcl_clear_;
   QPushButton* btn_approach_plan_;

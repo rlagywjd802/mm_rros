@@ -26,3 +26,5 @@ STEP4 = "Step4. Pick the object"
 STEP5 = "Step5. Move to initial pose"
 
 INIT_SOL = 1
+
+PART_ATTACH_LINK = "left_inner_finger_pad"

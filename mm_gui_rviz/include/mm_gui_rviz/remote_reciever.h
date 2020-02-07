@@ -62,8 +62,9 @@ public:
     // Publisher
     // joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_gui_joy", 1);
     base_stop_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("move_base/cancel", 1);
-    gripper_publisher_ = nh_.advertise<std_msgs::Bool>("gripper_joint", 1);
+    gripper_publisher_ = nh_.advertise<std_msgs::Bool>("gripper_close", 1);
     cmd_vel_publisher_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    record_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_record", 1);
     capture_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_capture", 1);
     clear_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_clear", 1);
 
@@ -126,6 +127,15 @@ public:
   {
     ROS_DEBUG_STREAM_NAMED("gui", "CmdVel");
     cmd_vel_publisher_.publish(msg);
+  }
+
+  void publishPclRecord()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "PclRecord");
+    
+    std_msgs::Bool msg;
+    msg.data = true;
+    record_publisher_.publish(msg);
   }
 
   void publishPclCapture()
@@ -336,6 +346,8 @@ protected:
   ros::Publisher base_stop_publisher_;
   ros::Publisher gripper_publisher_;
   ros::Publisher cmd_vel_publisher_;
+  
+  ros::Publisher record_publisher_;
   ros::Publisher capture_publisher_;
   ros::Publisher clear_publisher_;
   

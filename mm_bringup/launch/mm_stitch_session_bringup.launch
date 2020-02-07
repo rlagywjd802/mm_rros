@@ -3,7 +3,7 @@
 	<arg name="sim"		default="false"/>
 
 	<!-- cameras -->
-	<include file="$(find mm_bringup)/launch/mm_realsense_bringup.launch"/>
+	<include file="$(find mm_bringup)/launch/mm_camera_bringup.launch"/>
 	
 	<!-- arm -->
 	<include file="$(find ur_modern_driver)/launch/mm_ur5_bringup.launch">
@@ -11,5 +11,19 @@
 	</include>
 
 	<include file="$(find mm_moveit_config)/launch/mm_moveit_planning_execution.launch"/>
+
+	<!-- stitching -->
+	<include file="$(find point_cloud_stitching_color)/launch/fuse_points.launch">
+		<arg name="fusion_frame"		value="base_footprint"/>
+		<arg name="fusion_cloud_in" 	value="/realsense2/depth/color/points"/>
+	</include>
+
+	<!-- gui execution -->
+  	<node name="mm_gui_pcl_execution" pkg="mm_gui_run" type="mm_gui_pcl_execution.py" output="screen"/>
+
+  	<!-- rviz -->
+	<node if="$(arg rviz)" name="demo_rviz" pkg="rviz" type="rviz" respawn="false" 
+		args="-d $(find mm_bringup)/rviz/mm_demo.rviz" output="screen">
+	</node>
 	
 </launch>

@@ -5,6 +5,19 @@ from const import *
 from geometry_msgs.msg import *
 
 # transformation related
+def tr_to_mat(trans, rot):
+	trans_mat = tf.transformations.translation_matrix(trans)
+	rot_mat = tf.transformations.quaternion_matrix(rot)
+	pose_mat = tf.transformations.concatenate_matrices(trans_mat, rot_mat)
+
+	return pose_mat
+
+def mat_to_tr(pose_mat):
+	trans = tf.transformations.translation_from_matrix(pose_mat)
+	rot = tf.transformations.quaternion_from_matrix(pose_mat)
+
+	return trans, rot
+
 def pose_to_mat(pose):
 	pp = pose.position
 	po = pose.orientation

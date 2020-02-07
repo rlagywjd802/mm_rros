@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 
 <robot name="inspector_bot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Materials -->
+  <xacro:include filename="$(find mm_description)/urdf/common_properties.xacro" />
+
   <!-- Base Size -->
   <xacro:property name="base_x_size" value="0.76" />
   <xacro:property name="base_y_size" value="0.46" />
@@ -8,6 +12,7 @@
 
   <!-- Profile Size -->
   <xacro:property name="profile_size" value="0.04" />
+  <xacro:property name="profile_height1" value="${0.415+0.077}"/> <!-- camera -->
 
   <!-- Origin -->
   <xacro:property name="origin_x" value="0.025" />
@@ -22,7 +27,7 @@
   <xacro:property name="wheel_length" value="0.15" />
   <xacro:property name="wheel_radius" value="0.2" />
   <xacro:property name="base_center_height" value="${wheel_vertical_offset + wheel_radius}" />
-
+  
   <xacro:property name="M_PI" value="3.14159"/>
 
   <!-- Inspector_bot wheel macro -->
@@ -72,7 +77,7 @@
       <geometry>
         <box size = "${base_x_size}  ${base_y_size}  ${base_z_size}"/>
       </geometry>
-      <material name="white"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin xyz="0 0 ${base_center_height}" rpy="0 0 0" />
@@ -130,5 +135,27 @@
     <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:inspector_bot_wheel>
 
+  <!-- profile for side facing camera -->
+  <joint name="camera_profile_fixed_joint" type="fixed">
+    <parent link="bare_base_link"/>
+    <child link="camera_profile"/>
+    <origin xyz="${-base_x_size/2 - profile_size/2} ${-base_y_size/2 + profile_size*1.5} ${base_center_height + base_z_size/2 + profile_height1/2}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_profile">
+    <visual>
+      <geometry>
+        <box size="${profile_size} ${profile_size} ${profile_height1}"/>
+      </geometry>      
+      <material name="black"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${profile_size} ${profile_size} ${profile_height1}"/>
+      </geometry>
+      <material name="black"/>
+    </collision>
+  </link>
 
 </robot>

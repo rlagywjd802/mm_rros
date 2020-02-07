@@ -2,23 +2,27 @@
 
 <robot name="mobile_manipulator" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- argument -->
+  <!-- arguments -->
   <xacro:arg name="robot_namespace" default="/"/>
   <xacro:arg name="kinect1_enabled" default="true"/>
   <xacro:arg name="kinect2_enabled" default="false"/>
-  <xacro:arg name="realsense_enabled" default="true"/>
+  <xacro:arg name="realsense1_enabled" default="true"/>
+  <xacro:arg name="realsense2_enabled" default="true"/>
   <xacro:arg name="ur_enabled" default="true"/>
   <xacro:arg name="gripper_enabled" default="true"/>
 
-  <!-- inspector_bot -->
+  <!-- components -->
   <xacro:include filename="$(find mm_description)/urdf/components/inspector_bot.urdf.xacro" />  
   <xacro:include filename="$(find mm_description)/urdf/accessories/kinect_tilted_camera.urdf.xacro"/>
   <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
   <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" />
   <xacro:include filename="$(find realsense2_description)/urdf/_d415.urdf.xacro" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />  
 
-  <!-- ur5 robot -->
-  <xacro:if value="$(arg ur_enabled)">    
+  <!-- ********************* -->
+  <!--          ur5          -->
+  <!-- ********************* -->
+  <xacro:if value="$(arg ur_enabled)">
     <xacro:property name="ur5_z_location" value="${base_center_height + base_z_size/2}" />
     <xacro:property name="ur5_x_location" value="0.175" />
     
@@ -60,7 +64,9 @@
     </xacro:if>
   </xacro:if>
 
-  <!-- kinect -->  
+  <!-- ********************* -->
+  <!--         kinect        -->  
+  <!-- ********************* -->
   <xacro:if value="$(arg kinect1_enabled)">
     <xacro:arg name="kinect1_base_xyz" default="${base_x_size/2 + 0.041} 0 ${base_center_height + base_z_size/2 - 0.071}"/>
     <xacro:arg name="kinect1_base_rpy" default="0 0 0"/>
@@ -82,18 +88,42 @@
       base_xyz="$(arg kinect2_base_xyz)" base_rpy="$(arg kinect2_base_rpy)" tilt_angle="$(arg kinect2_tilt_angle)"/>
   </xacro:if>
 
-  <xacro:if value="$(arg realsense_enabled)">
-
-    <link name="realsense_base_link" />
-    <joint name="realsense_mount_fixed_joint" type="fixed">
-      <parent link="ee_link"/>
-      <child link="realsense_base_link"/>
-      <origin xyz="-0.02 0.077 0.0" rpy="${-M_PI/2} 0 0"/>
+  <!-- ********************* -->
+  <!--       realsense       -->
+  <!-- ********************* -->
+  <xacro:if value="$(arg realsense1_enabled)">
+    <link name="realsense1_mount_link" />
+  
+    <joint name="realsense1_profile_fixed_joint" type="fixed">
+      <parent link="camera_profile"/>
+      <child link="realsense1_mount_link"/>
+      <origin xyz="0 0 ${profile_height1/2}" rpy="0 0 ${-M_PI/4}"/>
     </joint>
 
-    <xacro:sensor_d415 parent="realsense_base_link">
+    <link name="realsense1_base_link" />
+    <joint name="realsense1_mount_fixed_joint" type="fixed">
+      <parent link="realsense1_mount_link"/>
+      <child link="realsense1_base_link"/>
+      <origin xyz="0.035 0 0.025" rpy="0 ${M_PI/6} 0"/>
+    </joint>
+
+    <xacro:sensor_d435 parent="realsense1_base_link" name="realsense1">
+      <origin xyz="0.010 0 -0.0125" rpy="0 0 0"/>
+    </xacro:sensor_d435>
+  </xacro:if>
+
+  <xacro:if value="$(arg realsense2_enabled)">
+    <link name="realsense2_base_link" />
+
+    <joint name="realsense2_mount_fixed_joint" type="fixed">
+      <parent link="ee_link"/>
+      <child link="realsense2_base_link"/>
+      <origin xyz="-0.02 0.065 0.0" rpy="${-M_PI/2} 0 0"/>
+    </joint>
+
+    <xacro:sensor_d415 parent="realsense2_base_link" name="realsense2">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:sensor_d415>
-
   </xacro:if>
+
 </robot>
