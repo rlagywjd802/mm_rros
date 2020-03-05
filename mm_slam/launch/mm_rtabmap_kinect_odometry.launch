@@ -1,0 +1,69 @@
+<launch>
+
+	<!-- Arguments -->
+  <arg name="database_path"   default="rtabmap.db"/>
+
+  <arg name="rviz"            default="false"/>
+  <arg name="camera"          default="camera"/>  
+  <arg name="args"            default=""/>
+
+  <!-- rtabmap -->
+  <group ns="rtabmap">
+
+    <!-- Use RGBD synchronization -->
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+      <remap from="rgb/image"       to="/$(arg camera)/rgb/image_rect_color"/>
+      <remap from="depth/image"     to="/$(arg camera)/depth_registered/image_raw"/>
+      <remap from="rgb/camera_info" to="/$(arg camera)/rgb/camera_info"/>
+      <remap from="rgbd_image"      to="/rgbd_image"/>
+      
+      <!-- <param name="queue_size"        value="30"/> -->
+      <param name="approx_sync"       value="true"/> 
+      <!-- <param name="compressed_rate"   value="5.0"/> -->
+    </node> 
+
+    <!-- slam -->
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg args)">
+        <param name="database_path" type="string" value="$(arg database_path)"/>
+
+        <param name="frame_id" type="string" value="/base_footprint"/>
+        <param name="odom_frame_id" type="string" value="/odom"/>
+
+        <param name="subscribe_depth" type="bool" value="false"/>
+        <param name="subscribe_rgbd" type="bool" value="true"/>
+
+        <remap from="odom" to="/odom"/>
+
+        <remap from="rgbd_image" to="/rgbd_image"/>
+
+        <!-- output -->
+        <!-- <remap from="grid_map" to="/map"/> -->
+        <param name="queue_size" type="int" value="10"/>
+        <!-- <param name="approx_sync" type="bool" value="false"/>  -->
+
+        <!-- localization mode -->
+        <!-- <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/> -->
+        <!-- <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/> -->
+        <param name="Mem/IncrementalMemory" type="string" value="true"/>
+        <!-- <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/> -->
+        <param name="Mem/InitWMWithAllNodes" type="string" value="false"/>
+
+        <!-- RTAB-Map's parameters -->
+        <!-- <param name="RGBD/ProximityBySpace" type="string" value="false"/> -->
+        <param name="RGBD/AngularUpdate" type="string" value="0.01"/>
+        <param name="RGBD/LinearUpdate" type="string" value="0.01"/>
+        <param name="RGBD/OptimizerFromGraphEnd" type="string" value="false"/>
+
+        <!-- <param name="Reg/Force3DoF" type="string" value="true"/> -->
+        <!-- <param name="Vis/MinInliers" type="string" value="12"/> -->
+    </node>
+  </group>
+
+	<!-- rviz -->
+  <group if="$(arg rviz)">
+    <include file="$(find mm_slam)/launch/base_rtabmap_rviz.launch">
+      <arg name="rgbd1"        value="true"/>
+    </include>
+  </group>
+
+</launch>

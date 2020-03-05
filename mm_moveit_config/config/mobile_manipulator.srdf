@@ -42,19 +42,7 @@
         <link name="base_laser_link" />
         <link name="rear_left_wheel_link" />
         <link name="rear_right_wheel_link" />
-        <link name="camera_profile" />
-        <link name="realsense1_mount_link" />
-        <link name="realsense1_base_link" />
-        <link name="realsense1_bottom_screw_frame" />
-        <link name="realsense1_link" />
-        <link name="realsense1_color_frame" />
-        <link name="realsense1_color_optical_frame" />
-        <link name="realsense1_depth_frame" />
-        <link name="realsense1_depth_optical_frame" />
-        <link name="realsense1_infra1_frame" />
-        <link name="realsense1_infra1_optical_frame" />
-        <link name="realsense1_infra2_frame" />
-        <link name="realsense1_infra2_optical_frame" />
+        <link name="battery_link" />
     </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="end_effector" parent_link="ee_link" group="robotiq" />
@@ -62,30 +50,26 @@
     <virtual_joint name="world" type="fixed" parent_frame="world" child_link="base_footprint" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="bare_base_link" link2="base_link" reason="Adjacent" />
-    <disable_collisions link1="bare_base_link" link2="camera_profile" reason="Adjacent" />
+    <disable_collisions link1="bare_base_link" link2="battery_link" reason="Adjacent" />
     <disable_collisions link1="bare_base_link" link2="front_left_wheel_link" reason="Adjacent" />
     <disable_collisions link1="bare_base_link" link2="front_right_wheel_link" reason="Adjacent" />
     <disable_collisions link1="bare_base_link" link2="kinect1_link" reason="Adjacent" />
-    <disable_collisions link1="bare_base_link" link2="realsense1_link" reason="Never" />
     <disable_collisions link1="bare_base_link" link2="rear_left_wheel_link" reason="Adjacent" />
     <disable_collisions link1="bare_base_link" link2="rear_right_wheel_link" reason="Adjacent" />
     <disable_collisions link1="bare_base_link" link2="shoulder_link" reason="Never" />
-    <disable_collisions link1="base_link" link2="camera_profile" reason="Never" />
+    <disable_collisions link1="base_link" link2="battery_link" reason="Never" />
     <disable_collisions link1="base_link" link2="front_left_wheel_link" reason="Never" />
     <disable_collisions link1="base_link" link2="front_right_wheel_link" reason="Never" />
     <disable_collisions link1="base_link" link2="kinect1_link" reason="Never" />
-    <disable_collisions link1="base_link" link2="realsense1_link" reason="Never" />
     <disable_collisions link1="base_link" link2="rear_left_wheel_link" reason="Never" />
     <disable_collisions link1="base_link" link2="rear_right_wheel_link" reason="Never" />
     <disable_collisions link1="base_link" link2="shoulder_link" reason="Adjacent" />
-    <disable_collisions link1="camera_profile" link2="front_left_wheel_link" reason="Never" />
-    <disable_collisions link1="camera_profile" link2="front_right_wheel_link" reason="Never" />
-    <disable_collisions link1="camera_profile" link2="kinect1_link" reason="Never" />
-    <disable_collisions link1="camera_profile" link2="realsense1_link" reason="Adjacent" />
-    <disable_collisions link1="camera_profile" link2="rear_left_wheel_link" reason="Never" />
-    <disable_collisions link1="camera_profile" link2="rear_right_wheel_link" reason="Never" />
-    <disable_collisions link1="camera_profile" link2="shoulder_link" reason="Never" />
-    <disable_collisions link1="camera_profile" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="battery_link" link2="front_left_wheel_link" reason="Never" />
+    <disable_collisions link1="battery_link" link2="front_right_wheel_link" reason="Never" />
+    <disable_collisions link1="battery_link" link2="kinect1_link" reason="Never" />
+    <disable_collisions link1="battery_link" link2="rear_left_wheel_link" reason="Never" />
+    <disable_collisions link1="battery_link" link2="rear_right_wheel_link" reason="Never" />
+    <disable_collisions link1="battery_link" link2="shoulder_link" reason="Never" />
     <disable_collisions link1="ee_link" link2="left_inner_finger" reason="Never" />
     <disable_collisions link1="ee_link" link2="left_inner_finger_pad" reason="Never" />
     <disable_collisions link1="ee_link" link2="left_inner_knuckle" reason="Never" />
@@ -105,16 +89,13 @@
     <disable_collisions link1="forearm_link" link2="wrist_1_link" reason="Adjacent" />
     <disable_collisions link1="front_left_wheel_link" link2="front_right_wheel_link" reason="Never" />
     <disable_collisions link1="front_left_wheel_link" link2="kinect1_link" reason="Never" />
-    <disable_collisions link1="front_left_wheel_link" link2="realsense1_link" reason="Never" />
     <disable_collisions link1="front_left_wheel_link" link2="rear_left_wheel_link" reason="Never" />
     <disable_collisions link1="front_left_wheel_link" link2="rear_right_wheel_link" reason="Never" />
     <disable_collisions link1="front_left_wheel_link" link2="shoulder_link" reason="Never" />
     <disable_collisions link1="front_right_wheel_link" link2="kinect1_link" reason="Never" />
-    <disable_collisions link1="front_right_wheel_link" link2="realsense1_link" reason="Never" />
     <disable_collisions link1="front_right_wheel_link" link2="rear_left_wheel_link" reason="Never" />
     <disable_collisions link1="front_right_wheel_link" link2="rear_right_wheel_link" reason="Never" />
     <disable_collisions link1="front_right_wheel_link" link2="shoulder_link" reason="Never" />
-    <disable_collisions link1="kinect1_link" link2="realsense1_link" reason="Never" />
     <disable_collisions link1="kinect1_link" link2="rear_left_wheel_link" reason="Never" />
     <disable_collisions link1="kinect1_link" link2="rear_right_wheel_link" reason="Never" />
     <disable_collisions link1="kinect1_link" link2="shoulder_link" reason="Never" />
@@ -158,7 +139,6 @@
     <disable_collisions link1="left_inner_knuckle" link2="wrist_2_link" reason="Never" />
     <disable_collisions link1="left_inner_knuckle" link2="wrist_3_link" reason="Never" />
     <disable_collisions link1="left_outer_finger" link2="left_outer_knuckle" reason="Adjacent" />
-    <disable_collisions link1="left_outer_finger" link2="realsense1_link" reason="Never" />
     <disable_collisions link1="left_outer_finger" link2="realsense2_link" reason="Never" />
     <disable_collisions link1="left_outer_finger" link2="right_inner_finger" reason="Never" />
     <disable_collisions link1="left_outer_finger" link2="right_inner_finger_pad" reason="Never" />
@@ -179,13 +159,6 @@
     <disable_collisions link1="left_outer_knuckle" link2="wrist_1_link" reason="Never" />
     <disable_collisions link1="left_outer_knuckle" link2="wrist_2_link" reason="Never" />
     <disable_collisions link1="left_outer_knuckle" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="realsense2_link" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="rear_left_wheel_link" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="rear_right_wheel_link" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="right_outer_finger" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="right_outer_knuckle" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="shoulder_link" reason="Never" />
-    <disable_collisions link1="realsense1_link" link2="upper_arm_link" reason="Never" />
     <disable_collisions link1="realsense2_link" link2="right_inner_finger" reason="Never" />
     <disable_collisions link1="realsense2_link" link2="right_inner_finger_pad" reason="Never" />
     <disable_collisions link1="realsense2_link" link2="right_inner_knuckle" reason="Never" />

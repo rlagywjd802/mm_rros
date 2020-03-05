@@ -7,14 +7,16 @@ from geometry_msgs.msg import Quaternion
 
 # mm
 MOVE_GROUP = "ur5"
-FRAME_ID = "base_footprint"
+# FRAME_ID = "base_footprint"
+FRAME_ID = "map"
 EEF_LINK = "eef_pose"
 REAL_EEF_LINK = "real_eef_pose"
 
 GRIPPER_MESH = "package://mm_description/meshes/gripper/robotiq_2f85_opened_combined_axis_mated.STL"
 
 INIT_R_AXIS = "z"
-INIT_ORIENT = Quaternion(0.0, 0.0, -0.707107, 0.707107) # euler_to_quat(0, 0, -math.pi/2)
+# INIT_ORIENT = Quaternion(0.0, 0.0, -0.707107, 0.707107) # euler_to_quat(0, 0, -math.pi/2)
+INIT_ORIENT = Quaternion(0.0, 0.0, 0.707107, 0.707107)
 INIT_OFFSET = 10.0
 
 BACK_ORIENT = Quaternion(0.0, 0.0, 0.707107, 0.707107) # euler_to_quat(0, 0, math.pi/2)

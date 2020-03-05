@@ -86,15 +86,33 @@ protected Q_SLOTS:
 
   void addTitle(std::string str);
 
-  void addTitlePlan1(std::string str);
+  void addTitlePick1(std::string str);
 
-  void addTitlePlan2(std::string str);
+  void addTitlePick2(std::string str);
 
-  void moveArmPlan();
+  void addTitlePlace1(std::string str);
 
-  void moveArmExecute();
+  void addTitlePlace2(std::string str);
 
-  void moveArmStop();
+  void pauseRtabmap();
+
+  void resumeRtabmap();
+
+  void pickApproachPlan();
+
+  void pickApproachExecute();
+
+  void pickRetreatPlan();
+
+  void pickRetreatExecute();
+  
+  void placeApproachPlan();
+
+  void placeApproachExecute();
+
+  void placeRetreatPlan();
+
+  void placeRetreatExecute();
 
   void moveGripperOpen();
   
@@ -105,10 +123,6 @@ protected Q_SLOTS:
   void pclCapture();
 
   void pclClear();
-
-  void approachArmPlan();
-
-  void approachArmExcute();
 
   void emergencyStop();
 
@@ -124,14 +138,6 @@ protected Q_SLOTS:
 
   void moveZM();
 
-  void addWaypoint();
-
-  void removeWaypoint();
-
-  void computeInterpolation();
-
-  void executeInterpolation();
-
   void testRB1();
 
   void testRB2();
@@ -144,30 +150,47 @@ protected Q_SLOTS:
 
   void selectSolution(int);
 
-  // void solveIK();
-
-  // void clearIK();
-
-  // void selectSolutionT(int, int);
-
 protected:
   QVBoxLayout* layout;
+
+  QHBoxLayout* rtabmap_layout;
+  QHBoxLayout* pcl_layout;
+
   QHBoxLayout* sub_layout;
   QVBoxLayout* subx_layout;
   QVBoxLayout* suby_layout;
   QVBoxLayout* subz_layout;
 
-  QHBoxLayout* plan_layout;
-  QVBoxLayout* plan1_layout;
-  QVBoxLayout* plan2_layout;
+  QHBoxLayout* pick_layout;
+  QVBoxLayout* pick1_layout;
+  QVBoxLayout* pick2_layout;
+
+  QHBoxLayout* place_layout;
+  QVBoxLayout* place1_layout;
+  QVBoxLayout* place2_layout;
+
+  QHBoxLayout* gripper_layout;
+
+  QPushButton* btn_rtabmap_pause_;
+  QPushButton* btn_rtabmap_resume_;
   
   QPushButton* btn_gripper_open_;
   QPushButton* btn_gripper_close_;
+  
   QPushButton* btn_pcl_record_;
   QPushButton* btn_pcl_capture_;
   QPushButton* btn_pcl_clear_;
-  QPushButton* btn_approach_plan_;
-  QPushButton* btn_approach_execute_;
+
+  QPushButton* btn_pick_approach_plan_;
+  QPushButton* btn_pick_approach_execute_;
+  QPushButton* btn_pick_retreat_plan_;
+  QPushButton* btn_pick_retreat_execute_;
+
+  QPushButton* btn_place_approach_plan_;
+  QPushButton* btn_place_approach_execute_;
+  QPushButton* btn_place_retreat_plan_;
+  QPushButton* btn_place_retreat_execute_;
+
   QPushButton* btn_emergency_stop_;
 
   QPushButton* btn_move_xp_;
@@ -176,11 +199,6 @@ protected:
   QPushButton* btn_move_ym_;
   QPushButton* btn_move_zp_;
   QPushButton* btn_move_zm_;
-
-  QPushButton* btn_waipoint_add_;
-  QPushButton* btn_waipoint_remove_;
-  QPushButton* btn_interpolation_compute_;
-  QPushButton* btn_interpolation_execute_;
 
   QHBoxLayout* rb_layout;
   QRadioButton* rbtn_1_;
@@ -196,11 +214,6 @@ protected:
   QTextBrowser* text_browser_;
 
   QComboBox *combo_box_;
-
-  // QPushButton* btn_solve_ik_;
-  // QPushButton* btn_clear_ik_;
-  // QTableWidget *table_widget_;
-  // QStringList table_header_;
 
   QFrame* line;
   RemoteReciever remote_reciever_;  

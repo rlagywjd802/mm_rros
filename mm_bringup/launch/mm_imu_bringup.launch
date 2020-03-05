@@ -2,7 +2,10 @@
   <!-- This launch assumes that you have already 
        started you preferred RGB-D sensor and your IMU.
        TF between frame_id and the sensors should already be set too. -->
-  <arg name="frame_id"                default="base_footprint" />
+  <arg name="world_frame"             default="/map" />
+  <arg name="odom_frame"              default="/odom" />
+  <arg name="base_link_frame"         default="/base_footprint" />
+
   <arg name="imu_topic"               default="/imu" />
   <arg name="imu_ignore_acc"          default="true" />
   <arg name="imu_remove_gravitational_acceleration" default="true" />
@@ -15,10 +18,10 @@
     <param name="frequency" value="50"/>
     <param name="sensor_timeout" value="0.1"/>
     <param name="two_d_mode" value="true"/>
-
-    <param name="odom_frame" value="odom"/>
-    <param name="base_link_frame" value="$(arg frame_id)"/>
-    <param name="world_frame" value="map"/>
+    
+    <param name="world_frame"     value="$(arg world_frame)"/>
+    <param name="odom_frame"      value="$(arg odom_frame)"/>
+    <param name="base_link_frame" value="$(arg base_link_frame)"/>
 
     <param name="transform_time_offset" value="0.0"/>
 
@@ -88,6 +91,5 @@
                                                   0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
                                                   0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
                                                   0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]</rosparam>
-
   </node>
 </launch>

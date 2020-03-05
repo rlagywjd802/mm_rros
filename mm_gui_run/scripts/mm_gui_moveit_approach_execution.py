@@ -3,17 +3,19 @@ import sys
 import copy
 import rospy
 import tf
+import math
 
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
+import sensor_msgs.msg
 import shape_msgs.msg
 from std_msgs.msg import String, Bool, Int32
 from geometry_msgs.msg import Pose, PointStamped, PoseStamped
 from visualization_msgs.msg import InteractiveMarkerUpdate
 from sensor_msgs.msg import Joy
 
-from std_srvs.srv import Trigger
+from std_srvs.srv import Trigger, Empty
 
 from ur5_inv_kin_wrapper import ur5_inv_kin_wrapper
 from utils import *
@@ -22,14 +24,15 @@ from const import *
 DXYZ = 0.02
 
 # fixed motion for record
-initial_joint = [-1.6746166388141077, -1.0553820768939417, -1.9730132261859339, -1.5056265036212366, 0.8055320382118225, -3.3957682291613978]
-joint1 = [-1.7512124220477503, -0.7758315245257776, -2.0813515822040003, -1.6075804869281214, 0.821963906288147, -3.4971850554095667]
-joint2 = [-2.114042107258932, -0.5674937407123011, -2.1670878569232386, -1.456916634236471, 0.9604483842849731, -3.929640833531515]
-joint3 = [-3.0713780562030237, -0.7171343008624476, -2.2055943647967737, -1.0137255827533167, 1.572555422782898, -4.720593277608053]
-joint4 = [-3.5758140722857874, -0.9128931204425257, -2.144115749989645, -0.9496153036700647, 1.9175775051116943, -5.097561899815695]
-joint5 = [-3.9125710169421595, -1.1535161177264612, -2.010705296193258, -0.9759872595416468, 2.120448350906372, -5.39805776277651]
-final_joint = [-4.152798000966207, -1.4738629500018519, -1.7466023604022425, -1.0692537466632288, 2.235809326171875, -5.655894641076223]
-record_motion = [initial_joint, joint1, joint2, joint3, joint4, joint5, final_joint]
+initial_joint = [-158.57, -61.82, -100.14, -95.34, 72.82, -247.12]
+initial_joint = [j*math.pi/180.0 for j in initial_joint]
+joint0 = [-2.65160733858, -0.787968460714, -1.77485400835, -1.28218108812, 1.23793566227, -4.4600678126]
+joint1 = [-3.13806707064, -0.875796620046, -1.76907188097, -1.15789491335, 1.61859285831, -4.76847023169]
+joint2 = [-3.51146394411, -0.984417740499, -1.73061067263, -1.13680297533, 1.90909790993, -5.00915128389]
+joint3 = [-3.96667200724, -1.25426799456, -1.56269914309, -1.21947080294, 2.22984671593, -5.38175660769]
+joint4 = [-4.133831803, -1.46375877062, -1.37870961825, -1.31245834032, 2.32692122459, -5.56171733538]
+joint5 = [-4.28966409365, -1.84895164171, -0.921948734914, -1.52604610125, 2.39951276779, -5.75916833082]
+record_motion = [joint0, joint1, joint2, joint3, joint4, joint5]
 
 def dxyz_wrt_eef_pose(cur_pose, dxyz):
     cur_pose_mat = pose_to_mat(cur_pose)
@@ -67,8 +70,15 @@ class UR5MoveGroupGUI():
         # Subscriber
         # rospy.Subscriber("clicked_point", PointStamped, self.clicked_cb)
 
-        rospy.Subscriber("approach_plan", Bool, self.approach_plan_cb)
-        rospy.Subscriber("approach_execute", Bool, self.approach_execute_cb)
+        rospy.Subscriber("pick_approach_plan", Bool, self.pick_approach_plan_cb)
+        rospy.Subscriber("pick_approach_execute", Bool, self.pick_approach_execute_cb)
+        rospy.Subscriber("pick_retreat_plan", Bool, self.pick_retreat_plan_cb)
+        rospy.Subscriber("pick_retreat_execute", Bool, self.pick_retreat_execute_cb)
+        rospy.Subscriber("place_approach_plan", Bool, self.place_approach_plan_cb)
+        rospy.Subscriber("place_approach_execute", Bool, self.place_approach_execute_cb)
+        rospy.Subscriber("place_retreat_plan", Bool, self.place_retreat_plan_cb)
+        rospy.Subscriber("place_retreat_execute", Bool, self.place_retreat_execute_cb)
+
         rospy.Subscriber("approach_stop", Bool, self.approach_stop_cb)
 
         rospy.Subscriber("move_xp", Bool, self.move_xp_cb)
@@ -89,8 +99,6 @@ class UR5MoveGroupGUI():
         rospy.Subscriber("compute_interpolation", Bool, self.stitch_plan_cb)
 
         # Publisher
-        self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.msg.DisplayTrajectory, queue_size=50)
-
         self.instruction_pub = rospy.Publisher('/instruction', String, queue_size=1)
 
         self.aco_pub = rospy.Publisher('/attached_collision_object', moveit_msgs.msg.AttachedCollisionObject, queue_size=100)
@@ -98,7 +106,7 @@ class UR5MoveGroupGUI():
 
         # Service
         rospy.wait_for_service('/pcl_fusion_node/reset')
-        
+
         # ready for listen tf
         self.listener = tf.TransformListener()
 
@@ -114,37 +122,30 @@ class UR5MoveGroupGUI():
         self.group.set_max_velocity_scaling_factor(0.05)        # 0.1
         self.group.set_max_acceleration_scaling_factor(0.05)    # 0.1
 
-        self.last_waypoints = []
+        self.pick_approach_plan = None
+        self.pick_retreat_plan = None
+        self.pick_retreat_plan1 = None
+        self.place_approach_plan = None
+        self.place_retreat_plan = None
 
-        self.plan = moveit_msgs.msg.RobotTrajectory()
+        # set after execution
+        self.pre_grasp_joint = None
+        self.post_grasp_joint = None
+        self.initial_joint = joint3
+
+        self.pick_retreat_step = 0
 
         self.last_offset = 10.0
 
         # IK
         self.ur5_inv = ur5_inv_kin_wrapper()
-        # self.ur5_inv.publish_state(-1) ## doesn't work
-        self.last_target_joint = None
+        self.last_selected_joint = None
         self.last_sol_num = None
 
         self.count = 0
 
-
-    ##################################################################################################
-    ##################################################################################################
-
-    def go(self, dx, dy, dz):
-        current_pose = self.group.get_current_pose().pose
-        pose_goal = Pose()
-        pose_goal.position.x = current_pose.position.x + dx
-        pose_goal.position.y = current_pose.position.y + dy
-        pose_goal.position.z = current_pose.position.z + dz
-        pose_goal.orientation = current_pose.orientation
-        
-        self.group.set_pose_target(pose_goal)
-        self.group.go(wait=True)
-        self.group.clear_pose_targets()
-        # rospy.sleep(5)
-        rospy.loginfo("move cb go: Finished")
+        self.move_to_target_joint(initial_joint)
+        rospy.loginfo("move to initial joint")
 
     ##################################################################################################
     ##################################################################################################
@@ -174,6 +175,42 @@ class UR5MoveGroupGUI():
         if valid:
             self.move_to_target_joint(target_joint)
 
+    def plan_for_joint_target(self, joint):
+        rospy.loginfo("plan to joint target| started")
+        self.group.set_joint_value_target(joint)
+        plan = self.group.plan()
+        self.group.clear_pose_targets()
+        rospy.loginfo("plan to joint target| finished")
+        return plan
+
+    def execute_plan(self, plan):
+        rospy.loginfo("execute plan| started")
+        self.group.execute(plan, wait=False)
+        rospy.sleep(5)
+        rospy.loginfo("execute plan| finished")
+
+    def attach_sphere(self, link, name, pose, radius, touch_links):
+        aco = moveit_msgs.msg.AttachedCollisionObject()
+        aco.object = self.make_sphere(name, pose, radius) ##
+        aco.link_name = link
+        aco.touch_links = touch_links
+        self.aco_pub.publish(aco)
+
+    def make_sphere(self, name, pose, radius):
+        co = moveit_msgs.msg.CollisionObject()
+        co.operation = moveit_msgs.msg.CollisionObject.ADD
+        co.id = name
+        co.header = pose.header
+        sphere = shape_msgs.msg.SolidPrimitive()
+        sphere.type = shape_msgs.msg.SolidPrimitive.SPHERE
+        sphere.dimensions = [radius]
+        co.primitives = [sphere]
+        co.primitive_poses = [pose.pose]
+        return co
+
+    ##################################################################################################
+    ##################################################################################################
+
     def move_xp_cb(self, msg):
         rospy.loginfo("move_xp_cb")
         self.move_dxyz([0, 0, DXYZ])
@@ -198,64 +235,56 @@ class UR5MoveGroupGUI():
         rospy.loginfo("move_ym_cb")
         self.move_dxyz([DXYZ, 0, 0])
 
-    # def move_xp_cb(self, msg):
-    #     rospy.loginfo("move_xp_cb")
-    #     cur_pose = self.group.get_current_pose().pose
-    #     des_pose = dxyz_wrt_eef_pose(cur_pose, [DXYZ, 0, 0])
-    #     self.move_to_target_pose(des_pose)
+    def pick_approach_plan_cb(self, msg):
+        '''
+        initial joint -> pre-grasp joint
+        '''
+        if self.last_selected_joint is not None:
+            self.pick_approach_plan = self.plan_for_joint_target(self.last_selected_joint)
 
-    # def move_xm_cb(self, msg):
-    #     rospy.loginfo("move_xm_cb")
-    #     cur_pose = self.group.get_current_pose().pose
-    #     des_pose = dxyz_wrt_eef_pose(cur_pose, [-DXYZ, 0, 0])
-    #     self.move_to_target_pose(des_pose)
+    def pick_approach_execute_cb(self, msg):
+        if self.pick_approach_plan is not None:
+            self.execute_plan(self.pick_approach_plan)
+            self.pre_grasp_joint = self.group.get_current_joint_values()
+            rospy.loginfo("pick_approach_execute", self.pre_grasp_joint)
+            self.instruction_pub.publish(STEP4)
 
-    # def move_yp_cb(self, msg):
-    #     rospy.loginfo("move_yp_cb")
-    #     cur_pose = self.group.get_current_pose().pose
-    #     des_pose = dxyz_wrt_eef_pose(cur_pose, [0, 0, -DXYZ])
-    #     self.move_to_target_pose(des_pose)
+    def pick_retreat_plan_cb(self, msg):
+        '''
+        grasp joint -> pre-grasp joint -> initial joint
+        '''
+        if self.pre_grasp_joint is not None:
+            self.ur5_inv.publish_state(-1)
 
-    # def move_ym_cb(self, msg):
-    #     rospy.loginfo("move_ym_cb")
-    #     cur_pose = self.group.get_current_pose().pose
-    #     des_pose = dxyz_wrt_eef_pose(cur_pose, [0, 0, DXYZ])
-    #     self.move_to_target_pose(des_pose)
+            self.pick_retreat_plan = self.plan_for_joint_target(initial_joint)
+            # if self.pick_retreat_step == 0:
+            #     self.pick_retreat_plan = self.plan_for_joint_target(self.pre_grasp_joint)
+            #     rospy.loginfo("pick retreat plan | step 0")
+            # elif self.pick_retreat_step == 1:
+            #     self.pick_retreat_plan1 = self.plan_for_joint_target(initial_joint)
+            #     rospy.loginfo("pick retreat plan | step 1")
 
-    # def move_zp_cb(self, msg):
-    #     rospy.loginfo("move_zp_cb")
-    #     cur_pose = self.group.get_current_pose().pose
-    #     des_pose = dxyz_wrt_eef_pose(cur_pose, [0, DXYZ, 0])
-    #     self.move_to_target_pose(des_pose)
+    def pick_retreat_execute_cb(self, msg):
+        if self.pick_retreat_plan is not None:
+            self.execute_plan(self.pick_retreat_plan)
+            # if self.pick_retreat_step == 0:
+            #     self.execute_plan(self.pick_retreat_plan)
+            #     self.pick_retreat_step += 1
+            # elif self.pick_retreat_step == 1:
+            #     self.execute_plan(self.pick_retreat_plan1)
+            #     self.pick_retreat_step += 1
 
-    # def move_zm_cb(self, msg):
-    #     rospy.loginfo("move_zm_cb")
-    #     cur_pose = self.group.get_current_pose().pose
-    #     des_pose = dxyz_wrt_eef_pose(cur_pose, [0, -DXYZ, 0])
-    #     self.move_to_target_pose(des_pose)
+    def place_approach_plan_cb(self, msg):
+        pass
 
-    def approach_plan_cb(self, msg):
-        self.group.set_joint_value_target(self.last_target_joint)
-        self.plan = self.group.plan()
-        rospy.loginfo("approach_plan: Waiting while RVIZ displays the plan...")
-        rospy.sleep(5)
-        rospy.loginfo("approach_plan: Visualizing the plan")
-        self.display_trajectory = moveit_msgs.msg.DisplayTrajectory()
-        self.display_trajectory.trajectory_start = self.robot.get_current_state()
-        self.display_trajectory.trajectory.append(self.plan)
-        self.display_trajectory_publisher.publish(self.display_trajectory);
-        rospy.loginfo("approach_plan: Waiting while plan is visualized (again)...")
-        rospy.sleep(5)
-        self.group.clear_pose_targets()
-        rospy.loginfo("approach_plan: Finished")
+    def place_approach_execute_cb(self, msg):
+        pass
 
-    def approach_execute_cb(self, msg):
-        rospy.loginfo("approach_execute: The Plan Execution Started")
-        self.group.execute(self.plan, wait=False)
-        rospy.sleep(5)
-        rospy.loginfo("approach_execute: Finished")
+    def place_retreat_plan_cb(self, msg):
+        pass
 
-        self.instruction_pub.publish(STEP4)
+    def place_retreat_execute_cb(self, msg):
+        pass
 
     def approach_stop_cb(self, msg):
         self.group.stop()
@@ -280,8 +309,12 @@ class UR5MoveGroupGUI():
 
                 if self.last_sol_num is None: 
                     self.ur5_inv.publish_state(-1)
+                elif self.last_sol_num is -1:
+                    self.ur5_inv.publish_state(-1)
+                    self.last_selected_joint = None
                 else:
-                    self.ur5_inv.publish_state(self.last_sol_num)
+                    _, target_joint = self.ur5_inv.publish_state(self.last_sol_num)
+                    self.last_selected_joint = target_joint
 
             except Exception as e:
                 rospy.logerr(e)
@@ -325,41 +358,23 @@ class UR5MoveGroupGUI():
         
         _, target_joint = self.ur5_inv.publish_state(sol_num)
 
-        if sol_num == -1:            
-            self.last_target_joint = None
+        if sol_num == -1:
+            self.last_selected_joint = None
         else:
-            self.last_target_joint = target_joint
+            self.last_selected_joint = target_joint
 
         self.last_sol_num = sol_num
 
-    def attach_sphere(self, link, name, pose, radius, touch_links):
-        aco = moveit_msgs.msg.AttachedCollisionObject()
-        aco.object = self.make_sphere(name, pose, radius) ##
-        aco.link_name = link
-        aco.touch_links = touch_links
-        self.aco_pub.publish(aco)
-
-    def make_sphere(self, name, pose, radius):
-        co = moveit_msgs.msg.CollisionObject()
-        co.operation = moveit_msgs.msg.CollisionObject.ADD
-        co.id = name
-        co.header = pose.header
-        sphere = shape_msgs.msg.SolidPrimitive()
-        sphere.type = shape_msgs.msg.SolidPrimitive.SPHERE
-        sphere.dimensions = [radius]
-        co.primitives = [sphere]
-        co.primitive_poses = [pose.pose]
-        return co
-
     def gripper_close_cb(self, msg):
         if msg.data:
-            rospy.sleep(3)  # wait for close gripper
+            rospy.sleep(2)  # wait for close gripper
             attach_link = "left_inner_finger_pad"
             part_name = "part"
             part_size = 0.1 # sphere - radius
             # part_size = (0.12, 0.02, 0.15)    # box
             part_pose = geometry_msgs.msg.PoseStamped()
             part_pose.header.frame_id = "left_inner_finger_pad"
+            part_pose.header.stamp = rospy.Time.now()
             part_pose.pose.position.y = -0.01
             part_pose.pose.position.z = 0.05
             touch_links = self.robot.get_link_names(group='robotiq')
@@ -367,9 +382,10 @@ class UR5MoveGroupGUI():
             self.attach_sphere(attach_link, part_name, part_pose, part_size, touch_links)
             self.captured_pcl.publish(Bool(False))
         else:
-            # dettach link
-            pass
-
+            self.scene.remove_attached_object("left_inner_finger_pad", "part")
+            rospy.sleep(1)
+            self.scene.remove_world_object("part")
+            self.captured_pcl.publish(Bool(False))
 
 def main(arg):
     if len(arg) > 1:
@@ -377,10 +393,15 @@ def main(arg):
             log_level = rospy.DEBUG
     else:
         log_level = rospy.INFO
+
+    cnt = 0 # publish transparent robot state for few times
     try:
         ur5 = UR5MoveGroupGUI(log_level)
         while not rospy.is_shutdown():
-            rospy.sleep(10)
+            if cnt < 2:
+                ur5.ur5_inv.publish_state(-1)
+            cnt += 1
+            rospy.sleep(1)
 
     except KeyboardInterrupt:
         return

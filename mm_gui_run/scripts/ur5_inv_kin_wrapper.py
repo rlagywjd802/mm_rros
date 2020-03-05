@@ -13,17 +13,15 @@ from const import *
 
 JOINTS = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 
 			'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
-LINKS_ENABLE = ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 
+UR5_LINK = ['base_link', 'shoulder_link', 'upper_arm_link', 'forearm_link', 
 				'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
-LINKS_DISABLE = []
+ROBOTIQ_LINK = ['robotiq_arg2f_base_link', 'left_outer_knuckle', 'left_outer_finger', 
+				'left_inner_finger', 'left_inner_finger_pad', 'left_inner_knuckle', 
+				'right_inner_knuckle', 'right_outer_knuckle', 'right_outer_finger', 
+				'right_inner_finger', 'right_inner_finger_pad']
 
-# workspace
-J1 = [-360.0, -60.0]	# (-180) +120, -180  
-J2 = [-240.0, 60.0] 	# (-90) +-150
-J3 = [-360.0, 360.0]
-J4 = [-360.0, 0.0]
-J5 = [-120.0, -60.0]	# (-90) += 30
-J6 = [-270.0, 90.0]		# (-90) += 180
+LINKS_ENABLE = UR5_LINK + ROBOTIQ_LINK
+LINKS_DISABLE = ['realsense2_link', 'part'] # 'part' doesn't work
 
 rad2deg = 180.0/math.pi
 deg2rad = math.pi/180.0
@@ -74,15 +72,6 @@ class ur5_inv_kin_wrapper(ur5):
 			sol_deg = sol_rad[:, i] * rad2deg
 			print("sol {} : [{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}]".format(
 				i, sol_deg[0], sol_deg[1], sol_deg[2], sol_deg[3], sol_deg[4], sol_deg[5]))
-
-	# def _inv_kin_limited(self, pose_mat):
-	# 	inv_sol = self.inv_kin(pose_mat)
-	# 	for i in range(8):
-	# 		if inv_sol[0, i] > (J1[0]+360.0)*deg2rad:
-	# 			inv_sol[0, i] -= math.pi*2
-	# 		if inv_sol[3, i] > J4[1]*deg2rad:
-	# 			inv_sol[3, i] -= math.pi*2
-	# 	return inv_sol
 
 	def _calculate_diff(self, inv_sol, cur_joint):
 		diffs = []
@@ -207,7 +196,7 @@ class ur5_inv_kin_wrapper(ur5):
 		'''
 		publishes selected sol of robot state
 		if num is -1, 
-			publish transparent robot
+			publish transparent robot & return zeros
 		else,
 			1) check state validity
 			2) if valid, publish green robot
@@ -223,7 +212,6 @@ class ur5_inv_kin_wrapper(ur5):
 			link_colors = self._set_link_colors(0, 0, 0, 0)
 		else:
 			selected_inv_sol = self.inv_sol[:, num]
-			# link_colors = self._set_link_colors(0, 20, 0, 0.7)
 			valid = self._get_state_validity(selected_inv_sol)
 			if valid:
 				link_colors = self._set_link_colors(0, 20, 0, 0.7)
@@ -236,12 +224,11 @@ class ur5_inv_kin_wrapper(ur5):
 		robot_state.state.joint_state.header.frame_id = FRAME_ID
 		robot_state.state.joint_state.name = JOINTS
 		robot_state.state.joint_state.position = selected_inv_sol
-		robot_state.state.joint_state.velocity = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 		robot_state.state.multi_dof_joint_state.header.frame_id = FRAME_ID
 		if self.aco is not None:
 			robot_state.state.attached_collision_objects = [self.aco]
 		robot_state.highlight_links = link_colors
-		# robot_state.state.is_diff = False
+		robot_state.state.is_diff = True
 
 		self.robot_state_pub.publish(robot_state)
 

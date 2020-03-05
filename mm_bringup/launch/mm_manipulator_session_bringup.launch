@@ -1,18 +1,12 @@
 <launch>
-	<arg name="rviz"		default="false"/>
-	<arg name="map_name"	default="rtabmap.db"/>
+	<arg name="rviz"	default="false"/>
+	<arg name="sim"		default="false"/>
 
-	<!-- base -->
-	<!-- <include file="$(find mm_bringup)/launch/mm_mobile_bringup.launch"/> -->
-
-	<!-- sensors -->
+	<!-- cameras -->
 	<include file="$(find mm_bringup)/launch/mm_camera_bringup.launch">
-		<arg name="kinect1" value="true"/>
-		<arg name="kinect2" value="false"/> 
-		<arg name="realsense2" value="true"/>
+		<!-- <arg name="realsense1"	value="true"/> -->
+		<!-- <arg name="realsense2"	value="false"/> -->
 	</include>
-	<!-- <include file="$(find mm_bringup)/launch/mm_imu_bringup.launch"/>	 -->
-	<include file="$(find mm_bringup)/launch/mm_laser_bringup.launch"/>
 
 	<!-- arm -->
 	<include file="$(find mm_bringup)/launch/mm_ur5_driver.launch">
@@ -33,36 +27,38 @@
 	<!-- robot state publisher -->
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-	<!-- slam & navigation -->
-	<include file="$(find mm_slam)/launch/mm_rtabmap.launch">
-		<arg name="camera" 				value="kinect1"/>
-		<arg name="localization"		value="true"/>
-		<arg name="dwa"					value="false"/>
-		<arg name="database_path" 		value="$(arg map_name)"/>
-		<arg name="odom_topic"			value="/odom"/>
-	</include>
-
 	<!-- move group -->
 	<include file="$(find mm_moveit_config)/launch/mm_moveit_planning_execution.launch"/>
 
+	<!-- self-filter -->
+	<!-- cloud_out : /cloud_out -->
+<!-- 	<rosparam file="$(find robot_self_filter)/config/self_see_links.yaml" command="load" ns="robot_self_filter"/>  
+	<node name="robot_self_filter" pkg="robot_self_filter" type="self_filter" output="screen">
+		<remap from="cloud_in" to="/realsense1/depth/color/points"/>
+	</node>
+ -->
 	<!-- stitching -->
+	<!-- cloud_out : /pcl_fusion_node_color/pcl_fusion_node/fused_points -->
 	<include file="$(find point_cloud_stitching_color)/launch/fuse_points.launch">
 		<arg name="fusion_frame"	value="base_footprint"/>
 		<arg name="cloud_in" 		value="/realsense2/depth/color/points"/>
 	</include>
 
 	<!-- gui execution -->
+	<!-- cloud in : select between self-filter or stitching cloud_out -->
 	<node name="mm_gui_pcl_execution" pkg="mm_gui_run" type="mm_gui_pcl_execution.py" output="screen">
 		<param name="captured_cloud_in"	value="/pcl_fusion_node_color/pcl_fusion_node/fused_points"/>
-		<!-- <param name="captured_cloud_in"	value="/realsense2/depth/color/points"/> -->
+		<!-- <param name="captured_cloud_in"	value="/cloud_out"/> -->
 	</node>
 
 	<!-- <node name="waypoint_controls" pkg="mm_gui_run" type="waypoint_controls.py"/> -->
 	<!-- <node name="mm_gui_moveit_approach_execution" pkg="mm_gui_run" type="mm_gui_moveit_approach_execution.py"/> -->
 
  
-  	<!-- rviz -->
-	<node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find mm_slam)/rviz/mm_demo.rviz"/>
+  <!-- rviz -->
+	<node if="$(arg rviz)" name="demo_rviz" pkg="rviz" type="rviz" respawn="false" 
+		args="-d $(find mm_bringup)/rviz/mm_demo.rviz" output="screen">
+	</node>
 
   	
 </launch>

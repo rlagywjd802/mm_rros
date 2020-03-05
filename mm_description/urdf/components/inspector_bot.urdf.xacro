@@ -27,6 +27,11 @@
   <xacro:property name="wheel_length" value="0.15" />
   <xacro:property name="wheel_radius" value="0.2" />
   <xacro:property name="base_center_height" value="${wheel_vertical_offset + wheel_radius}" />
+
+  <!-- Battery Size -->
+  <xacro:property name="battery_x_size" value="${0.18+0.02}"/>
+  <xacro:property name="battery_y_size" value="${0.36+0.02}"/>
+  <xacro:property name="battery_z_size" value="${0.28+0.02}"/>
   
   <xacro:property name="M_PI" value="3.14159"/>
 
@@ -66,7 +71,8 @@
   <link name="base_footprint"/>
 
   <joint name="base_joint" type="fixed">
-    <origin xyz="-${base_x_size/2 + origin_x} ${base_y_size/2 - origin_y} 0" rpy="0 0 0" />
+    <!-- <origin xyz="-${base_x_size/2 + origin_x} ${base_y_size/2 - origin_y} 0" rpy="0 0 0" /> -->
+    <origin xyz="0 0 0" rpy="0 0 0" />
     <parent link="base_footprint" />
     <child link="bare_base_link" />
   </joint>
@@ -136,7 +142,7 @@
   </xacro:inspector_bot_wheel>
 
   <!-- profile for side facing camera -->
-  <joint name="camera_profile_fixed_joint" type="fixed">
+  <!-- <joint name="camera_profile_fixed_joint" type="fixed">
     <parent link="bare_base_link"/>
     <child link="camera_profile"/>
     <origin xyz="${-base_x_size/2 - profile_size/2} ${-base_y_size/2 + profile_size*1.5} ${base_center_height + base_z_size/2 + profile_height1/2}" rpy="0 0 0"/>
@@ -156,6 +162,31 @@
       </geometry>
       <material name="black"/>
     </collision>
+  </link> -->
+
+  <!-- battery -->
+  <joint name="camera_profile_fixed_joint" type="fixed">
+    <parent link="bare_base_link"/>
+    <child link="battery_link"/>
+    <origin xyz="${-base_x_size/2 + profile_size + battery_x_size/2} 0 ${base_center_height + base_z_size/2 + battery_z_size/2}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="battery_link">
+    <visual>
+      <geometry>
+        <box size="${battery_x_size} ${battery_y_size} ${battery_z_size}"/>
+      </geometry>      
+      <material name="black"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${battery_x_size} ${battery_y_size} ${battery_z_size}"/>
+      </geometry>
+      <material name="black"/>
+    </collision>
   </link>
+
+
 
 </robot>

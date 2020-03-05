@@ -6,7 +6,7 @@
   <xacro:arg name="robot_namespace" default="/"/>
   <xacro:arg name="kinect1_enabled" default="true"/>
   <xacro:arg name="kinect2_enabled" default="false"/>
-  <xacro:arg name="realsense1_enabled" default="true"/>
+  <xacro:arg name="realsense1_enabled" default="false"/>
   <xacro:arg name="realsense2_enabled" default="true"/>
   <xacro:arg name="ur_enabled" default="true"/>
   <xacro:arg name="gripper_enabled" default="true"/>

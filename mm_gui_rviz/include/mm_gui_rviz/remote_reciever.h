@@ -45,6 +45,8 @@
 #include <geometry_msgs/Twist.h>
 #include <actionlib_msgs/GoalID.h>
 
+#include <std_srvs/Empty.h>
+
 #include <string>
 #include <vector>
 
@@ -60,16 +62,23 @@ public:
   RemoteReciever()
   {
     // Publisher
-    // joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_gui_joy", 1);
     base_stop_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("move_base/cancel", 1);
-    gripper_publisher_ = nh_.advertise<std_msgs::Bool>("gripper_close", 1);
     cmd_vel_publisher_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+
     record_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_record", 1);
     capture_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_capture", 1);
     clear_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_clear", 1);
 
-    approach_plan_publisher_ = nh_.advertise<std_msgs::Bool>("approach_plan", 1);
-    approach_execute_publisher_ = nh_.advertise<std_msgs::Bool>("approach_execute", 1);
+    pick_approach_plan_publisher_ = nh_.advertise<std_msgs::Bool>("pick_approach_plan", 1);
+    pick_approach_execute_publisher_ = nh_.advertise<std_msgs::Bool>("pick_approach_execute", 1);
+    pick_retreat_plan_publisher_ = nh_.advertise<std_msgs::Bool>("pick_retreat_plan", 1);
+    pick_retreat_execute_publisher_ = nh_.advertise<std_msgs::Bool>("pick_retreat_execute", 1);
+
+    place_approach_plan_publisher_ = nh_.advertise<std_msgs::Bool>("place_approach_plan", 1);
+    place_approach_execute_publisher_ = nh_.advertise<std_msgs::Bool>("place_approach_execute", 1);
+    place_retreat_plan_publisher_ = nh_.advertise<std_msgs::Bool>("place_retreat_plan", 1);
+    place_retreat_execute_publisher_ = nh_.advertise<std_msgs::Bool>("place_retreat_execute", 1);
+    
     approach_stop_publisher_ = nh_.advertise<std_msgs::Bool>("approach_stop", 1);
 
     move_xp_publisher_ = nh_.advertise<std_msgs::Bool>("move_xp", 1);
@@ -79,11 +88,6 @@ public:
     move_zp_publisher_ = nh_.advertise<std_msgs::Bool>("move_zp", 1);
     move_zm_publisher_ = nh_.advertise<std_msgs::Bool>("move_zm", 1);
 
-    add_waypoint_publisher_ = nh_.advertise<std_msgs::Bool>("add_waypoint", 1);
-    remove_waypoint_publisher_ = nh_.advertise<std_msgs::Bool>("remove_waypoint", 1);
-    compute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("compute_interpolation", 1);
-    execute_interpolation_publisher_ = nh_.advertise<std_msgs::Bool>("execute_interpolation", 1);
-
     rb_publisher_ = nh_.advertise<std_msgs::String>("rotate_axis", 1);
     sl_publisher_ = nh_.advertise<std_msgs::Int32>("distance", 1);
     clear_imarker_publisher_ = nh_.advertise<std_msgs::Bool>("clear_imarker", 1);
@@ -91,9 +95,14 @@ public:
     solution_publisher_ = nh_.advertise<std_msgs::Int32>("solution_num", 1);
     solve_ik_publisher_ = nh_.advertise<std_msgs::Bool>("solve_ik", 1);
 
+    gripper_publisher_ = nh_.advertise<std_msgs::Bool>("gripper_close", 1);
+
     // Subscriber
     tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
-    // ik_cost_subscriber_ = nh_.subscribe<std_msgs::Float32MultiArray>("inv_kin_cost", 5, &RemoteReciever::ik_cost_cb, this);
+
+    // Service
+    rtabmap_pause_client_ = nh_.serviceClient<std_srvs::Empty>("/rtabmap/pause");
+    rtabmap_resume_client_ = nh_.serviceClient<std_srvs::Empty>("/rtabmap/resume");
   }
 
   void publishEmergencyStop()
@@ -156,31 +165,76 @@ public:
     clear_publisher_.publish(msg);
   }
 
-  void publishApproachPlan()
+  void publishPickApproachPlan()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "ApproachPlan");
+    ROS_DEBUG_STREAM_NAMED("gui", "PickApproachPlan");
 
     std_msgs::Bool msg;
     msg.data = true;
-    approach_plan_publisher_.publish(msg);
+    pick_approach_plan_publisher_.publish(msg);
   }
 
-  void publishApproachExcute()
+  void publishPickApproachExecute()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "ApproachExecute");
+    ROS_DEBUG_STREAM_NAMED("gui", "PickApproachExecute");
 
     std_msgs::Bool msg;
     msg.data = true;
-    approach_execute_publisher_.publish(msg);
+    pick_approach_execute_publisher_.publish(msg);
   }
 
-  void publishApproachStop()
+  void publishPickRetreatPlan()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "ApproachStop");
+    ROS_DEBUG_STREAM_NAMED("gui", "PickRetreatPlan");
 
     std_msgs::Bool msg;
     msg.data = true;
-    approach_stop_publisher_.publish(msg);
+    pick_retreat_plan_publisher_.publish(msg);
+  }
+
+  void publishPickRetreatExecute()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "PickRetreatExecute");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    pick_retreat_execute_publisher_.publish(msg);
+  }
+
+  void publishPlaceApproachPlan()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "PlaceApproachPlan");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    place_approach_plan_publisher_.publish(msg);
+  }
+
+  void publishPlaceApproachExecute()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "PlaceApproachExecute");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    place_approach_execute_publisher_.publish(msg);
+  }
+
+  void publishPlaceRetreatPlan()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "PlaceRetreatPlan");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    place_retreat_plan_publisher_.publish(msg);
+  }
+
+  void publishPlaceRetreatExecute()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "PlaceRetreatExecute");
+
+    std_msgs::Bool msg;
+    msg.data = true;
+    place_retreat_execute_publisher_.publish(msg);
   }
 
   void publishMoveXP()
@@ -237,43 +291,6 @@ public:
     move_zm_publisher_.publish(msg);
   }
 
-
-  void publishAddWaypoint()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "AddWaypoint");
-
-    std_msgs::Bool msg;
-    msg.data = true;
-    add_waypoint_publisher_.publish(msg); 
-  }
-
-  void publishRemoveWaypoint()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "RemoveWaypoint");
-
-    std_msgs::Bool msg;
-    msg.data = true;
-    remove_waypoint_publisher_.publish(msg); 
-  }
-
-  void publishComputeInterpolation()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "ComputeInterpolation");
-
-    std_msgs::Bool msg;
-    msg.data = true;
-    compute_interpolation_publisher_.publish(msg); 
-  }
-
-  void publishExecuteInterpolation()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "ExecuteInterpolation");
-
-    std_msgs::Bool msg;
-    msg.data = true;
-    execute_interpolation_publisher_.publish(msg); 
-  }
-
   void publishRB(int value)
   {
     ROS_DEBUG_STREAM_NAMED("gui", "RB");
@@ -323,26 +340,34 @@ public:
     solve_ik_publisher_.publish(msg);
   }
 
+  void callPauseRtabmap()
+  {
+    std_srvs::Empty srv;
+    if(rtabmap_pause_client_.call(srv))
+      ROS_DEBUG_STREAM_NAMED("gui", "rtabmap pause success");
+    else
+      ROS_DEBUG_STREAM_NAMED("gui", "rtabmap pause failed");
+  }
+
+  void callResumeRtabmap()
+  {
+    std_srvs::Empty srv;
+    if(rtabmap_resume_client_.call(srv))
+      ROS_DEBUG_STREAM_NAMED("gui", "rtabmap resume success");
+    else
+      ROS_DEBUG_STREAM_NAMED("gui", "rtabmap resume failed");
+  }
+
   void instruction_cb(const std_msgs::String::ConstPtr& msg)
   {
     tb_string = msg->data.c_str();
   }
 
-  // void ik_cost_cb(const std_msgs::Float32MultiArray::ConstPtr &msg)
-  // {
-  //   std::vector<float>* tmp;
-  //   tmp->push_back(1.0);
-  //   tmp->push_back(2.0);
-  //   ik_cost = tmp;
-  // }
-
   const std::string& get_instruction() {return tb_string;}
 
-  // const std::vector<float>* get_ik_cost() {return ik_cost;}
 
 protected:
   // The ROS publishers
-  // ros::Publisher joy_publisher_;
   ros::Publisher base_stop_publisher_;
   ros::Publisher gripper_publisher_;
   ros::Publisher cmd_vel_publisher_;
@@ -351,8 +376,15 @@ protected:
   ros::Publisher capture_publisher_;
   ros::Publisher clear_publisher_;
   
-  ros::Publisher approach_plan_publisher_;
-  ros::Publisher approach_execute_publisher_;
+  ros::Publisher pick_approach_plan_publisher_;
+  ros::Publisher pick_approach_execute_publisher_;
+  ros::Publisher pick_retreat_plan_publisher_;
+  ros::Publisher pick_retreat_execute_publisher_;
+  ros::Publisher place_approach_plan_publisher_;
+  ros::Publisher place_approach_execute_publisher_;
+  ros::Publisher place_retreat_plan_publisher_;
+  ros::Publisher place_retreat_execute_publisher_;
+
   ros::Publisher approach_stop_publisher_;
 
   ros::Publisher move_xp_publisher_;
@@ -362,11 +394,6 @@ protected:
   ros::Publisher move_ym_publisher_;
   ros::Publisher move_zm_publisher_;
 
-  ros::Publisher add_waypoint_publisher_;
-  ros::Publisher remove_waypoint_publisher_;
-  ros::Publisher compute_interpolation_publisher_;
-  ros::Publisher execute_interpolation_publisher_;
-
   ros::Publisher rb_publisher_;
   ros::Publisher sl_publisher_;
   ros::Publisher clear_imarker_publisher_;
@@ -375,7 +402,9 @@ protected:
   ros::Publisher solve_ik_publisher_;
 
   ros::Subscriber tb_subscriber_;
-  // ros::Subscriber ik_cost_subscriber_;
+
+  ros::ServiceClient rtabmap_pause_client_;
+  ros::ServiceClient rtabmap_resume_client_;
   
   // The ROS node handle.
   ros::NodeHandle nh_;

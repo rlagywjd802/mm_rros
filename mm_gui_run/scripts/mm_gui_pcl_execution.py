@@ -36,7 +36,8 @@ class PointCloudGUI():
 		if msg.data:
 			rospy.loginfo("clicked pcl capture | {}".format(self.pcl_in))
 
-			captured_pcl = rospy.wait_for_message(self.pcl_in, PointCloud2, 20)
+			captured_pcl = rospy.wait_for_message(self.pcl_in,
+                                PointCloud2, 60)
 			
 			self.captured_pcl_pub.publish(captured_pcl)
 
@@ -45,8 +46,12 @@ class PointCloudGUI():
 
 			self.instruction_pub.publish(STEP2)
 		else:
-			self.last_pcl.header.stamp = rospy.Time.now()
+			time_now = rospy.Time.now()
+			print("pcl_capture_cb==============started")
+			print(time_now)
+			self.last_pcl.header.stamp = time_now
 			self.captured_pcl_pub.publish(self.last_pcl)
+			print("pcl_capture_cb==============ended")
 
 	def pcl_clear_cb(self, msg):
 		rospy.loginfo("clicked pcl clear")
