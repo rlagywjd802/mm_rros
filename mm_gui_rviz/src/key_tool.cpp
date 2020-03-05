@@ -43,16 +43,16 @@ int KeyTool::processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel)
   switch (event->key())
   {
     case Qt::Key_1:
-      x = -1;
-      th = -1;
+      x = -0.7;
+      th = -0.7;
       break;
     case Qt::Key_2:
       x = -1;
       th = 0;
       break;
     case Qt::Key_3:
-      x = -1;
-      th = 1;
+      x = -0.7;
+      th = 0.7;
       break;
     case Qt::Key_4:
       x = 0;
@@ -65,16 +65,16 @@ int KeyTool::processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel)
       th = -1;
       break;
     case Qt::Key_7:
-      x = 1;
-      th = 1;
+      x = 0.7;
+      th = 0.7;
       break;
     case Qt::Key_8:
       x = 1;
       th = 0;
       break;
     case Qt::Key_9:
-      x = 1;
-      th = -1;
+      x = 0.7;
+      th = -0.7;
       break;
     default:
       return move_tool_.processKeyEvent(event, panel);

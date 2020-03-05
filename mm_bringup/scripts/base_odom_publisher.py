@@ -16,6 +16,7 @@ import tf
 import math as m
 import sys
 from math import sin, cos, pi
+from std_msgs.msg import Bool
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, PoseStamped
 
@@ -72,7 +73,6 @@ th = 0.0
 def initialize():
 
     global odom_pub
-    global base_odom_pub
     global odom_broadcaster
     global r
     global current_time
@@ -80,17 +80,14 @@ def initialize():
     global enc_last
     global pub_time
     global test_wheels
-    
-    global x
-    global y
-    global th
 
     rospy.init_node('base_odom_publisher_node')
     rospy.loginfo('status: odometry_publisher crearted')
+
     rospy.Subscriber('/cmd_vel', Twist, move_callback)
+    rospy.Subscriber('/e_stop', Bool, estop_callback)
 
     odom_pub = rospy.Publisher("odom", Odometry, queue_size=50)
-    base_odom_pub = rospy.Publisher("base_odom", Odometry, queue_size=50)
     odom_broadcaster = tf.TransformBroadcaster()
 
     rospy.loginfo('status: odom_pub initiated')
@@ -100,11 +97,6 @@ def initialize():
     current_time = rospy.Time.now()
     last_time = rospy.Time.now()
     pub_time = rospy.get_time()
-
-    x = rospy.get_param('/initial_x', 0.0)
-    y = rospy.get_param('/initial_y', 0.0)
-    th = rospy.get_param('/initial_th', 0.0)
-    rospy.loginfo('status: odom initiated [{}, {}, {}]'.format(x, y, th))
     
     getEncoders()
     enc_last = test_wheels
@@ -120,7 +112,7 @@ def initialize():
 #########################################################################################
 
 debug = 0
-encoder_debug = 1
+encoder_debug = 0
 rc_debug = 0
 mode_debug = 0
 speed_debug = 1
@@ -592,9 +584,18 @@ v_max = 0.5
 # max angular velocity
 w_max = 1.0
 
+estop = False
 
 def sign(a):
     return (a/abs(a))
+
+def estop_callback(data):
+    global estop
+    estop = data.data
+    if estop:
+        ser.write('!EX\r')
+    else:
+        ser.write('!MG\r')
 
 def move_callback(data):
 
@@ -622,23 +623,22 @@ def move_callback(data):
 
     pub_time = rospy.get_time()
 
-    if (pulses[0] > 1500) and (RC_MODE != 1):  #estop activated
+    # if (pulses[0] > 1500) and (RC_MODE != 1):  #estop activated
 
-        ser.write('!EX\r')
-        EM_STOP = 1
+    #     ser.write('!EX\r')
+    #     EM_STOP = 1
 
-    elif (EM_STOP) and (pulses[1] > 1500):
+    # elif (EM_STOP) and (pulses[1] > 1500):
 
-        ser.write('!MG\r')
-        EM_STOP = 0
-        RC_MODE = 1
+    #     ser.write('!MG\r')
+    #     EM_STOP = 0
+    #     RC_MODE = 1
 
-    elif (RC_MODE):
+    # elif (RC_MODE):
 
-        [left,right] = pulse2vel(pulses)
-        move_command(left,right)
-
-    else:
+    #     [left,right] = pulse2vel(pulses)
+    #     move_command(left,right)
+    if not estop:
 
         if (abs(data.linear.x) < v_max) and (abs(data.angular.z) < w_max):
 
@@ -650,7 +650,7 @@ def move_callback(data):
             left  = 0
             right = 0
 
-            print "cmd failed-------------"
+            print "cmd failed-------------", data.linear.x, data.angular.z
 
         debug_printer(debug,"left",left)
         debug_printer(debug,"right",right)
