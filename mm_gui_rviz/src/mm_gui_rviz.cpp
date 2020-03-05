@@ -65,11 +65,6 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   btn_rtabmap_resume_ = new QPushButton(this);
   btn_rtabmap_resume_->setText("Resume");
   connect(btn_rtabmap_resume_, SIGNAL(clicked()), this, SLOT(resumeRtabmap()));
-  
-  // Create a push button
-  btn_emergency_stop_ = new QPushButton(this);
-  btn_emergency_stop_->setText("Stop");
-  connect(btn_emergency_stop_, SIGNAL(clicked()), this, SLOT(emergencyStop()));
 
   // Create a push button
   btn_gripper_open_ = new QPushButton(this);
@@ -311,9 +306,6 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   gripper_layout->addWidget(btn_gripper_close_);
   layout->addLayout(gripper_layout);
 
-  addTitle("Emergency");
-  layout->addWidget(btn_emergency_stop_);
-
   setLayout(layout);
 
 
@@ -346,7 +338,6 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
 
   btn_gripper_open_->setEnabled(true);
   btn_gripper_close_->setEnabled(true);
-  btn_emergency_stop_->setEnabled(true);
 
   rbtn_3_->setChecked(true);
 
@@ -426,11 +417,6 @@ void MMGuiRviz::pauseRtabmap()
 void MMGuiRviz::resumeRtabmap()
 {
   remote_reciever_.callResumeRtabmap();
-}
-
-void MMGuiRviz::emergencyStop()
-{
-  remote_reciever_.publishEmergencyStop();
 }
 
 void MMGuiRviz::moveGripperOpen()

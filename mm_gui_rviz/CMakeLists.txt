@@ -37,15 +37,12 @@ if(rviz_QT_VERSION VERSION_LESS "5")
   macro(qt_wrap_ui)
     qt4_wrap_ui(${ARGN})
   endmacro()
-
-  message("******************4")
 else()
   find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
   set(QT_LIBRARIES Qt5::Widgets)
   macro(qt_wrap_ui)
     qt5_wrap_ui(${ARGN})
   endmacro()
-  message("******************5")
 endif()
 ## Prefer the Qt signals and slots to avoid defining "emit", "slots",
 ## etc because they can conflict with boost signals, so define QT_NO_KEYWORDS here.
@@ -78,6 +75,8 @@ include_directories(SYSTEM include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS}
 
 set(SOURCE_FILES
   src/${PROJECT_NAME}.cpp
+  src/key_tool.cpp
+  src/e_stop.cpp
 )
 
 # Rviz GUI library

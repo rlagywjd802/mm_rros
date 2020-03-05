@@ -191,8 +191,6 @@ protected:
   QPushButton* btn_place_retreat_plan_;
   QPushButton* btn_place_retreat_execute_;
 
-  QPushButton* btn_emergency_stop_;
-
   QPushButton* btn_move_xp_;
   QPushButton* btn_move_xm_;
   QPushButton* btn_move_yp_;

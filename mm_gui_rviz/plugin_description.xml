@@ -6,4 +6,20 @@
 			A panel widget allowing control of a ROS pipeline
 		</description>
 	</class>
+
+	<class name="mm_gui_rviz/KeyTool" 
+				type="mm_gui_rviz::KeyTool" 
+				base_class_type="rviz::Tool">
+		<description>
+			Tool to capture keyboard input
+		</description>
+	</class>
+
+	<class name="mm_gui_rviz/EStop" 
+				type="mm_gui_rviz::EStop" 
+				base_class_type="rviz::Tool">
+		<description>
+			Tool for emergency stop
+		</description>
+	</class>
 </library>

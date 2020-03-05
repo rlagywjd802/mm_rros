@@ -63,7 +63,7 @@ public:
   {
     // Publisher
     base_stop_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("move_base/cancel", 1);
-    cmd_vel_publisher_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    cmd_vel_publisher_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
     record_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_record", 1);
     capture_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_capture", 1);
@@ -79,7 +79,7 @@ public:
     place_retreat_plan_publisher_ = nh_.advertise<std_msgs::Bool>("place_retreat_plan", 1);
     place_retreat_execute_publisher_ = nh_.advertise<std_msgs::Bool>("place_retreat_execute", 1);
     
-    approach_stop_publisher_ = nh_.advertise<std_msgs::Bool>("approach_stop", 1);
+    e_stop_publisher_ = nh_.advertise<std_msgs::Bool>("e_stop", 1);
 
     move_xp_publisher_ = nh_.advertise<std_msgs::Bool>("move_xp", 1);
     move_xm_publisher_ = nh_.advertise<std_msgs::Bool>("move_xm", 1);
@@ -105,13 +105,13 @@ public:
     rtabmap_resume_client_ = nh_.serviceClient<std_srvs::Empty>("/rtabmap/resume");
   }
 
-  void publishEmergencyStop()
+  void publishEStop(bool data)
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "ApproachStop");
+    ROS_DEBUG_STREAM_NAMED("gui", "EStop");
 
     std_msgs::Bool msg;
-    msg.data = true;
-    approach_stop_publisher_.publish(msg);
+    msg.data = data;
+    e_stop_publisher_.publish(msg);
   }
 
   void publishGripperOpen()
@@ -385,7 +385,7 @@ protected:
   ros::Publisher place_retreat_plan_publisher_;
   ros::Publisher place_retreat_execute_publisher_;
 
-  ros::Publisher approach_stop_publisher_;
+  ros::Publisher e_stop_publisher_;
 
   ros::Publisher move_xp_publisher_;
   ros::Publisher move_yp_publisher_;
