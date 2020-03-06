@@ -45,6 +45,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QFrame>
+#include <QMessageBox>
 
 #include "mm_gui_rviz.h"
 
@@ -185,6 +186,7 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateText()));
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateIKCost()));
+  connect(timer_, SIGNAL(timeout()), this, SLOT(updateMBResult()));
   timer_->start(100);
 
   text_browser_ = new QTextBrowser(this);
@@ -538,6 +540,14 @@ void MMGuiRviz::updateText()
 {
   text_browser_->setText(QString::fromStdString(remote_reciever_.get_instruction()));
 }
+
+void MMGuiRviz::updateMBResult()
+{
+  int result_status = remote_reciever_.get_mb_result();
+  if (result_status == 3)
+    QMessageBox::information(this, "MoveBase", "Goal Reached");
+}
+
 
 void MMGuiRviz::clearIMarker()
 {

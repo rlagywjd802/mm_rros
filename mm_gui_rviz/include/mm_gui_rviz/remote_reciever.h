@@ -45,6 +45,8 @@
 #include <geometry_msgs/Twist.h>
 #include <actionlib_msgs/GoalID.h>
 
+#include <move_base_msgs/MoveBaseActionResult.h>
+
 #include <std_srvs/Empty.h>
 
 #include <string>
@@ -56,6 +58,7 @@ class RemoteReciever
 {
 private:
   std::string tb_string;
+  int mb_result_status;
   // std::vector<float>* ik_cost(float);
 
 public:
@@ -99,6 +102,7 @@ public:
 
     // Subscriber
     tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
+    mb_result_subscriber_ = nh_.subscribe<move_base_msgs::MoveBaseActionResult>("/move_base/result", 5, &RemoteReciever::mb_result_cb, this);
 
     // Service
     rtabmap_pause_client_ = nh_.serviceClient<std_srvs::Empty>("/rtabmap/pause");
@@ -363,8 +367,14 @@ public:
     tb_string = msg->data.c_str();
   }
 
+  void mb_result_cb(const move_base_msgs::MoveBaseActionResult::ConstPtr& msg)
+  {
+    mb_result_status = msg->status.status;
+  }
+
   const std::string& get_instruction() {return tb_string;}
 
+  const int& get_mb_result() {return mb_result_status;}
 
 protected:
   // The ROS publishers
@@ -402,6 +412,7 @@ protected:
   ros::Publisher solve_ik_publisher_;
 
   ros::Subscriber tb_subscriber_;
+  ros::Subscriber mb_result_subscriber_;
 
   ros::ServiceClient rtabmap_pause_client_;
   ros::ServiceClient rtabmap_resume_client_;

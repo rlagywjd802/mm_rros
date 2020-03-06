@@ -76,6 +76,8 @@ public Q_SLOTS:
 
   // void updateIKCost();
 
+  void updateMBResult();
+
 protected Q_SLOTS:
 
   void addLabelX();
