@@ -216,7 +216,9 @@ protected:
   QComboBox *combo_box_;
 
   QFrame* line;
-  RemoteReciever remote_reciever_;  
+  RemoteReciever remote_reciever_;
+
+  int goal_reached_flag; 
 
 };
 

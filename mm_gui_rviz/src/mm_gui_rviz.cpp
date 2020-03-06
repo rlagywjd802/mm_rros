@@ -345,6 +345,8 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
 
   btn_imarker_clear_->setEnabled(true);
 
+  goal_reached_flag = 0;
+
 }
 
 void MMGuiRviz::addLabelX()
@@ -544,8 +546,11 @@ void MMGuiRviz::updateText()
 void MMGuiRviz::updateMBResult()
 {
   int result_status = remote_reciever_.get_mb_result();
-  if (result_status == 3)
+  if (result_status == 3 && goal_reached_flag == 0){
     QMessageBox::information(this, "MoveBase", "Goal Reached");
+    goal_reached_flag = 1;
+  }
+  // printf("move base result status is %d\n", result_status);
 }
 
 
