@@ -44,6 +44,7 @@
 
 #include <geometry_msgs/Twist.h>
 #include <actionlib_msgs/GoalID.h>
+#include <actionlib_msgs/GoalStatusArray.h>
 
 #include <move_base_msgs/MoveBaseActionResult.h>
 
@@ -58,14 +59,16 @@ class RemoteReciever
 {
 private:
   std::string tb_string;
-  int mb_result_status;
+  int mb_status = 0;
+  int mm_step = 0;
+  // int mb_result_status;
   // std::vector<float>* ik_cost(float);
 
 public:
   RemoteReciever()
   {
     // Publisher
-    base_stop_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("move_base/cancel", 1);
+    mb_cancel_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("/move_base/cancel", 1);
     cmd_vel_publisher_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
     record_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_record", 1);
@@ -102,11 +105,21 @@ public:
 
     // Subscriber
     tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
-    mb_result_subscriber_ = nh_.subscribe<move_base_msgs::MoveBaseActionResult>("/move_base/result", 5, &RemoteReciever::mb_result_cb, this);
+    mb_status_subscriber_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("/move_base/status", 5, &RemoteReciever::mb_status_cb, this);
+    mm_step_subscriber_ = nh_.subscribe<std_msgs::Int32>("/mm_gui_step", 5, &RemoteReciever::mm_step_cb, this);
 
     // Service
     rtabmap_pause_client_ = nh_.serviceClient<std_srvs::Empty>("/rtabmap/pause");
     rtabmap_resume_client_ = nh_.serviceClient<std_srvs::Empty>("/rtabmap/resume");
+  }
+
+  void publishCancelMB()
+  {
+    ROS_DEBUG_STREAM_NAMED("gui", "MBCancel");
+
+    actionlib_msgs::GoalID msg;
+    msg.stamp = ros::Time::now();
+    mb_cancel_publisher_.publish(msg);
   }
 
   void publishEStop(bool data)
@@ -367,17 +380,34 @@ public:
     tb_string = msg->data.c_str();
   }
 
-  void mb_result_cb(const move_base_msgs::MoveBaseActionResult::ConstPtr& msg)
+  // void mb_result_cb(const move_base_msgs::MoveBaseActionResult::ConstPtr& msg)
+  // {
+  //   mb_result_status = msg->status.status;
+  // }
+
+  void mb_status_cb(const actionlib_msgs::GoalStatusArray::ConstPtr& msg)
   {
-    mb_result_status = msg->status.status;
+    if (!msg->status_list.empty())
+      mb_status = msg->status_list[0].status;
   }
+
+  void mm_step_cb(const std_msgs::Int32::ConstPtr& msg)
+  {
+    mm_step = msg->data;
+  }
+  
 
   const std::string& get_instruction() {return tb_string;}
 
-  const int& get_mb_result() {return mb_result_status;}
+  // const int& get_mb_result() {return mb_result_status;}
+  const int& get_mb_status() {return mb_status;}
+
+  const int& get_mm_step() {return mm_step;}
 
 protected:
   // The ROS publishers
+  ros::Publisher mb_cancel_publisher_;
+
   ros::Publisher base_stop_publisher_;
   ros::Publisher gripper_publisher_;
   ros::Publisher cmd_vel_publisher_;
@@ -412,7 +442,8 @@ protected:
   ros::Publisher solve_ik_publisher_;
 
   ros::Subscriber tb_subscriber_;
-  ros::Subscriber mb_result_subscriber_;
+  ros::Subscriber mb_status_subscriber_;
+  ros::Subscriber mm_step_subscriber_;
 
   ros::ServiceClient rtabmap_pause_client_;
   ros::ServiceClient rtabmap_resume_client_;

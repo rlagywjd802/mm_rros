@@ -38,6 +38,7 @@
 
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPainter>
@@ -56,6 +57,11 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   //////////////////////////////
   // Button
   //////////////////////////////
+  
+  // Create a push button
+  btn_mb_cancel_ = new QPushButton(this);
+  btn_mb_cancel_->setText("Cancel motion planner");
+  connect(btn_mb_cancel_, SIGNAL(clicked()), this, SLOT(cancelMB()));
 
   // Create a push button
   btn_rtabmap_pause_ = new QPushButton(this);
@@ -68,6 +74,21 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   connect(btn_rtabmap_resume_, SIGNAL(clicked()), this, SLOT(resumeRtabmap()));
 
   // Create a push button
+  btn_pcl_record_ = new QPushButton(this);
+  btn_pcl_record_->setText("Capture");
+  connect(btn_pcl_record_, SIGNAL(clicked()), this, SLOT(pclRecord()));
+
+  // Create a push button
+  btn_pcl_capture_ = new QPushButton(this);
+  btn_pcl_capture_->setText("Show Point Cloud");
+  connect(btn_pcl_capture_, SIGNAL(clicked()), this, SLOT(pclCapture()));
+
+  // Create a push button
+  btn_pcl_clear_ = new QPushButton(this);
+  btn_pcl_clear_->setText("Clear");
+  connect(btn_pcl_clear_, SIGNAL(clicked()), this, SLOT(pclClear()));
+
+  // Create a push button
   btn_gripper_open_ = new QPushButton(this);
   btn_gripper_open_->setText("Open");
   connect(btn_gripper_open_, SIGNAL(clicked()), this, SLOT(moveGripperOpen()));
@@ -78,97 +99,62 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   connect(btn_gripper_close_, SIGNAL(clicked()), this, SLOT(moveGripperClose()));
 
   // Create a push button
-  btn_pcl_record_ = new QPushButton(this);
-  btn_pcl_record_->setText("Record");
-  connect(btn_pcl_record_, SIGNAL(clicked()), this, SLOT(pclRecord()));
+  btn_appr_plan_ = new QPushButton(this);
+  btn_appr_plan_->setText("Plan");
+  connect(btn_appr_plan_, SIGNAL(clicked()), this, SLOT(apprPlan()));
 
   // Create a push button
-  btn_pcl_capture_ = new QPushButton(this);
-  btn_pcl_capture_->setText("Capture");
-  connect(btn_pcl_capture_, SIGNAL(clicked()), this, SLOT(pclCapture()));
+  btn_appr_execute_ = new QPushButton(this);
+  btn_appr_execute_->setText("Execute");
+  connect(btn_appr_execute_, SIGNAL(clicked()), this, SLOT(apprExecute()));
 
   // Create a push button
-  btn_pcl_clear_ = new QPushButton(this);
-  btn_pcl_clear_->setText("Clear");
-  connect(btn_pcl_clear_, SIGNAL(clicked()), this, SLOT(pclClear()));
+  btn_retr_plan_ = new QPushButton(this);
+  btn_retr_plan_->setText("Plan");
+  connect(btn_retr_plan_, SIGNAL(clicked()), this, SLOT(retrPlan()));
 
   // Create a push button
-  btn_pick_approach_plan_ = new QPushButton(this);
-  btn_pick_approach_plan_->setText("Plan");
-  connect(btn_pick_approach_plan_, SIGNAL(clicked()), this, SLOT(pickApproachPlan()));
-
-  // Create a push button
-  btn_pick_approach_execute_ = new QPushButton(this);
-  btn_pick_approach_execute_->setText("Execute");
-  connect(btn_pick_approach_execute_, SIGNAL(clicked()), this, SLOT(pickApproachExecute()));
-
-  // Create a push button
-  btn_pick_retreat_plan_ = new QPushButton(this);
-  btn_pick_retreat_plan_->setText("Plan");
-  connect(btn_pick_retreat_plan_, SIGNAL(clicked()), this, SLOT(pickRetreatPlan()));
-
-  // Create a push button
-  btn_pick_retreat_execute_ = new QPushButton(this);
-  btn_pick_retreat_execute_->setText("Execute");
-  connect(btn_pick_retreat_execute_, SIGNAL(clicked()), this, SLOT(pickRetreatExecute()));
-
-  // Create a push button
-  btn_place_approach_plan_ = new QPushButton(this);
-  btn_place_approach_plan_->setText("Plan");
-  connect(btn_place_approach_plan_, SIGNAL(clicked()), this, SLOT(placeApproachPlan()));
-
-  // Create a push button
-  btn_place_approach_execute_ = new QPushButton(this);
-  btn_place_approach_execute_->setText("Execute");
-  connect(btn_place_approach_execute_, SIGNAL(clicked()), this, SLOT(placeApproachExecute()));
-
-  // Create a push button
-  btn_place_retreat_plan_ = new QPushButton(this);
-  btn_place_retreat_plan_->setText("Plan");
-  connect(btn_place_retreat_plan_, SIGNAL(clicked()), this, SLOT(placeRetreatPlan()));
-
-  // Create a push button
-  btn_place_retreat_execute_ = new QPushButton(this);
-  btn_place_retreat_execute_->setText("Execute");
-  connect(btn_place_retreat_execute_, SIGNAL(clicked()), this, SLOT(placeRetreatExecute()));
+  btn_retr_execute_ = new QPushButton(this);
+  btn_retr_execute_->setText("Execute");
+  connect(btn_retr_execute_, SIGNAL(clicked()), this, SLOT(retrExecute()));
 
   // Create a push button
   btn_move_xp_ = new QPushButton(this);
-  btn_move_xp_->setText("+");
+  btn_move_xp_->setText("Forward");
   connect(btn_move_xp_, SIGNAL(clicked()), this, SLOT(moveXP()));
 
   // Create a push button
   btn_move_xm_ = new QPushButton(this);
-  btn_move_xm_->setText("-");
+  btn_move_xm_->setText("Backward");
   connect(btn_move_xm_, SIGNAL(clicked()), this, SLOT(moveXM()));
 
   // Create a push button
   btn_move_yp_ = new QPushButton(this);
-  btn_move_yp_->setText("+");
+  btn_move_yp_->setText("Left");
   connect(btn_move_yp_, SIGNAL(clicked()), this, SLOT(moveYP()));
 
   // Create a push button
   btn_move_ym_ = new QPushButton(this);
-  btn_move_ym_->setText("-");
+  btn_move_ym_->setText("Right");
   connect(btn_move_ym_, SIGNAL(clicked()), this, SLOT(moveYM()));
 
   // Create a push button
   btn_move_zp_ = new QPushButton(this);
-  btn_move_zp_->setText("+");
+  btn_move_zp_->setText("Up");
   connect(btn_move_zp_, SIGNAL(clicked()), this, SLOT(moveZP()));
 
   // Create a push button
   btn_move_zm_ = new QPushButton(this);
-  btn_move_zm_->setText("-");
+  btn_move_zm_->setText("Down");
   connect(btn_move_zm_, SIGNAL(clicked()), this, SLOT(moveZM()));
 
   // Create a radio button
-  rbtn_1_ = new QRadioButton("rx(red)", this);
-  rbtn_2_ = new QRadioButton("ry(green)", this);
-  rbtn_3_ = new QRadioButton("rz(blue)", this);
-  connect(rbtn_1_, SIGNAL(clicked()), this, SLOT(testRB1()));  
-  connect(rbtn_2_, SIGNAL(clicked()), this, SLOT(testRB2()));  
-  connect(rbtn_3_, SIGNAL(clicked()), this, SLOT(testRB3()));
+  rbtn_appr_1_ = new QRadioButton("roll(red)", this);
+  rbtn_appr_2_ = new QRadioButton("pitch(green)", this);
+  rbtn_appr_3_ = new QRadioButton("yaw(blue)", this);
+  connect(rbtn_appr_1_, SIGNAL(clicked()), this, SLOT(apprRB1()));  
+  connect(rbtn_appr_2_, SIGNAL(clicked()), this, SLOT(apprRB2()));  
+  connect(rbtn_appr_3_, SIGNAL(clicked()), this, SLOT(apprRB3()));
   
   // Create a slider
   slider_ = new QSlider(Qt::Horizontal, this);
@@ -182,11 +168,18 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   btn_imarker_clear_->setText("Clear");
   connect(btn_imarker_clear_, SIGNAL(clicked()), this, SLOT(clearIMarker()));
 
+  // Create a radio button
+  rbtn_motion_1_ = new QRadioButton("pick up", this);
+  rbtn_motion_2_ = new QRadioButton("place", this);
+  connect(rbtn_motion_1_, SIGNAL(clicked()), this, SLOT(motionRB1()));  
+  connect(rbtn_motion_2_, SIGNAL(clicked()), this, SLOT(motionRB2()));
+
   // Create a text browser
   timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateText()));
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateIKCost()));
   connect(timer_, SIGNAL(timeout()), this, SLOT(updateMBResult()));
+  connect(timer_, SIGNAL(timeout()), this, SLOT(updateMMStep()));
   timer_->start(100);
 
   text_browser_ = new QTextBrowser(this);
@@ -213,100 +206,120 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   // Main Layout
   layout = new QVBoxLayout;
 
-  // addTitle("Instruction Panel");
+  // text browser
   layout->addWidget(text_browser_);
 
-  addTitle("Rtabmap Localization");
-  rtabmap_layout = new QHBoxLayout;
-  rtabmap_layout->addWidget(btn_rtabmap_pause_);
-  rtabmap_layout->addWidget(btn_rtabmap_resume_);
-  layout->addLayout(rtabmap_layout);  
+  // Mobile Base
+  lb_mb_ = new QLabel(QString::fromStdString("Mobile Base"));
+  lb_mb_->setAlignment(Qt::AlignCenter);
+  layout->addWidget(lb_mb_);
+  layout->addWidget(btn_mb_cancel_);
 
-  addTitle("Capture Point Cloud Data");
-  pcl_layout = new QHBoxLayout;
-  pcl_layout->addWidget(btn_pcl_record_);
-  pcl_layout->addWidget(btn_pcl_capture_);
-  pcl_layout->addWidget(btn_pcl_clear_);
-  layout->addLayout(pcl_layout);
+  QHBoxLayout* l_rtabmap = new QHBoxLayout;
+  lb_mb_loc_ = new QLabel(QString::fromStdString("localization:"));
+  l_rtabmap->addWidget(lb_mb_loc_);
+  l_rtabmap->addWidget(btn_rtabmap_pause_);
+  l_rtabmap->addWidget(btn_rtabmap_resume_);
+  layout->addLayout(l_rtabmap);
 
-  addTitle("Set Pre-Grasp Pose");
-  sl_layout = new QHBoxLayout;
-  sl_layout->addWidget(slider_);
-  layout->addLayout(sl_layout);
+  // Camera on Manipulator
+  lb_pcl_ = new QLabel(QString::fromStdString("Camera on Manipulator"));
+  lb_pcl_->setAlignment(Qt::AlignCenter);
+  QHBoxLayout* l_pcl = new QHBoxLayout;
+  l_pcl->addWidget(btn_pcl_record_);
+  l_pcl->addWidget(btn_pcl_capture_);
+  l_pcl->addWidget(btn_pcl_clear_);
+  layout->addWidget(lb_pcl_);
+  layout->addLayout(l_pcl);
 
-  rb_layout = new QHBoxLayout;
-  rb_layout->addWidget(rbtn_1_);
-  rb_layout->addWidget(rbtn_2_);
-  rb_layout->addWidget(rbtn_3_);
-  layout->addLayout(rb_layout);
+  // Settings for Approaching Pickup
+  lb_appr_ = new QLabel(QString::fromStdString("Settings for Approaching Pickup"));
+  lb_appr_->setAlignment(Qt::AlignCenter);
+  layout->addWidget(lb_appr_);
 
-  layout->addWidget(btn_imarker_clear_);
+  QHBoxLayout* l_appr_pose = new QHBoxLayout;
+  lb_appr_pose_ = new QLabel(QString::fromStdString("set pre-grasp pose"));
+  l_appr_pose->addWidget(rbtn_appr_1_);
+  l_appr_pose->addWidget(rbtn_appr_2_);
+  l_appr_pose->addWidget(rbtn_appr_3_);  
+  layout->addWidget(lb_appr_pose_);
+  layout->addLayout(l_appr_pose);
 
-  addTitle("Select IK Solution");
-  layout->addWidget(combo_box_);
+  QHBoxLayout* l_appr_dist = new QHBoxLayout;
+  lb_appr_dist_ = new QLabel(QString::fromStdString("displacement"));
+  l_appr_dist->addWidget(lb_appr_dist_);
+  l_appr_dist->addWidget(slider_);
+  l_appr_dist->addWidget(btn_imarker_clear_);
+  layout->addLayout(l_appr_dist);
 
-  addTitle("Pick");
-  pick_layout = new QHBoxLayout;
-  pick1_layout = new QVBoxLayout;
-  pick2_layout = new QVBoxLayout;
+  QHBoxLayout* l_appr_ik = new QHBoxLayout;
+  lb_appr_ik_ = new QLabel(QString::fromStdString("select arm configuration"));
+  l_appr_ik->addWidget(lb_appr_ik_);
+  l_appr_ik->addWidget(combo_box_);
+  layout->addLayout(l_appr_ik);
 
-  addTitlePick1("Approach");
-  pick1_layout->addWidget(btn_pick_approach_plan_);
-  pick1_layout->addWidget(btn_pick_approach_execute_);
+  // Manipulator Motion
+  lb_motion_ = new QLabel(QString::fromStdString("Manipulator Motion"));
+  lb_motion_->setAlignment(Qt::AlignCenter);
+  QHBoxLayout* l_motion_ = new QHBoxLayout;
+  // l_motion_->setAlignment(Qt::AlignCenter);
+  l_motion_->addWidget(rbtn_motion_1_);
+  l_motion_->addWidget(rbtn_motion_2_);
+  layout->addWidget(lb_motion_);
+  layout->addLayout(l_motion_);
 
-  addTitlePick2("Retreat");
-  pick2_layout->addWidget(btn_pick_retreat_plan_);
-  pick2_layout->addWidget(btn_pick_retreat_execute_);
+  QHBoxLayout* l_motion_plan_ = new QHBoxLayout;
+  QVBoxLayout* l_motion_appr_ = new QVBoxLayout;
+  lb_motion_appr_ = new QLabel(QString::fromStdString("Approach"));
+  lb_motion_appr_->setAlignment(Qt::AlignCenter);
+  l_motion_appr_->addWidget(lb_motion_appr_);
+  l_motion_appr_->addWidget(btn_appr_plan_);
+  l_motion_appr_->addWidget(btn_appr_execute_);
+  QVBoxLayout* l_motion_retr_ = new QVBoxLayout;
+  lb_motion_retr_ = new QLabel(QString::fromStdString("Retreat"));
+  lb_motion_retr_->setAlignment(Qt::AlignCenter);
+  l_motion_retr_->addWidget(lb_motion_retr_);
+  l_motion_retr_->addWidget(btn_retr_plan_);
+  l_motion_retr_->addWidget(btn_retr_execute_);
+  l_motion_plan_->addLayout(l_motion_appr_);
+  l_motion_plan_->addLayout(l_motion_retr_);
+  layout->addLayout(l_motion_plan_);
 
-  pick_layout->addLayout(pick1_layout);
-  pick_layout->addLayout(pick2_layout);
-  layout->addLayout(pick_layout);
-
-  addTitle("Place");
-  place_layout = new QHBoxLayout;
-  place1_layout = new QVBoxLayout;
-  place2_layout = new QVBoxLayout;
-
-  addTitlePlace1("Approach");
-  place1_layout->addWidget(btn_place_approach_plan_);
-  place1_layout->addWidget(btn_place_approach_execute_);
-
-  addTitlePlace2("Retreat");
-  place2_layout->addWidget(btn_place_retreat_plan_);
-  place2_layout->addWidget(btn_place_retreat_execute_);
-
-  place_layout->addLayout(place1_layout);
-  place_layout->addLayout(place2_layout);
-  layout->addLayout(place_layout);
-
-  addTitle("UR5 actions");  
-  sub_layout = new QHBoxLayout;
-  subx_layout = new QVBoxLayout;
-  suby_layout = new QVBoxLayout;
-  subz_layout = new QVBoxLayout;
-
-  subx_layout->addWidget(btn_move_xp_);
-  addLabelX();
-  subx_layout->addWidget(btn_move_xm_);
-
-  suby_layout->addWidget(btn_move_yp_);
-  addLabelY();
-  suby_layout->addWidget(btn_move_ym_);
-
-  subz_layout->addWidget(btn_move_zp_);
-  addLabelZ();
-  subz_layout->addWidget(btn_move_zm_);
-
-  sub_layout->addLayout(subx_layout);
-  sub_layout->addLayout(suby_layout);
-  sub_layout->addLayout(subz_layout);
-  layout->addLayout(sub_layout);
-
-  addTitle("Gripper actions");
-  gripper_layout = new QHBoxLayout;  
-  gripper_layout->addWidget(btn_gripper_open_);
-  gripper_layout->addWidget(btn_gripper_close_);
-  layout->addLayout(gripper_layout);
+  // Move End-Effector
+  lb_ee_ = new QLabel(QString::fromStdString("Move End-Effector"));
+  lb_ee_->setAlignment(Qt::AlignCenter);
+  // QHBoxLayout* l_ee = new QHBoxLayout;
+  // QVBoxLayout* l_ee_x = new QVBoxLayout;
+  // QVBoxLayout* l_ee_y = new QVBoxLayout;
+  // QVBoxLayout* l_ee_z = new QVBoxLayout;
+  // l_ee_x->addWidget(btn_move_xp_);
+  // l_ee_x->addWidget(btn_move_xm_);
+  // l_ee_y->addWidget(btn_move_yp_);
+  // l_ee_y->addWidget(btn_move_ym_);
+  // l_ee_z->addWidget(btn_move_zp_);
+  // l_ee_z->addWidget(btn_move_zm_);
+  // l_ee->addLayout(l_ee_x);
+  // l_ee->addLayout(l_ee_y);
+  // l_ee->addLayout(l_ee_z);
+  QHBoxLayout* l_ee_z = new QHBoxLayout;
+  l_ee_z->addWidget(btn_move_zp_);
+  l_ee_z->addWidget(btn_move_zm_);
+  QGridLayout* l_ee = new QGridLayout();
+  l_ee->addWidget(btn_move_xp_, 1, 2);
+  l_ee->addWidget(btn_move_xm_, 3, 2);
+  l_ee->addWidget(btn_move_yp_, 2, 1);
+  l_ee->addWidget(btn_move_ym_, 2, 3);
+  l_ee->addLayout(l_ee_z, 2, 2);
+  layout->addWidget(lb_ee_);
+  layout->addLayout(l_ee);
+  
+  lb_gripper_ = new QLabel(QString::fromStdString("Gripper Action"));
+  lb_gripper_->setAlignment(Qt::AlignCenter);
+  QHBoxLayout* l_gripper = new QHBoxLayout;  
+  l_gripper->addWidget(btn_gripper_open_);
+  l_gripper->addWidget(btn_gripper_close_);
+  layout->addWidget(lb_gripper_);
+  layout->addLayout(l_gripper);
 
   setLayout(layout);
 
@@ -315,102 +328,48 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   // Initial Setting
   //////////////////////////////
 
-  btn_rtabmap_pause_->setEnabled(true);
-  btn_rtabmap_resume_->setEnabled(true);
+  // btn_mb_cancel_->setEnabled(true);
+  // btn_rtabmap_pause_->setEnabled(true);
+  // btn_rtabmap_resume_->setEnabled(true);
 
-  btn_pcl_record_->setEnabled(true);
-  btn_pcl_capture_->setEnabled(true);
-  btn_pcl_clear_->setEnabled(true);
+  // btn_pcl_record_->setEnabled(true);
+  // btn_pcl_capture_->setEnabled(true);
+  // btn_pcl_clear_->setEnabled(true);
 
-  btn_pick_approach_plan_->setEnabled(true);
-  btn_pick_approach_execute_->setEnabled(true);
-  btn_pick_retreat_plan_->setEnabled(true);
-  btn_pick_retreat_execute_->setEnabled(true);
-  btn_place_approach_plan_->setEnabled(true);
-  btn_place_approach_execute_->setEnabled(true);
-  btn_place_retreat_plan_->setEnabled(true);
-  btn_place_retreat_execute_->setEnabled(true);
+  // btn_pick_approach_plan_->setEnabled(true);
+  // btn_pick_approach_execute_->setEnabled(true);
+  // btn_pick_retreat_plan_->setEnabled(true);
+  // btn_pick_retreat_execute_->setEnabled(true);
+  // btn_place_approach_plan_->setEnabled(true);
+  // btn_place_approach_execute_->setEnabled(true);
+  // btn_place_retreat_plan_->setEnabled(true);
+  // btn_place_retreat_execute_->setEnabled(true);
 
-  btn_move_xp_->setEnabled(true);
-  btn_move_xm_->setEnabled(true);
-  btn_move_yp_->setEnabled(true);
-  btn_move_ym_->setEnabled(true);
-  btn_move_zp_->setEnabled(true);
-  btn_move_zm_->setEnabled(true);
+  // btn_move_xp_->setEnabled(true);
+  // btn_move_xm_->setEnabled(true);
+  // btn_move_yp_->setEnabled(true);
+  // btn_move_ym_->setEnabled(true);
+  // btn_move_zp_->setEnabled(true);
+  // btn_move_zm_->setEnabled(true);
 
-  btn_gripper_open_->setEnabled(true);
-  btn_gripper_close_->setEnabled(true);
+  // btn_gripper_open_->setEnabled(true);
+  // btn_gripper_close_->setEnabled(true);
 
-  rbtn_3_->setChecked(true);
+  // btn_imarker_clear_->setEnabled(true);
 
-  btn_imarker_clear_->setEnabled(true);
+  rbtn_appr_3_->setChecked(true);
+  rbtn_motion_1_->setChecked(true);
+  set_all_disabled();
 
-  goal_reached_flag = 0;
+  // goal_reached_flag = 0;
+  mb_last = 0;
+  m_motion = 0; // 0-pick up, 1-place
 
 }
 
-void MMGuiRviz::addLabelX()
+void MMGuiRviz::cancelMB()
 {
-  QLabel* label = new QLabel(QString::fromStdString("x"));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  subx_layout->addWidget(label);
-}
-
-void MMGuiRviz::addLabelY()
-{
-  QLabel* label = new QLabel(QString::fromStdString("y"));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  suby_layout->addWidget(label);
-}
-
-void MMGuiRviz::addLabelZ()
-{
-  QLabel* label = new QLabel(QString::fromStdString("z"));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  subz_layout->addWidget(label);
-}
-
-void MMGuiRviz::addTitlePick1(std::string str)
-{
-  QLabel* label = new QLabel(QString::fromStdString(str));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  pick1_layout->addWidget(label);
-}
-
-void MMGuiRviz::addTitlePick2(std::string str)
-{
-  QLabel* label = new QLabel(QString::fromStdString(str));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  pick2_layout->addWidget(label);
-}
-
-void MMGuiRviz::addTitlePlace1(std::string str)
-{
-  QLabel* label = new QLabel(QString::fromStdString(str));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  place1_layout->addWidget(label);
-}
-
-void MMGuiRviz::addTitlePlace2(std::string str)
-{
-  QLabel* label = new QLabel(QString::fromStdString(str));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  place2_layout->addWidget(label);
-}
-
-void MMGuiRviz::addTitle(std::string str)
-{
-  QLabel* label = new QLabel(QString::fromStdString(str));
-  label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet("QLabel { color : black; }");
-  layout->addWidget(label);
+  remote_reciever_.publishCancelMB();
 }
 
 void MMGuiRviz::pauseRtabmap()
@@ -448,44 +407,28 @@ void MMGuiRviz::pclClear()
   remote_reciever_.publishPclClear();
 }
 
-void MMGuiRviz::pickApproachPlan()
+void MMGuiRviz::apprPlan()
 {
-  remote_reciever_.publishPickApproachPlan();
+  if(m_motion == 0) remote_reciever_.publishPickApproachPlan();
+  else              remote_reciever_.publishPlaceApproachPlan();
 }
 
-void MMGuiRviz::pickApproachExecute()
+void MMGuiRviz::apprExecute()
 {
-  remote_reciever_.publishPickApproachExecute();
+  if(m_motion == 0) remote_reciever_.publishPickApproachExecute();
+  else              remote_reciever_.publishPlaceApproachExecute();
 }
 
-void MMGuiRviz::pickRetreatPlan()
+void MMGuiRviz::retrPlan()
 {
-  remote_reciever_.publishPickRetreatPlan();
+  if(m_motion == 0) remote_reciever_.publishPickRetreatPlan();
+  else              remote_reciever_.publishPlaceRetreatPlan();
 }
 
-void MMGuiRviz::pickRetreatExecute()
+void MMGuiRviz::retrExecute()
 {
-  remote_reciever_.publishPickRetreatExecute();
-}
-
-void MMGuiRviz::placeApproachPlan()
-{
-  remote_reciever_.publishPlaceApproachPlan();
-}
-
-void MMGuiRviz::placeApproachExecute()
-{
-  remote_reciever_.publishPlaceApproachExecute();
-}
-
-void MMGuiRviz::placeRetreatPlan()
-{
-  remote_reciever_.publishPlaceRetreatPlan();
-}
-
-void MMGuiRviz::placeRetreatExecute()
-{
-  remote_reciever_.publishPlaceRetreatExecute();
+  if(m_motion == 0) remote_reciever_.publishPickRetreatExecute();
+  else              remote_reciever_.publishPlaceRetreatExecute();
 }
 
 void MMGuiRviz::moveXP()
@@ -518,19 +461,29 @@ void MMGuiRviz::moveZM()
   remote_reciever_.publishMoveZM();
 }
 
-void MMGuiRviz::testRB1()
+void MMGuiRviz::apprRB1()
 {
   remote_reciever_.publishRB(1);
 }
 
-void MMGuiRviz::testRB2()
+void MMGuiRviz::apprRB2()
 {
   remote_reciever_.publishRB(2);
 }
 
-void MMGuiRviz::testRB3()
+void MMGuiRviz::apprRB3()
 {
   remote_reciever_.publishRB(3);
+}
+
+void MMGuiRviz::motionRB1()
+{
+  m_motion = 0;
+}
+
+void MMGuiRviz::motionRB2()
+{
+  m_motion = 1;
 }
 
 void MMGuiRviz::setDistance(int value)
@@ -538,25 +491,227 @@ void MMGuiRviz::setDistance(int value)
   remote_reciever_.publishDistance(value);
 }
 
+void MMGuiRviz::set_all_disabled()
+{
+  lb_mb_->setStyleSheet("background-color:rgb(186, 189, 182); color:gray;");
+  lb_mb_loc_->setStyleSheet("color:gray;");
+  btn_mb_cancel_->setEnabled(false);
+  btn_rtabmap_pause_->setEnabled(false);
+  btn_rtabmap_resume_->setEnabled(false);  
+
+  lb_pcl_->setStyleSheet("background-color:rgb(186, 189, 182); color:gray;");
+  btn_pcl_record_->setEnabled(false);
+  btn_pcl_capture_->setEnabled(false);
+  btn_pcl_clear_->setEnabled(false);
+
+  lb_appr_->setStyleSheet("background-color:rgb(186, 189, 182); color:gray;");
+  lb_appr_pose_->setStyleSheet("color:gray;");
+  lb_appr_dist_->setStyleSheet("color:gray;");
+  lb_appr_ik_->setStyleSheet("color:gray;");
+  rbtn_appr_1_->setEnabled(false);
+  rbtn_appr_2_->setEnabled(false);
+  rbtn_appr_3_->setEnabled(false);
+  slider_->setEnabled(false);
+  btn_imarker_clear_->setEnabled(false);
+  combo_box_->setEnabled(false);  
+
+  lb_motion_->setStyleSheet("background-color:rgb(186, 189, 182); color:gray;");
+  lb_motion_appr_->setStyleSheet("color:gray;");
+  lb_motion_retr_->setStyleSheet("color:gray;");
+  rbtn_motion_1_->setEnabled(false);
+  rbtn_motion_2_->setEnabled(false);
+  btn_appr_plan_->setEnabled(false);
+  btn_appr_execute_->setEnabled(false);
+  btn_retr_plan_->setEnabled(false);
+  btn_retr_execute_->setEnabled(false);
+
+  lb_ee_->setStyleSheet("background-color:rgb(186, 189, 182); color:gray;");
+  btn_move_xp_->setEnabled(false);
+  btn_move_xm_->setEnabled(false);
+  btn_move_yp_->setEnabled(false);
+  btn_move_ym_->setEnabled(false);
+  btn_move_zp_->setEnabled(false);
+  btn_move_zm_->setEnabled(false);
+
+  lb_gripper_->setStyleSheet("background-color:rgb(186, 189, 182); color:gray;");
+  btn_gripper_open_->setEnabled(false);
+  btn_gripper_close_->setEnabled(false);
+}
+
+void MMGuiRviz::set_all_enabled()
+{
+  lb_mb_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+  lb_mb_loc_->setStyleSheet("color:black;");
+  btn_mb_cancel_->setEnabled(true);
+  btn_rtabmap_pause_->setEnabled(true);
+  btn_rtabmap_resume_->setEnabled(true);  
+
+  lb_pcl_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+  btn_pcl_record_->setEnabled(true);
+  btn_pcl_capture_->setEnabled(true);
+  btn_pcl_clear_->setEnabled(true);
+
+  lb_appr_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+  lb_appr_pose_->setStyleSheet("color:black;");
+  lb_appr_dist_->setStyleSheet("color:black;");
+  lb_appr_ik_->setStyleSheet("color:black;");
+  rbtn_appr_1_->setEnabled(true);
+  rbtn_appr_2_->setEnabled(true);
+  rbtn_appr_3_->setEnabled(true);
+  slider_->setEnabled(true);
+  btn_imarker_clear_->setEnabled(true);
+  combo_box_->setEnabled(true);  
+
+  lb_motion_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+  lb_motion_appr_->setStyleSheet("color:black;");
+  lb_motion_retr_->setStyleSheet("color:black;");
+  rbtn_motion_1_->setEnabled(true);
+  rbtn_motion_2_->setEnabled(true);
+  btn_appr_plan_->setEnabled(true);
+  btn_appr_execute_->setEnabled(true);
+  btn_retr_plan_->setEnabled(true);
+  btn_retr_execute_->setEnabled(true);
+
+  lb_ee_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+  btn_move_xp_->setEnabled(true);
+  btn_move_xm_->setEnabled(true);
+  btn_move_yp_->setEnabled(true);
+  btn_move_ym_->setEnabled(true);
+  btn_move_zp_->setEnabled(true);
+  btn_move_zm_->setEnabled(true);
+
+  lb_gripper_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+  btn_gripper_open_->setEnabled(true);
+  btn_gripper_close_->setEnabled(true);
+}
+
+void MMGuiRviz::set_step(int step)
+{
+  set_all_disabled();
+  switch(step) {
+    case 1:
+      lb_mb_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+      lb_mb_loc_->setStyleSheet("color:black;");
+      btn_mb_cancel_->setEnabled(true);
+      btn_rtabmap_pause_->setEnabled(true);
+      btn_rtabmap_resume_->setEnabled(true);
+      break;
+    case 2:
+      lb_pcl_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+      btn_pcl_record_->setEnabled(true);
+      btn_pcl_capture_->setEnabled(true);
+      btn_pcl_clear_->setEnabled(true);
+      break;
+    case 3:
+      lb_appr_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+      lb_appr_pose_->setStyleSheet("color:black;");
+      lb_appr_dist_->setStyleSheet("color:black;");
+      lb_appr_ik_->setStyleSheet("color:black;");
+      rbtn_appr_1_->setEnabled(true);
+      rbtn_appr_2_->setEnabled(true);
+      rbtn_appr_3_->setEnabled(true);
+      slider_->setEnabled(true);
+      btn_imarker_clear_->setEnabled(true);
+      combo_box_->setEnabled(true);
+      break;
+    case 4:
+      lb_motion_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+      lb_motion_appr_->setStyleSheet("color:black;");
+      lb_motion_retr_->setStyleSheet("color:black;");
+      rbtn_motion_1_->setEnabled(true);
+      rbtn_motion_2_->setEnabled(true);
+      btn_appr_plan_->setEnabled(true);
+      btn_appr_execute_->setEnabled(true);
+      btn_retr_plan_->setEnabled(true);
+      btn_retr_execute_->setEnabled(true);
+      break;
+    case 5:
+      lb_ee_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+      btn_move_xp_->setEnabled(true);
+      btn_move_xm_->setEnabled(true);
+      btn_move_yp_->setEnabled(true);
+      btn_move_ym_->setEnabled(true);
+      btn_move_zp_->setEnabled(true);
+      btn_move_zm_->setEnabled(true);
+      lb_gripper_->setStyleSheet("background-color:rgb(186, 189, 182); color:black;");
+      btn_gripper_open_->setEnabled(true);
+      btn_gripper_close_->setEnabled(true);
+      break;
+    case 6:
+      set_all_enabled();
+      break;
+    default:
+      break;
+  }
+}
+
 void MMGuiRviz::updateText()
 {
   text_browser_->setText(QString::fromStdString(remote_reciever_.get_instruction()));
 }
 
-void MMGuiRviz::updateMBResult()
+// void MMGuiRviz::updateMBResult()
+// {
+//   int result_status = remote_reciever_.get_mb_result();
+//   if (result_status == 3 && goal_reached_flag == 0){
+//     QMessageBox::information(this, "MoveBase", "Goal Reached");
+//     goal_reached_flag = 1;
+//   }
+//   // printf("move base result status is %d\n", result_status);
+// }
+
+void MMGuiRviz::updateMBStatus()
 {
-  int result_status = remote_reciever_.get_mb_result();
-  if (result_status == 3 && goal_reached_flag == 0){
+  int mb_current = remote_reciever_.get_mb_status();
+
+  // message when the goal is reached
+  if (mb_last == 1 && mb_current == 3)
+  {
     QMessageBox::information(this, "MoveBase", "Goal Reached");
-    goal_reached_flag = 1;
   }
-  // printf("move base result status is %d\n", result_status);
+
+  // printf(mb_current);
+
+  switch(mb_current) {
+    case 1:
+      // The goal is currently being processed by the action server
+      mb_last = mb_current;
+      break;
+    case 2:
+      // The goal received a cancel request after it started executing
+      //   and has since completed its execution (Terminal State)
+      mb_last = mb_current;
+      break;
+    case 3:
+      // The goal was achieved successfully by the action server (Terminal State)
+      mb_last = mb_current;
+      break;
+    case 4:
+      // The goal was aborted during execution by the action server due
+      //  to some failure (Terminal State)
+      mb_last = mb_current;
+      break;
+    case 6:
+      // The goal received a cancel request after it started executing
+      //    and has not yet completed execution
+      mb_last = mb_current;
+      break;
+  }
+}
+
+void MMGuiRviz::updateMMStep()
+{
+  int mm_current = remote_reciever_.get_mm_step();
+  
+  if(mm_last != mm_current) set_step(mm_current);
+
+  mm_last = mm_current;
 }
 
 
 void MMGuiRviz::clearIMarker()
 {
-  rbtn_3_->setChecked(true);
+  rbtn_appr_3_->setChecked(true);
   slider_->setValue(10);
   remote_reciever_.publishClearIMarker();
 }

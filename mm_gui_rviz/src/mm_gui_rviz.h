@@ -50,6 +50,7 @@
 #include <QTableWidget>
 #include <QStringList>
 #include <QHeaderView>
+#include <QLabel>
 
 #include <mm_gui_rviz/remote_reciever.h>
 
@@ -76,46 +77,28 @@ public Q_SLOTS:
 
   // void updateIKCost();
 
-  void updateMBResult();
+  // void updateMBResult();
+  void updateMBStatus();
+
+  void updateMMStep();
+
 
 protected Q_SLOTS:
 
-  void addLabelX();
-
-  void addLabelY();
-
-  void addLabelZ();
-
-  void addTitle(std::string str);
-
-  void addTitlePick1(std::string str);
-
-  void addTitlePick2(std::string str);
-
-  void addTitlePlace1(std::string str);
-
-  void addTitlePlace2(std::string str);
+  void cancelMB();
 
   void pauseRtabmap();
 
   void resumeRtabmap();
 
-  void pickApproachPlan();
+  void apprPlan();
 
-  void pickApproachExecute();
+  void apprExecute();
 
-  void pickRetreatPlan();
+  void retrPlan();
 
-  void pickRetreatExecute();
+  void retrExecute();
   
-  void placeApproachPlan();
-
-  void placeApproachExecute();
-
-  void placeRetreatPlan();
-
-  void placeRetreatExecute();
-
   void moveGripperOpen();
   
   void moveGripperClose();
@@ -140,11 +123,15 @@ protected Q_SLOTS:
 
   void moveZM();
 
-  void testRB1();
+  void apprRB1();
 
-  void testRB2();
+  void apprRB2();
 
-  void testRB3();
+  void apprRB3();
+
+  void motionRB1();
+
+  void motionRB2();
 
   void setDistance(int);
 
@@ -152,26 +139,16 @@ protected Q_SLOTS:
 
   void selectSolution(int);
 
+  void set_all_disabled();
+
+  void set_all_enabled();
+
+  void set_step(int);
+
 protected:
   QVBoxLayout* layout;
 
-  QHBoxLayout* rtabmap_layout;
-  QHBoxLayout* pcl_layout;
-
-  QHBoxLayout* sub_layout;
-  QVBoxLayout* subx_layout;
-  QVBoxLayout* suby_layout;
-  QVBoxLayout* subz_layout;
-
-  QHBoxLayout* pick_layout;
-  QVBoxLayout* pick1_layout;
-  QVBoxLayout* pick2_layout;
-
-  QHBoxLayout* place_layout;
-  QVBoxLayout* place1_layout;
-  QVBoxLayout* place2_layout;
-
-  QHBoxLayout* gripper_layout;
+  QPushButton* btn_mb_cancel_;
 
   QPushButton* btn_rtabmap_pause_;
   QPushButton* btn_rtabmap_resume_;
@@ -183,15 +160,12 @@ protected:
   QPushButton* btn_pcl_capture_;
   QPushButton* btn_pcl_clear_;
 
-  QPushButton* btn_pick_approach_plan_;
-  QPushButton* btn_pick_approach_execute_;
-  QPushButton* btn_pick_retreat_plan_;
-  QPushButton* btn_pick_retreat_execute_;
+  QPushButton* btn_imarker_clear_;
 
-  QPushButton* btn_place_approach_plan_;
-  QPushButton* btn_place_approach_execute_;
-  QPushButton* btn_place_retreat_plan_;
-  QPushButton* btn_place_retreat_execute_;
+  QPushButton* btn_appr_plan_;
+  QPushButton* btn_appr_execute_;
+  QPushButton* btn_retr_plan_;
+  QPushButton* btn_retr_execute_;
 
   QPushButton* btn_move_xp_;
   QPushButton* btn_move_xm_;
@@ -200,25 +174,39 @@ protected:
   QPushButton* btn_move_zp_;
   QPushButton* btn_move_zm_;
 
-  QHBoxLayout* rb_layout;
-  QRadioButton* rbtn_1_;
-  QRadioButton* rbtn_2_;
-  QRadioButton* rbtn_3_;
+  QRadioButton* rbtn_appr_1_;
+  QRadioButton* rbtn_appr_2_;
+  QRadioButton* rbtn_appr_3_;
 
-  QHBoxLayout* sl_layout;
+  QRadioButton* rbtn_motion_1_;
+  QRadioButton* rbtn_motion_2_;
+
   QSlider* slider_;
-
-  QPushButton* btn_imarker_clear_;
 
   QTimer* timer_;
   QTextBrowser* text_browser_;
 
   QComboBox *combo_box_;
 
-  QFrame* line;
+  QLabel* lb_mb_;
+  QLabel* lb_mb_loc_;
+  QLabel* lb_pcl_;
+  QLabel* lb_appr_;
+  QLabel* lb_appr_pose_;
+  QLabel* lb_appr_dist_;
+  QLabel* lb_appr_ik_;
+  QLabel* lb_motion_;
+  QLabel* lb_motion_appr_;
+  QLabel* lb_motion_retr_;
+  QLabel* lb_ee_;
+  QLabel* lb_gripper_;
+  
   RemoteReciever remote_reciever_;
 
-  int goal_reached_flag; 
+  // int goal_reached_flag; 
+  int mb_last;
+  int mm_last;
+  int m_motion;
 
 };
 
