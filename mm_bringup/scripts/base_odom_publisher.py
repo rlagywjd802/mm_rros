@@ -650,7 +650,7 @@ def move_callback(data):
             left  = 0
             right = 0
 
-            print "cmd failed-------------", data.linear.x, data.angular.z
+            print "cmd failed------------- vx=", data.linear.x, 'wz=', data.angular.z
 
         debug_printer(debug,"left",left)
         debug_printer(debug,"right",right)

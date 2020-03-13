@@ -357,9 +357,9 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
 
   // btn_imarker_clear_->setEnabled(true);
 
-  rbtn_appr_3_->setChecked(true);
   rbtn_motion_1_->setChecked(true);
-  set_all_disabled();
+  rbtn_appr_3_->setChecked(true);
+  set_all_enabled();
 
   // goal_reached_flag = 0;
   mb_last = 0;

@@ -60,7 +60,7 @@ class RemoteReciever
 private:
   std::string tb_string;
   int mb_status = 0;
-  int mm_step = 0;
+  int mm_step = 6;
   // int mb_result_status;
   // std::vector<float>* ik_cost(float);
 
