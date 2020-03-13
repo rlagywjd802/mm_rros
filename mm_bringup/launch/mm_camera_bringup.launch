@@ -17,5 +17,5 @@
 		<arg if="$(arg realsense2)" name="camera2" 	value="true"/>
 	</include>
 
-	<include if="$(arg webcam)" file="$(find usb_cam)/launch/usb_cam.launch"/>
+	<include if="$(arg webcam)" file="$(find mm_bringup)/launch/mm_webcam_bringup.launch"/>
 </launch>

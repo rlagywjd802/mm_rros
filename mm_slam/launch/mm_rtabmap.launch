@@ -14,10 +14,10 @@
   <arg name="args"            default=""/>
 
   <!-- Navigation -->
-  <group if="$(arg localization)">
+  <!--group if="$(arg localization)">
     <include     if="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_dwa.launch"/>
     <include unless="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_teb.launch"/>
-  </group>
+  </group-->
 
   <!-- rtabmap -->
   <group ns="rtabmap">

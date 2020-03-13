@@ -2,25 +2,25 @@
 	<arg name="rviz"			default="true"/>
 	<arg name="map_name"		default="rtabmap.db"/>
 
-	<include file="$(find mm_bringup)/launch/mm_state_publisher.launch"/>
+	<!--include file="$(find mm_bringup)/launch/mm_state_publisher.launch"/-->
 
-	<include file="$(find mm_bringup)/launch/mm_mobile_bringup.launch"/>
+	<!--include file="$(find mm_bringup)/launch/mm_mobile_bringup.launch"/-->
 
 	<include file="$(find mm_bringup)/launch/mm_camera_bringup.launch">
 		<arg name="kinect1" 	value="true"/>		
-		<arg name="kinect2"   value="true"/>
+		<arg name="kinect2"   value="false"/>
 		<arg name="realsense2" 	value="true"/>
 	</include>
 
-	<include file="$(find mm_bringup)/launch/mm_imu_bringup.launch"/>
+	<!--include file="$(find mm_bringup)/launch/mm_imu_bringup.launch"/-->
 	
 	<include file="$(find mm_bringup)/launch/mm_laser_bringup.launch"/>
 
 	<include file="$(find mm_slam)/launch/mm_rtabmap.launch">
-		<arg name="camera" 				value="kinect1"/>
+		<arg name="camera" 				  value="kinect1"/>
 		<arg name="localization"		value="true"/>
-		<arg name="dwa"					value="false"/>
-		<arg name="database_path" 		value="$(arg map_name)"/>
+		<arg name="dwa"					    value="false"/>
+		<arg name="database_path" 	value="$(arg map_name)"/>
 	</include>
 
 
