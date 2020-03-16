@@ -69,6 +69,7 @@ public:
   {
     // Publisher
     mb_cancel_publisher_ = nh_.advertise<actionlib_msgs::GoalID>("/move_base/cancel", 1);
+    clicked_cancel_publisher_ = nh_.advertise<std_msgs::Bool>("/clicked_cancel", 1);
     cmd_vel_publisher_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
     record_publisher_ = nh_.advertise<std_msgs::Bool>("pcl_record", 1);
@@ -117,9 +118,12 @@ public:
   {
     ROS_DEBUG_STREAM_NAMED("gui", "MBCancel");
 
-    actionlib_msgs::GoalID msg;
-    msg.stamp = ros::Time::now();
-    mb_cancel_publisher_.publish(msg);
+    // actionlib_msgs::GoalID msg;
+    // msg.stamp = ros::Time::now();
+    // mb_cancel_publisher_.publish(msg);
+    std_msgs::Bool msg;
+    msg.data = true;
+    clicked_cancel_publisher_.publish(msg);    
   }
 
   void publishEStop(bool data)
@@ -407,6 +411,7 @@ public:
 protected:
   // The ROS publishers
   ros::Publisher mb_cancel_publisher_;
+  ros::Publisher clicked_cancel_publisher_;
 
   ros::Publisher base_stop_publisher_;
   ros::Publisher gripper_publisher_;
