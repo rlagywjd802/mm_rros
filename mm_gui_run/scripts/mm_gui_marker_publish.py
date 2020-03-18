@@ -17,8 +17,8 @@ def create_marker():
 
 	marker.type = Marker.CUBE
 
-	marker.pose.position.x = -0.1
-	marker.pose.position.y = -2.0
+	marker.pose.position.x = -2.0 #-0.1
+	marker.pose.position.y = -1.5 #-2.0
 	marker.pose.position.z = 1.0
 	marker.scale.x = 0.5
 	marker.scale.y = 0.5
