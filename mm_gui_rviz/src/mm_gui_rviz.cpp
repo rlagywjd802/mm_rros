@@ -48,6 +48,8 @@
 #include <QFrame>
 #include <QMessageBox>
 
+#include <std_msgs/Int32.h>
+
 #include "mm_gui_rviz.h"
 
 namespace mm_gui_rviz
@@ -365,6 +367,28 @@ MMGuiRviz::MMGuiRviz(QWidget* parent) : rviz::Panel(parent)
   mb_last = 0;
   m_motion = 0; // 0-pick up, 1-place
 
+  mb_status_subscriber_ = nh_.subscribe<std_msgs::Int32>("/mm_gui_mb_status", 1, &MMGuiRviz::mb_status_cb, this);
+
+}
+
+void MMGuiRviz::mb_status_cb(const std_msgs::Int32::ConstPtr& msg)
+{
+  int mb_status = msg->data;
+  printf("move base status is %d\n", mb_status);
+
+  // message when the goal is reached
+  if (mb_status == 2)
+  {
+    QMessageBox::information(this, "MoveBase", "Plan Canceled by User");
+  }
+  else if (mb_status == 3)
+  {
+    QMessageBox::information(this, "MoveBase", "Goal Reached");
+  }
+  else if (mb_status == 4)
+  {
+    QMessageBox::information(this, "MoveBase", "Plan Canceled by Oscillation");
+  }
 }
 
 void MMGuiRviz::cancelMB()
@@ -662,40 +686,21 @@ void MMGuiRviz::updateText()
 
 void MMGuiRviz::updateMBStatus()
 {
-  int mb_current = remote_reciever_.get_mb_status();
+  int mb_status = remote_reciever_.get_mb_status();
+  printf("move base status is %d\n", mb_status);
 
   // message when the goal is reached
-  if (mb_last == 1 && mb_current == 3)
+  if (mb_status == 2)
+  {
+    QMessageBox::information(this, "MoveBase", "Plan Canceled by User");
+  }
+  else if (mb_status == 3)
   {
     QMessageBox::information(this, "MoveBase", "Goal Reached");
   }
-
-  // printf(mb_current);
-
-  switch(mb_current) {
-    case 1:
-      // The goal is currently being processed by the action server
-      mb_last = mb_current;
-      break;
-    case 2:
-      // The goal received a cancel request after it started executing
-      //   and has since completed its execution (Terminal State)
-      mb_last = mb_current;
-      break;
-    case 3:
-      // The goal was achieved successfully by the action server (Terminal State)
-      mb_last = mb_current;
-      break;
-    case 4:
-      // The goal was aborted during execution by the action server due
-      //  to some failure (Terminal State)
-      mb_last = mb_current;
-      break;
-    case 6:
-      // The goal received a cancel request after it started executing
-      //    and has not yet completed execution
-      mb_last = mb_current;
-      break;
+  else if (mb_status == 4)
+  {
+    QMessageBox::information(this, "MoveBase", "Plan Canceled by Oscillation");
   }
 }
 

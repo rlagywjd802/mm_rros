@@ -37,7 +37,7 @@
 
 #ifndef Q_MOC_RUN
 #include <ros/ros.h>
-
+#include <std_msgs/Int32.h>
 #include <rviz/panel.h>
 #endif
 
@@ -70,7 +70,7 @@ public:
 
   virtual void load(const rviz::Config& config);
   virtual void save(rviz::Config config) const;
-
+  void mb_status_cb(const std_msgs::Int32::ConstPtr&);
 public Q_SLOTS:
   
   void updateText();
@@ -202,6 +202,9 @@ protected:
   QLabel* lb_gripper_;
   
   RemoteReciever remote_reciever_;
+
+  ros::NodeHandle nh_;
+  ros::Subscriber mb_status_subscriber_;
 
   // int goal_reached_flag; 
   int mb_last;

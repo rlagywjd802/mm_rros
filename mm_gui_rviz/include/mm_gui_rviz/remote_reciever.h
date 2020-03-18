@@ -106,7 +106,7 @@ public:
 
     // Subscriber
     tb_subscriber_ = nh_.subscribe<std_msgs::String>("instruction", 5, &RemoteReciever::instruction_cb, this);
-    mb_status_subscriber_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("/move_base/status", 5, &RemoteReciever::mb_status_cb, this);
+    // mb_status_subscriber_ = nh_.subscribe<std_msgs::Int32>("/mm_gui_mb_status", 5, &RemoteReciever::mb_status_cb, this);
     mm_step_subscriber_ = nh_.subscribe<std_msgs::Int32>("/mm_gui_step", 5, &RemoteReciever::mm_step_cb, this);
 
     // Service
@@ -389,10 +389,9 @@ public:
   //   mb_result_status = msg->status.status;
   // }
 
-  void mb_status_cb(const actionlib_msgs::GoalStatusArray::ConstPtr& msg)
+  void mb_status_cb(const std_msgs::Int32::ConstPtr& msg)
   {
-    if (!msg->status_list.empty())
-      mb_status = msg->status_list[0].status;
+    mb_status = msg->data;
   }
 
   void mm_step_cb(const std_msgs::Int32::ConstPtr& msg)
