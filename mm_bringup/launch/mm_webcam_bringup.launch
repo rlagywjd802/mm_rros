@@ -13,9 +13,9 @@
 		<arg name="device"	value="$(arg device2)"/>
 	</include> 
 
- 	<!--include file="$(find usb_cam)/launch/usb_cam.launch">
+ 	<include file="$(find usb_cam)/launch/usb_cam.launch">
 		<arg name="camera"	value="cam3"/>
 		<arg name="device"	value="$(arg device3)"/>
-	</include-->
+	</include>
 
 </launch>

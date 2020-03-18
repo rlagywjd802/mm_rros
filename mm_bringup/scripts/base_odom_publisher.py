@@ -445,7 +445,7 @@ DistancePerCount_right_front = (m.pi * wheel_diameter * in_to_m) / enc_countperr
 DistancePerCount_right_front = (m.pi * wheel_diameter * in_to_m) / enc_countperrev_right_rear              
 
 lengthBetweenTwoWheels = 26.0 * in_to_m
-factor = 280.0/360.0 # 0.69 - 250/360
+factor = 261.0/360.0 #280/360 # 0.69 - 250/360
 odom_old = Odometry()
 
 # distance between origin and the center of the robot

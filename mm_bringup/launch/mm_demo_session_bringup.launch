@@ -6,12 +6,12 @@
 	<!-- <include file="$(find mm_bringup)/launch/mm_mobile_bringup.launch"/> -->
 
 	<!-- sensors -->
-	<!--include file="$(find mm_bringup)/launch/mm_camera_bringup.launch">
+	<include file="$(find mm_bringup)/launch/mm_camera_bringup.launch">
 		<arg name="kinect1" value="true"/>
 		<arg name="kinect2" value="false"/> 
 		<arg name="realsense2" value="true"/>
     <arg name="webcam" value="true"/>
-	</include-->
+	</include>
 	<!-- <include file="$(find mm_bringup)/launch/mm_imu_bringup.launch"/>	 -->
 	<include file="$(find mm_bringup)/launch/mm_laser_bringup.launch"/>
 

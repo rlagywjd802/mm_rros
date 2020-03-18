@@ -14,10 +14,10 @@
   <arg name="args"            default=""/>
 
   <!-- Navigation -->
-  <!--group if="$(arg localization)">
+  <group if="$(arg localization)">
     <include     if="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_dwa.launch"/>
     <include unless="$(arg dwa)" file="$(find mm_navigation)/launch/mm_move_base_teb.launch"/>
-  </group-->
+  </group>
 
   <!-- rtabmap -->
   <group ns="rtabmap">
@@ -85,7 +85,8 @@
         <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
         <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
         <!-- <param name="Mem/IncrementalMemory" type="string" value="true"/> -->
-        <!-- <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/> -->
+        <!--param name="Mem/InitWMWithAllNodes" type="string" value="$(arg
+localization)"/-->
         <param name="Mem/InitWMWithAllNodes" type="string" value="false"/>
 
         <!-- RTAB-Map's parameters -->
@@ -93,6 +94,8 @@
         <param name="RGBD/AngularUpdate" type="string" value="0.01"/>
         <param name="RGBD/LinearUpdate" type="string" value="0.01"/>
         <param name="RGBD/OptimizerFromGraphEnd" type="string" value="false"/>
+        <param name="RGBD/SavedLocalizationIgnored" type="bool"
+value="false"/>
 
         <param name="Reg/Force3DoF" type="string" value="true"/>
         <param name="Vis/MinInliers" type="string" value="12"/>
