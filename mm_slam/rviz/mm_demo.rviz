@@ -7,16 +7,12 @@ Panels:
         - /Global Options1
         - /Global Planner1/GlobalCostmap1
         - /Robot1/Odometry1/Shape1
-        - /Images1
-        - /Captured1
-        - /MotionPlanning1
       Splitter Ratio: 0.605095983
-    Tree Height: 810
+    Tree Height: 334
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
     Expanded:
-      - /2D Pose Estimate1
       - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
@@ -30,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: EndEffector Cam
   - Class: mm_gui_rviz/MMGuiRviz
     Name: MMGuiRviz
 Toolbars:
@@ -60,12 +56,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: Map
       Topic: /map
       Unreliable: false
       Use Timestamp: false
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -297,35 +293,35 @@ Visualization Manager:
       Displays:
         - Class: rviz/Image
           Enabled: true
-          Image Topic: /kinect1/rgb/image_color
+          Image Topic: /cam2/usb_cam/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0
-          Name: Front Cam
+          Name: Left Cam
           Normalize Range: true
           Queue Size: 10
           Transport Hint: compressed
           Unreliable: true
           Value: true
         - Class: rviz/Image
-          Enabled: false
-          Image Topic: /kinect2/rgb/image_color
+          Enabled: true
+          Image Topic: /cam3/usb_cam/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0
-          Name: Back Cam
+          Name: Right Cam
           Normalize Range: true
           Queue Size: 10
           Transport Hint: compressed
           Unreliable: true
-          Value: false
+          Value: true
         - Class: rviz/Image
           Enabled: true
           Image Topic: /realsense2/color/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0
-          Name: Side Cam
+          Name: EndEffector Cam
           Normalize Range: true
           Queue Size: 10
           Transport Hint: compressed
@@ -336,20 +332,243 @@ Visualization Manager:
     - Attached Body Color: 150; 50; 150
       Class: moveit_rviz_plugin/RobotState
       Collision Enabled: false
-      Enabled: false
+      Enabled: true
       Links:
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        bare_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ee_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        inertial_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        kinect1_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        kinect1_frame_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        kinect1_head_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        kinect1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        kinect1_neck_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_inner_finger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_inner_finger_pad:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_inner_knuckle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_outer_finger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_outer_knuckle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        real_ee_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_color_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_infra2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        realsense2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_inner_finger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_inner_finger_pad:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_inner_knuckle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_outer_finger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_outer_knuckle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robotiq_arg2f_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robotiq_ee:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        shoulder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_3_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotState
       Robot Alpha: 0.5
       Robot Description: robot_description
       Robot State Topic: /inv_kin_sol
       Show All Links: true
       Show Highlights: true
-      Value: false
+      Value: true
       Visual Enabled: true
     - Alpha: 1
       Class: rviz/RobotModel
@@ -676,7 +895,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Loop Animation: true
+        Loop Animation: false
         Robot Alpha: 0.5
         Robot Color: 150; 50; 150
         Show Robot Collision: false
@@ -953,68 +1172,63 @@ Visualization Manager:
   Global Options:
     Background Color: 70; 70; 70
     Default Light: true
-    Fixed Frame: map
+    Fixed Frame: base_footprint
     Frame Rate: 30
   Name: root
   Tools:
     - Class: rviz/Interact
       Hide Inactive Objects: true
-    - Class: rviz/MoveCamera
-    - Class: rviz/Select
-    - Class: rviz/FocusCamera
-    - Class: rviz/Measure
-    - Class: rviz/SetInitialPose
-      Topic: /initialpose
     - Class: rviz/SetGoal
       Topic: /move_base_simple/goal
     - Class: rviz/PublishPoint
       Single click: true
       Topic: /clicked_point
-    - Class: rviz_visual_tools/KeyTool
+    - Class: mm_gui_rviz/KeyTool
+    - Class: mm_gui_rviz/EStop
   Value: true
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 9.2499485
+      Distance: 5.84425735
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.34522879
-        Y: -0.383753419
-        Z: -1.19106781
+        X: -0.844579339
+        Y: -1.59495342
+        Z: -0.219442248
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.689796269
+      Pitch: 0.824796617
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.3636179
+      Yaw: 1.05361664
     Saved: ~
 Window Geometry:
-  Back Cam:
-    collapsed: false
   Displays:
     collapsed: false
-  Front Cam:
+  EndEffector Cam:
     collapsed: false
   Height: 1056
   Hide Left Dock: false
   Hide Right Dock: false
+  Left Cam:
+    collapsed: false
   MMGuiRviz:
     collapsed: false
   MotionPlanning:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001bf000003dafc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006100fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc00000028000003da000003700100001dfa000000010100000002fb00000012004d004d004700750069005200760069007a0100000000ffffffff0000011d00fffffffb000000100044006900730070006c00610079007301000000000000016a0000016a00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff000000160000001600000001000002cb000003dafc0200000007fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000000280000018e0000018300fffffffb0000001200460072006f006e0074002000430061006d01000001bc000001310000001600fffffffb00000010004200610063006b002000430061006d000000017e000001550000001600fffffffb000000100053006900640065002000430061006d01000002f30000010f0000001600fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000396000000ad00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073f0000004afc0100000003fb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000000000000073f0000000000000000fb0000000800540069006d006500000000000000073f0000030000fffffffb0000000800540069006d00650100000000000004500000000000000000000002a9000003da00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
-  Selection:
+  QMainWindow State: 000000ff00000000fd000000040000000000000178000003dafc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006100fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007201000000280000004c0000004a00fffffffc0000007a00000388000002ee0100001dfa000000000100000002fb00000012004d004d004700750069005200760069007a0100000000ffffffff0000017800fffffffb000000100044006900730070006c00610079007301000000000000016a0000016a00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff00000000000000000000000100000194000003dafc0200000007fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000000280000018e0000018300fffffffb00000010004c006500660074002000430061006d01000000280000014f0000001600fffffffb0000001200520069006700680074002000430061006d010000017d000001550000001600fffffffb0000001e0045006e0064004500660066006500630074006f0072002000430061006d01000002d80000012a0000001600fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000396000000ad00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073f0000004afc0100000003fb0000003c005400720061006a006500630074006f007200790020002d0020005400720061006a006500630074006f0072007900200053006c006900640065007200000000000000073f0000000000000000fb0000000800540069006d006500000000000000073f0000030000fffffffb0000000800540069006d0065010000000000000450000000000000000000000427000003da00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Right Cam:
     collapsed: false
-  Side Cam:
+  Selection:
     collapsed: false
   Time:
     collapsed: false

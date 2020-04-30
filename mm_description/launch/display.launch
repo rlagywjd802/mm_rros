@@ -1,5 +1,5 @@
 <launch>
-	<include file="$(find mm_description)/launch/description.launch"/>
+	<include file="$(find cb_description)/launch/description.launch"/>
 	
 	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
 		<param name="use_gui" value="false"/>	
@@ -10,5 +10,5 @@
 		<param name="tf_prefix" value=""/>
 	</node>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mm_description)/rviz/robot_model.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find cb_description)/rviz/display.rviz"/>
 </launch>

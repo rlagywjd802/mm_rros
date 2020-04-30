@@ -7,8 +7,8 @@ from geometry_msgs.msg import Quaternion
 
 # mm
 MOVE_GROUP = "ur5"
-# FRAME_ID = "base_footprint"
-FRAME_ID = "map"
+FRAME_ID = "base_footprint"
+# FRAME_ID = "map"
 EEF_LINK = "eef_pose"
 REAL_EEF_LINK = "real_eef_pose"
 

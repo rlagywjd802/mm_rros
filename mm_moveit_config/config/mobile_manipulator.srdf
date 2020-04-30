@@ -21,7 +21,7 @@
         <link name="left_inner_knuckle" />
         <link name="right_inner_knuckle" />
         <link name="right_outer_knuckle" />
-        <link name="right_outer_finger" />
+        <link name="right_outer_finger" />3
         <link name="right_inner_finger" />
         <link name="right_inner_finger_pad" />
         <link name="tool0" />
