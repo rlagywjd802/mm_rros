@@ -36,15 +36,25 @@ Everything except for *PCLFusionColor* is open-source package.
 ## Usage
 **Arm** Unfortunately, mobile base is broken. If you want to test out only arm part, you can try this.
 On robot computer, run:
-`roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=false`
-`rosrun mm_gui_run waypoint_controls.py`
-`rosrun mm_gui_run mm_gui_moveit_approach_execution.py`
+```
+roslaunch mm_bringup mm_demo_session_bringup.launch rviz:=false
+```
+```
+rosrun mm_gui_run waypoint_controls.py`
+```
+```
+rosrun mm_gui_run mm_gui_moveit_approach_execution.py`
+```
 You can either directly launch above files from robot computer or launch via ssh on remote computer.
 To access robot computer via ssh, run:
-`ssh -X mm@mm`
+```
+ssh -X mm@mm
+```
 
 On remote computer, run:
-`roslaunch mm_bringup mm_demo_rviz.launch config:=true`
+```
+roslaunch mm_bringup mm_demo_rviz.launch config:=true
+```
 
 **Base+Arm** Full version for user trial. To run mobile base as well, uncomment following lines from *mm_demo_session_bringup.launch* and run same command as above.
 ```
